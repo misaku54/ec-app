@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    image: postgres:16
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+      - ./db/migration:/docker-entrypoint-initdb.d
+
+  app:
+    build: ./app
+    depends_on:
+      - postgresdb
+    env_file: ./.env
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./app:/app
+    command: ./mvnw spring-boot:run
+    stdin_open: true
+    tty: true
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3003:5173"
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+
+volumes:
+  db-storage:
