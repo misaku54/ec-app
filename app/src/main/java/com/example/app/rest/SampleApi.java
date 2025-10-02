@@ -23,8 +23,6 @@ public class SampleApi {
     try (InputStreamReader isr = new InputStreamReader(is)) {
       int i = isr.read();
 
-      
-
       while(i != -1) {
         System.out.print((char)i);
         i = isr.read();
@@ -72,5 +70,29 @@ public class SampleApi {
     }
 
     fr.close();
+  }
+
+  @GetMapping("/byte")
+  public void byteWrite() {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+    bos.write(65);
+    bos.write(66);
+    byte[] data = bos.toByteArray();
+
+    for (byte b : data) {
+      System.out.println(b);
+    }
+  }
+
+  // バイナリファイルにバイト列を書き込むための処理
+  @GetMapping("write")
+  public void writeByte() throws IOException {
+    FileOutputStream fos = new FileOutputStream("data.dat", true);
+    // 65は２進数で0100001 = Aという文字列
+    // 実際はAという文字列を
+    fos.write(65);// 引数はint
+    fos.flush();
+    fos.close();
   }
 }
