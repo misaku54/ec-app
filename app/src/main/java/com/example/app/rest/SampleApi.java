@@ -2,12 +2,11 @@ package com.example.app.rest;
 
 import com.example.app.dto.SampleDto;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.IIOException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -51,5 +50,27 @@ public class SampleApi {
     int status = response.statusCode();
     return new SampleDto(body,status);
 
+  }
+
+  @PostMapping("/writeFile")
+  public void writeFile() throws IOException {
+    FileWriter fw = new FileWriter("sample.txt", true);
+    fw.write("A");
+    fw.flush();
+    fw.close();
+  }
+
+  @PostMapping("/readFile")
+  public void readFile() throws IOException {
+    FileReader fr = new FileReader("sample2.txt");
+    int i = fr.read();
+
+    while(i != -1) {
+      char c = (char)i;
+      System.out.print(c);
+      i = fr.read();
+    }
+
+    fr.close();
   }
 }
