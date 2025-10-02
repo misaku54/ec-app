@@ -6,7 +6,6 @@ import com.example.app.dto.ResponseListDto;
 import com.example.app.form.AdmProductCreateForm;
 import com.example.app.service.ProductService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +27,9 @@ public class AdmProductApi {
   }
 
   @PostMapping("/create")
-  public ResponseDto<ProductDto> doCreateProduct(@RequestBody AdmProductCreateForm admProductCreateForm) {
-    ResponseDto<ProductDto> response = new ResponseDto<>();
+  public ResponseDto<String> doCreateProduct(@RequestBody AdmProductCreateForm admProductCreateForm) {
+    ResponseDto<String> response = new ResponseDto<>();
+    response.setData("success");
     return response;
   }
 }

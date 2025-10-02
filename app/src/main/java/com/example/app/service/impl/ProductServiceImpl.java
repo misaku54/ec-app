@@ -21,10 +21,9 @@ public class ProductServiceImpl implements ProductService {
     return productList;
   }
 
-  public ProductDto createProduct(String name, String description, int price, int stock) throws Exception {
+  public void createProduct(String name, String description, int price, int stock) throws Exception {
     if (!productMapper.createProduct(name, description, price, stock)) {
       throw new ApiInvalidUpdateException("登録に失敗しました。");
     }
-    return new ProductDto();
   }
 }

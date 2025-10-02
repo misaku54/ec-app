@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ProductService {
   List<ProductDto> getProductList();
-  ProductDto createProduct(String name, String description, int price, int stock) throws Exception;
+  void createProduct(String name, String description, int price, int stock) throws Exception;
 }
