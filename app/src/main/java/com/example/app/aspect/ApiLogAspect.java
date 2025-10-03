@@ -5,6 +5,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 public class ApiLogAspect {
   @Before("execution(public * com.example.app.rest..*.*(..))")
   public void before(JoinPoint joinPoint) {
+    MDC.put("ControllerClassName", joinPoint.getSignature().getDeclaringTypeName());
+    MDC.put("ControllerMethodName", joinPoint.getSignature().getName());
     log.info("メソッド開始：" + joinPoint.getSignature());
   }
 

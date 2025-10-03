@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+  <timestamp key="timestamp" datePattern="yyyyMMdd'-'HHmmss"/>
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d [%thread] %-5level [%X{ControllerClassName}] [%X{ControllerMethodName}] [%X{api.req.body}] %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- デフォルト設定（全体適用） -->
+  <root level="info">
+    <appender-ref ref="stdout" />
+  </root>
+</configuration>
