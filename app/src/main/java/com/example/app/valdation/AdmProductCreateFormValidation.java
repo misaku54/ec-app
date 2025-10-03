@@ -13,6 +13,6 @@ public class AdmProductCreateFormValidation implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    AdmProductCreateForm form = (AdmProductCreateForm)target;
+    AdmProductCreateForm form = (AdmProductCreateForm) target;
   }
 }
