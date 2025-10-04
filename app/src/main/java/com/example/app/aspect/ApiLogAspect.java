@@ -16,11 +16,18 @@ public class ApiLogAspect {
   public void before(JoinPoint joinPoint) {
     MDC.put("ControllerClassName", joinPoint.getSignature().getDeclaringTypeName());
     MDC.put("ControllerMethodName", joinPoint.getSignature().getName());
+    for (Object arg : joinPoint.getArgs()) {
+      if (arg.getClass().getName().startsWith("com.example.app.form") ||
+        (arg.getClass().getName().startsWith("com.example.app.dto"))) {
+        MDC.put("api.req.body", "リクエストボディ");
+      }
+    }
     log.info("メソッド開始：" + joinPoint.getSignature());
   }
 
   @After("execution(public * com.example.app.rest..*.*(..))")
   public void after(JoinPoint joinPoint) {
     log.info("メソッド終了：" + joinPoint.getSignature());
+    MDC.clear();
   }
 }
