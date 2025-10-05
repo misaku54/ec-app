@@ -23,8 +23,8 @@
     order by id
   </select>
 
-  <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
+  <insert id="createProduct">
     INSERT INTO products (name, description ,price, stock)
-    VALUES (#{product.name}, #{product.description} , #{product.price}, #{product.stock})
+    VALUES (#{name}, #{description} , #{price}, #{stock})
   </insert>
 </mapper>

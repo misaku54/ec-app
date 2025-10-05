@@ -27,7 +27,14 @@ public class AdmProductApi {
   }
 
   @PostMapping("/create")
-  public ResponseDto<String> doCreateProduct(@RequestBody AdmProductCreateForm admProductCreateForm) {
+  public ResponseDto<String> doCreateProduct(@RequestBody AdmProductCreateForm admProductCreateForm) throws Exception {
+    productService.createProduct(
+      admProductCreateForm.getName(),
+      admProductCreateForm.getDescription(),
+      admProductCreateForm.getPrice(),
+      admProductCreateForm.getStock()
+    );
+
     ResponseDto<String> response = new ResponseDto<>();
     response.setData("success");
     return response;
