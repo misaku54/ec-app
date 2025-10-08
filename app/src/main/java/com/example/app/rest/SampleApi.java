@@ -110,4 +110,14 @@ public class SampleApi {
       }
     }
   }
+
+  // バイトと文字列をまとめて読み込む
+  @GetMapping("bufferReader")
+  public void bufferReader() throws IOException {
+    // 文字列の場合(txtファイル)
+    File inputFile = new File("aa.txt");
+    try (FileReader fr = new FileReader(inputFile); BufferedReader br = new BufferedReader(fr)) {
+      br.readLine();
+    }
+  }
 }
