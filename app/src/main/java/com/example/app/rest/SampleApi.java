@@ -117,7 +117,11 @@ public class SampleApi {
     // 文字列の場合(txtファイル)
     File inputFile = new File("aa.txt");
     try (FileReader fr = new FileReader(inputFile); BufferedReader br = new BufferedReader(fr)) {
-      br.readLine();
+      //　１行読みとりnullになるまでループ
+      String line = null;
+      while ((line = br.readLine()) != null) {
+        System.out.println(line);
+      }
     }
   }
 }
