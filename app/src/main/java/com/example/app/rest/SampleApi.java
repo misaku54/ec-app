@@ -95,4 +95,19 @@ public class SampleApi {
     fos.flush();
     fos.close();
   }
+
+  @GetMapping("copy")
+  public void copyFile() throws IOException {
+    File inputFile  = new File("in.xlsx");
+    File outputFile = new File("out.xlsx");
+
+    // バイナリファイルの読み書き用のストリームを用意
+    try (FileInputStream fis  = new FileInputStream(inputFile);FileOutputStream fos = new FileOutputStream(outputFile);) {
+      int i = fis.read();
+      while (i != -1) {
+        fos.write(i);
+        i = fis.read();
+      }
+    }
+  }
 }
