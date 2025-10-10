@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Properties;
 
 @RestController
 public class SampleApi {
@@ -123,5 +124,17 @@ public class SampleApi {
         System.out.println(line);
       }
     }
+  }
+
+  // プロパティファイルの読みとり
+  @GetMapping("readPropeties")
+  public void readPropeties() throws IOException {
+    File file = new File("a.propeties");
+    FileReader fr = new FileReader(file);
+    Properties p = new Properties();
+    p.load(fr);
+    String a = p.getProperty("a");
+    String b = p.getProperty("b");
+    fr.close();
   }
 }
