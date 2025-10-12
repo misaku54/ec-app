@@ -1,9 +1,7 @@
-cloud:
-  aws:
-    s3:
-      endpoint: http://localhost:9000
-      region: us-east-1
-      bucket: your-bucket
-    credentials:
-      access-key: minioadmin
-      secret-key: minioadmin
+aws:
+  endpoint: http://localhost:9000
+  region: us-east-1
+  minio-user: minioadmin
+  minio-pass: minioadmin
+  s3:
+    bucket-name: your-bucket

@@ -1,6 +1,6 @@
 package com.example.app.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.example.app.properties.AwsLocalProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -13,25 +13,13 @@ import java.net.URI;
 @Configuration
 public class AwsLocalConfiguration {
 
-  @Value("${cloud.aws.s3.endpoint}")
-  private String endpoint;
-
-  @Value("${cloud.aws.s3.region}")
-  private String region;
-
-  @Value("${cloud.aws.credentials.access-key}")
-  private String accessKey;
-
-  @Value("${cloud.aws.credentials.secret-key}")
-  private String secretKey;
-
   @Bean
-  public S3Client s3ClientCreate() {
+  public S3Client s3ClientCreate(AwsLocalProperties awsLocalProperties) {
     return S3Client.builder()
-      .endpointOverride(URI.create(endpoint))
-      .region(Region.of(region))
+      .endpointOverride(URI.create(awsLocalProperties.getEndpoint()))
+      .region(Region.of(awsLocalProperties.getRegion()))
       .credentialsProvider(StaticCredentialsProvider.create(
-        AwsBasicCredentials.create(accessKey, secretKey)
+        AwsBasicCredentials.create(awsLocalProperties.getMinioUser(), awsLocalProperties.getMinioPass())
       )).build();
   }
 }
