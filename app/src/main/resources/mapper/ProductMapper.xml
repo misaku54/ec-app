@@ -12,11 +12,6 @@
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
 
-  <insert id="insertProduct" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO products (name, description ,price, stock)
-    VALUES (#{product.name}, #{product.description} , #{product.price}, #{product.stock})
-  </insert>
-
   <select id="getProductList" resultMap="ProductResultMap">
     select id, name, description, price, stock, created_at, updated_at
     from products
@@ -24,7 +19,15 @@
   </select>
 
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO products (name, description ,price, stock)
-    VALUES (#{name}, #{description} , #{price}, #{stock})
+    INSERT INTO products (name, description, price, stock)
+    VALUES (#{name}, #{description}, #{price}, #{stock})
   </insert>
+
+  <update id="updateProductUrl">
+    UPDATE products
+    SET
+      s3_path = #{s3Path}
+    WHERE
+      id = #{id}
+  </update>
 </mapper>

@@ -19,15 +19,12 @@ public class FileUploadServiceImpl implements FileUploadService {
 
   private final S3Client s3Client;
 
-  // オブジェクト名までのパスを生成しS3へアップロード(例：sample/商品画像/12345/main.jpg)
-  // オブジェクトパスを返却
-  // 商品登録（画像オブジェクトパス以外）→　画像をS3にアップロード、オブジェクトパス返却　→ 登録したレコードのオブジェクトパスを更新
-  // トランザクションはる
   @Override
-  public String uploadImage(String prefix, int id, MultipartFile imageFile) throws IOException {
+  public String uploadImage(String prefix, Integer id, MultipartFile imageFile) throws Exception {
     String fileName = imageFile.getOriginalFilename() != null ? imageFile.getOriginalFilename() : "image.png";
     String objectKey = "/" + prefix + "/" + id + "/" + fileName;
 
-    return S3Util.putFile(s3Client, imageFile, bucketName, objectKey);
+    S3Util.putFile(s3Client, imageFile, bucketName, objectKey);
+    return objectKey;
   }
 }

@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 
 @Data
 public class ProductDto {
-  private int id;
+  private Integer id;
   private String name;
   private String description;
   private int price;
   private int stock;
-  private String url;
+  private String s3Path;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

@@ -8,6 +8,7 @@ import com.example.app.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
@@ -17,9 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+  private final String S3_PRODUCT_PREFIX = "PRODUCTS";
+
   private final ProductMapper productMapper;
 
   private final FileUploadService fileUploadService;
+
 
 
   @Override
@@ -28,15 +32,23 @@ public class ProductServiceImpl implements ProductService {
     return productList;
   }
 
-  public void createProduct(String name, String description, int price, int stock, MultipartFile imageFile) throws Exception {
+  @Override
+  @Transactional
+  public void createProduct(ProductDto product, MultipartFile imageFile) throws Exception {
+
     // 商品を保存
-    if (productMapper.createProduct(name, description, price, stock) == 0) {
-      throw new ApiInvalidUpdateException("登録に失敗しました。");
+    if (productMapper.createProduct(product) == 0) {
+      throw new ApiInvalidUpdateException("商品登録に失敗しました。");
     }
 
-    // 画像があれば、S3にアップロード
-    if (imageFile != null) {
-//      fileUploadService.uploadImage()
+    // 画像があれば、S3にアップロードし、prefixをDBに保存
+    if (imageFile != null ) {
+      String imageUrl = fileUploadService.uploadImage(S3_PRODUCT_PREFIX, product.getId() ,imageFile);
+
+      product.setS3Path(imageUrl);
+      if (productMapper.updateProductUrl(product) == 0) {
+        throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
+      }
     }
   }
 

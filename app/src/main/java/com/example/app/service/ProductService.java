@@ -10,6 +10,6 @@ public interface ProductService {
 
   List<ProductDto> getProductList();
 
-  void createProduct(String name, String description, int price, int stock, MultipartFile imageFile) throws Exception;
+  void createProduct(ProductDto productDto, MultipartFile imageFile) throws Exception;
 
 }

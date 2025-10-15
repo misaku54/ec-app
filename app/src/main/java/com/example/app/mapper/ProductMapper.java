@@ -11,9 +11,8 @@ public interface ProductMapper {
 
   List<ProductDto> getProductList();
 
-  int createProduct(
-    @Param("name") String name,
-    @Param("description") String description,
-    @Param("price") int price,
-    @Param("stock") int stock);
+  int createProduct(ProductDto product);
+
+  int updateProductUrl(ProductDto product);
+
 }
