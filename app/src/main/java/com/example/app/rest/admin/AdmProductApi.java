@@ -32,7 +32,8 @@ public class AdmProductApi {
       admProductCreateForm.getName(),
       admProductCreateForm.getDescription(),
       admProductCreateForm.getPrice(),
-      admProductCreateForm.getStock()
+      admProductCreateForm.getStock(),
+      admProductCreateForm.getImageFile()
     );
 
     ResponseDto<String> response = new ResponseDto<>();

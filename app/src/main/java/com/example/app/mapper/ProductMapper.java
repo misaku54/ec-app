@@ -11,7 +11,7 @@ public interface ProductMapper {
 
   List<ProductDto> getProductList();
 
-  boolean createProduct(
+  int createProduct(
     @Param("name") String name,
     @Param("description") String description,
     @Param("price") int price,

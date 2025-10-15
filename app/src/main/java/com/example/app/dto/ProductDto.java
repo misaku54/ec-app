@@ -11,6 +11,7 @@ public class ProductDto {
   private String description;
   private int price;
   private int stock;
+  private String url;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

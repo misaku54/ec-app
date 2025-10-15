@@ -23,7 +23,7 @@
     order by id
   </select>
 
-  <insert id="createProduct">
+  <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO products (name, description ,price, stock)
     VALUES (#{name}, #{description} , #{price}, #{stock})
   </insert>
