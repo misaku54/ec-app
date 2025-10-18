@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 
 import java.net.URI;
 
@@ -20,6 +21,10 @@ public class AwsLocalConfiguration {
       .region(Region.of(awsLocalProperties.getRegion()))
       .credentialsProvider(StaticCredentialsProvider.create(
         AwsBasicCredentials.create(awsLocalProperties.getMinioUser(), awsLocalProperties.getMinioPass())
-      )).build();
+      ))
+      .serviceConfiguration(S3Configuration.builder()
+        .pathStyleAccessEnabled(true)  // SDKはデフォルトで仮想ホスト形式でアクセスするがminio用パススベース形式のため、パスベース形式を強制
+        .build())
+      .build();
   }
 }

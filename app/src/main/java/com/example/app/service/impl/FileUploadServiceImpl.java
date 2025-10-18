@@ -22,7 +22,7 @@ public class FileUploadServiceImpl implements FileUploadService {
   @Override
   public String uploadImage(String prefix, Integer id, MultipartFile imageFile) throws Exception {
     String fileName = imageFile.getOriginalFilename() != null ? imageFile.getOriginalFilename() : "image.png";
-    String objectKey = "/" + prefix + "/" + id + "/" + fileName;
+    String objectKey = prefix + "/" + id + "/" + fileName;
 
     S3Util.putFile(s3Client, imageFile, bucketName, objectKey);
     return objectKey;

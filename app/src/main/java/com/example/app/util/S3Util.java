@@ -13,14 +13,14 @@ import java.io.InputStream;
 public class S3Util {
 
   public static void putFile(S3Client s3Client, MultipartFile imageFile, String bucketName ,String objectKey) throws IOException {
-    try (InputStream inputStream = imageFile.getInputStream()) {
+    try {
       PutObjectRequest putRequest = PutObjectRequest.builder()
         .bucket(bucketName)
         .key(objectKey)
         .contentType(imageFile.getContentType())
         .build();
 
-      s3Client.putObject(putRequest, RequestBody.fromInputStream(inputStream, imageFile.getSize()));
+      s3Client.putObject(putRequest, RequestBody.fromBytes(imageFile.getBytes()));
     } catch (Exception e) {
       log.error("S3オブジェクトの取得に失敗しました。bucket={} and fileName={}. Error:{}",
         bucketName, objectKey, e.getMessage() ,e);

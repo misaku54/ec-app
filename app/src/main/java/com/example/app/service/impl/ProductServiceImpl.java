@@ -18,12 +18,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+  // =====================================================================
+  // Constant
+  // =====================================================================
   private final String S3_PRODUCT_PREFIX = "PRODUCTS";
 
+  // =====================================================================
+  // DI
+  // =====================================================================
   private final ProductMapper productMapper;
 
   private final FileUploadService fileUploadService;
-
 
 
   @Override
@@ -42,8 +47,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // 画像があれば、S3にアップロードし、prefixをDBに保存
-    if (imageFile != null ) {
-      String imageUrl = fileUploadService.uploadImage(S3_PRODUCT_PREFIX, product.getId() ,imageFile);
+    if (imageFile != null) {
+      String imageUrl = fileUploadService.uploadImage(S3_PRODUCT_PREFIX, product.getId(), imageFile);
 
       product.setS3Path(imageUrl);
       if (productMapper.updateProductUrl(product) == 0) {
