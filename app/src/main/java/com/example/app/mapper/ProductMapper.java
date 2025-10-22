@@ -13,6 +13,4 @@ public interface ProductMapper {
 
   int createProduct(ProductDto product);
 
-  int updateProductUrl(ProductDto product);
-
 }

@@ -23,11 +23,4 @@
     VALUES (#{name}, #{description}, #{price}, #{stock})
   </insert>
 
-  <update id="updateProductUrl">
-    UPDATE products
-    SET
-      s3_path = #{s3Path}
-    WHERE
-      id = #{id}
-  </update>
 </mapper>
