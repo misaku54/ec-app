@@ -29,4 +29,5 @@ public class GlobalExceptionHandler {
     log.error("予期しないエラーが発生しました。", ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
   }
+
 }

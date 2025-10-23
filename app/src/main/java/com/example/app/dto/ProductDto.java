@@ -11,7 +11,6 @@ public class ProductDto {
   private String description;
   private int price;
   private int stock;
-  private String s3Path;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }
