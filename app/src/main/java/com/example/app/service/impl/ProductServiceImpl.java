@@ -1,9 +1,11 @@
 package com.example.app.service.impl;
 
+import com.example.app.dto.ProductDetailDto;
 import com.example.app.dto.ProductDto;
 import com.example.app.dto.S3FileDto;
 import com.example.app.enums.EntityType;
 import com.example.app.exception.ApiInvalidUpdateException;
+import com.example.app.exception.ApiNotFoundException;
 import com.example.app.mapper.ProductMapper;
 import com.example.app.mapper.S3FileMapper;
 import com.example.app.service.FileUploadService;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,28 @@ public class ProductServiceImpl implements ProductService {
   public List<ProductDto> getProductList() {
     List<ProductDto> productList = productMapper.getProductList();
     return productList;
+  }
+
+  @Override
+  public ProductDetailDto detailProduct(int productId) {
+    ProductDto product = productMapper.getProductById(productId);
+    if (Objects.isNull(product)) {
+      throw new ApiNotFoundException("データが見つかりません。");
+    }
+    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(EntityType.PRODUCT, productId);
+    String imageUrl = fileUploadService.getImageUrl(objectKey);
+
+    ProductDetailDto detail = new ProductDetailDto();
+    detail.setId(product.getId());
+    detail.setName(product.getName());
+    detail.setDescription(product.getDescription());
+    detail.setPrice(product.getPrice());
+    detail.setStock(product.getStock());
+    detail.setCreatedAt(product.getCreatedAt());
+    detail.setUpdatedAt(product.getUpdatedAt());
+    detail.setImageUrl(imageUrl);
+
+    return detail;
   }
 
   @Override

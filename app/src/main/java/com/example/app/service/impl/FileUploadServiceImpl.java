@@ -27,4 +27,9 @@ public class FileUploadServiceImpl implements FileUploadService {
     S3Util.putFile(s3Client, imageFile, bucketName, objectKey);
     return objectKey;
   }
+
+  @Override
+  public String getImageUrl(String objectKey) {
+    return "https://" + bucketName + ".s3.ap-northeast-1.amazonaws.com/" + objectKey;
+  }
 }

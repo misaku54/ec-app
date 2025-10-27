@@ -11,6 +11,8 @@ public interface ProductMapper {
 
   List<ProductDto> getProductList();
 
+  ProductDto getProductById(@Param("productId") int productId);
+
   int createProduct(ProductDto product);
 
 }

@@ -1,5 +1,6 @@
 package com.example.app.rest.admin;
 
+import com.example.app.dto.ProductDetailDto;
 import com.example.app.dto.ProductDto;
 import com.example.app.dto.ResponseDto;
 import com.example.app.dto.ResponseListDto;
@@ -26,8 +27,17 @@ public class AdmProductApi {
     return response;
   }
 
+  @GetMapping("/{productId}")
+  public ResponseDto<ProductDetailDto> detailProduct(@PathVariable("productId") int productId) throws Exception {
+    ProductDetailDto productDetailDto = productService.detailProduct(productId);
+
+    ResponseDto<ProductDetailDto> response = new ResponseDto<>();
+    response.setData(productDetailDto);
+    return response;
+  }
+
   @PostMapping("/create")
-  public ResponseDto<String> doCreateProduct(@ModelAttribute AdmProductCreateForm admProductCreateForm) throws Exception {
+  public ResponseDto<String> createProduct(@ModelAttribute AdmProductCreateForm admProductCreateForm) throws Exception {
     ProductDto product = new ProductDto();
     product.setName(admProductCreateForm.getName());
     product.setDescription(admProductCreateForm.getDescription());
