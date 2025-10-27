@@ -16,7 +16,7 @@
     FROM S3_FILES
     where
       entity_type = #{entityType.value}
-      entity_id = #{entityId}
+      AND entity_id = #{entityId}
     ORDER BY id
   </select>
 

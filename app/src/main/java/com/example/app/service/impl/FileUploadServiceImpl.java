@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,9 @@ public class FileUploadServiceImpl implements FileUploadService {
 
   @Override
   public String getImageUrl(String objectKey) {
+    if (Objects.isNull(objectKey)) {
+      return null;
+    }
     return "https://" + bucketName + ".s3.ap-northeast-1.amazonaws.com/" + objectKey;
   }
 }

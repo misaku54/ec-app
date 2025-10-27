@@ -11,7 +11,7 @@ public interface ProductService {
 
   List<ProductDto> getProductList();
 
-  ProductDetailDto detailProduct(int productId) throws Exception;
+  ProductDetailDto getProductDetail(int productId) throws Exception;
 
   void createProduct(ProductDto productDto, MultipartFile imageFile) throws Exception;
 

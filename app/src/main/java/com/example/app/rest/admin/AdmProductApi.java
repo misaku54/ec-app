@@ -29,7 +29,7 @@ public class AdmProductApi {
 
   @GetMapping("/{productId}")
   public ResponseDto<ProductDetailDto> detailProduct(@PathVariable("productId") int productId) throws Exception {
-    ProductDetailDto productDetailDto = productService.detailProduct(productId);
+    ProductDetailDto productDetailDto = productService.getProductDetail(productId);
 
     ResponseDto<ProductDetailDto> response = new ResponseDto<>();
     response.setData(productDetailDto);

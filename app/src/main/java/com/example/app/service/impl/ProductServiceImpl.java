@@ -43,12 +43,16 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public ProductDetailDto detailProduct(int productId) {
+  public ProductDetailDto getProductDetail(int productId) {
     ProductDto product = productMapper.getProductById(productId);
     if (Objects.isNull(product)) {
-      throw new ApiNotFoundException("データが見つかりません。");
+      throw new ApiNotFoundException("リクエストを確認してください");
     }
-    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(EntityType.PRODUCT, productId);
+
+    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(
+      EntityType.PRODUCT,
+      productId
+    );
     String imageUrl = fileUploadService.getImageUrl(objectKey);
 
     ProductDetailDto detail = new ProductDetailDto();
