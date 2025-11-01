@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
   public ProductDetailDto getProductDetail(int productId) {
     ProductDto product = productMapper.getProductById(productId);
     if (Objects.isNull(product)) {
-      throw new ApiNotFoundException("リクエストを確認してください");
+      throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
     }
 
     String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(
