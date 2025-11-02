@@ -29,4 +29,15 @@
     VALUES (#{name}, #{description}, #{price}, #{stock})
   </insert>
 
+  <update id="updateProduct">
+    UPDATE PRODCUCTS SET
+      name = #{name},
+      description = #{description},
+      price = #{price},
+      stock = #{stock}
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{id}
+  </update>
+
 </mapper>

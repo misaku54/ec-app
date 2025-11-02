@@ -5,6 +5,7 @@ import com.example.app.dto.ProductDto;
 import com.example.app.dto.ResponseDto;
 import com.example.app.dto.ResponseListDto;
 import com.example.app.form.AdmProductCreateForm;
+import com.example.app.form.AdmProductUpdateForm;
 import com.example.app.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -50,4 +51,20 @@ public class AdmProductApi {
     response.setData("success");
     return response;
   }
+
+  @PostMapping("/update")
+  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
+    ProductDto product = new ProductDto();
+    product.setName(admProductUpdateForm.getName());
+    product.setDescription(admProductUpdateForm.getDescription());
+    product.setPrice(admProductUpdateForm.getPrice());
+    product.setStock(admProductUpdateForm.getStock());
+
+    productService.updateProduct(product, admProductUpdateForm.getImageFile());
+
+    ResponseDto<String> response = new ResponseDto<>();
+    response.setData("success");
+    return response;
+  }
+
 }

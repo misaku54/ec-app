@@ -15,4 +15,6 @@ public interface ProductService {
 
   void createProduct(ProductDto productDto, MultipartFile imageFile) throws Exception;
 
+  void updateProduct(ProductDto productDto, MultipartFile imageFile) throws Exception;
+
 }

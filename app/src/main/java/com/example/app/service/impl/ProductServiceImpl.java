@@ -77,17 +77,59 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // 画像があれば、S3にアップロードし、prefixをDBに保存
-    if (imageFile != null) {
-      String imageUrl = fileUploadService.uploadImage(EntityType.PRODUCT.name(), product.getId(), imageFile);
+    if (Objects.isNull(imageFile)) {
+      return;
+    }
 
+    String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, product.getId());
+    fileUploadService.uploadImage(objectKey, imageFile);
+
+    S3FileDto s3File = new S3FileDto();
+    s3File.setEntityId(product.getId());
+    s3File.setEntityType(EntityType.PRODUCT);
+    s3File.setS3Path(objectKey);
+
+    if (s3FileMapper.insertS3File(s3File) == 0) {
+      throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
+    }
+
+  }
+
+  @Override
+  @Transactional
+  public void updateProduct(ProductDto product, MultipartFile imageFile) throws Exception {
+
+    if (productMapper.getProductById(product.getId()) == null) {
+      throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
+    }
+
+    if (productMapper.updateProduct(product) == 0) {
+      throw new ApiInvalidUpdateException("商品更新に失敗しました。");
+    }
+
+    if (Objects.isNull(imageFile)) {
+      return;
+    }
+
+    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(
+      EntityType.PRODUCT,
+      product.getId()
+    );
+
+    if (Objects.isNull(objectKey)) {
+      // アップロード
+      objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, product.getId());
+      fileUploadService.uploadImage(objectKey, imageFile);
       S3FileDto s3File = new S3FileDto();
       s3File.setEntityId(product.getId());
       s3File.setEntityType(EntityType.PRODUCT);
-      s3File.setS3Path(imageUrl);
+      s3File.setS3Path(objectKey);
 
       if (s3FileMapper.insertS3File(s3File) == 0) {
         throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
       }
+    } else {
+      fileUploadService.uploadImage(objectKey, imageFile);
     }
   }
 

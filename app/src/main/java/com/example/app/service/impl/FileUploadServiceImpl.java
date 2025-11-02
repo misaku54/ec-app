@@ -1,5 +1,6 @@
 package com.example.app.service.impl;
 
+import com.example.app.enums.EntityType;
 import com.example.app.service.FileUploadService;
 import com.example.app.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,26 @@ public class FileUploadServiceImpl implements FileUploadService {
   private final S3Client s3Client;
 
   @Override
-  public String uploadImage(String prefix, Integer id, MultipartFile imageFile) throws Exception {
-    String fileName = imageFile.getOriginalFilename() != null ? imageFile.getOriginalFilename() : "image.png";
-    String objectKey = prefix + "/" + id + "/" + fileName;
+  public String generateOjbectKey(EntityType entityType, Integer id) throws Exception {
+    String prefix = entityType.name();
 
+    switch (entityType) {
+      case PRODUCT -> {
+        return prefix + "/" + id + "/product.png";
+      }
+      case USER -> {
+        return prefix + "/" + id + "/user.png";
+      }
+      default -> throw new Exception();
+    }
+  }
+
+  @Override
+  public void uploadImage(String objectKey, MultipartFile imageFile) throws Exception {
+    if (Objects.isNull(objectKey)) {
+      throw new Exception();
+    }
     S3Util.putFile(s3Client, imageFile, bucketName, objectKey);
-    return objectKey;
   }
 
   @Override

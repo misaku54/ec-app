@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EntityType implements IntEnum {
 
-  PRODUCT(1, "商品");
+  PRODUCT(1, "商品"),
+  USER(2, "ユーザー");
 
   private final int value;
 
