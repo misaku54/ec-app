@@ -81,18 +81,7 @@ public class ProductServiceImpl implements ProductService {
       return;
     }
 
-    String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, product.getId());
-    fileUploadService.uploadImage(objectKey, imageFile);
-
-    S3FileDto s3File = new S3FileDto();
-    s3File.setEntityId(product.getId());
-    s3File.setEntityType(EntityType.PRODUCT);
-    s3File.setS3Path(objectKey);
-
-    if (s3FileMapper.insertS3File(s3File) == 0) {
-      throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
-    }
-
+    uploadAndSaveProductImage(product.getId(), imageFile);
   }
 
   @Override
@@ -117,20 +106,23 @@ public class ProductServiceImpl implements ProductService {
     );
 
     if (Objects.isNull(objectKey)) {
-      // アップロード
-      objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, product.getId());
-      fileUploadService.uploadImage(objectKey, imageFile);
-      S3FileDto s3File = new S3FileDto();
-      s3File.setEntityId(product.getId());
-      s3File.setEntityType(EntityType.PRODUCT);
-      s3File.setS3Path(objectKey);
-
-      if (s3FileMapper.insertS3File(s3File) == 0) {
-        throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
-      }
+      uploadAndSaveProductImage(product.getId(), imageFile);
     } else {
       fileUploadService.uploadImage(objectKey, imageFile);
     }
   }
 
+  private void uploadAndSaveProductImage(int productId, MultipartFile imageFile) throws Exception {
+    String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId);
+
+    fileUploadService.uploadImage(objectKey, imageFile);
+    S3FileDto s3File = new S3FileDto();
+    s3File.setEntityId(productId);
+    s3File.setEntityType(EntityType.PRODUCT);
+    s3File.setS3Path(objectKey);
+
+    if (s3FileMapper.insertS3File(s3File) == 0) {
+      throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
+    }
+  }
 }

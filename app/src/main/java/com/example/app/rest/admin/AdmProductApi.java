@@ -55,6 +55,7 @@ public class AdmProductApi {
   @PostMapping("/update")
   public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
     ProductDto product = new ProductDto();
+    product.setId(admProductUpdateForm.getId());
     product.setName(admProductUpdateForm.getName());
     product.setDescription(admProductUpdateForm.getDescription());
     product.setPrice(admProductUpdateForm.getPrice());

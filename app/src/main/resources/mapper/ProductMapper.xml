@@ -30,11 +30,11 @@
   </insert>
 
   <update id="updateProduct">
-    UPDATE PRODCUCTS SET
+    UPDATE products SET
       name = #{name},
       description = #{description},
       price = #{price},
-      stock = #{stock}
+      stock = #{stock},
       updated_at = CURRENT_TIMESTAMP
     WHERE
       id = #{id}

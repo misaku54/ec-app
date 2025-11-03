@@ -32,9 +32,15 @@ public class GlobalExceptionHandler {
 
   // DBアクセスエラーハンドリング
   @ExceptionHandler(DataAccessException.class)
-  public ResponseEntity<String> handleDataAccess(DataAccessException ex) {
+  public ResponseEntity<ResponseErrorDto> handleDataAccess(DataAccessException ex) {
     log.error("データベース操作中にエラーが発生しました。", ex);
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    ResponseErrorDto responseError = new ResponseErrorDto(
+      HttpStatus.INTERNAL_SERVER_ERROR.value(),
+      HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+      ex.getMessage()
+    );
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseError);
   }
 
   @ExceptionHandler(Exception.class)
