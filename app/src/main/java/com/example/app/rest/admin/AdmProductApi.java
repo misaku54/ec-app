@@ -5,6 +5,7 @@ import com.example.app.dto.ProductDto;
 import com.example.app.dto.ResponseDto;
 import com.example.app.dto.ResponseListDto;
 import com.example.app.form.AdmProductCreateForm;
+import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
 import com.example.app.service.ProductService;
 import lombok.AllArgsConstructor;

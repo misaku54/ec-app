@@ -17,6 +17,7 @@
     where
       entity_type = #{entityType.value}
       AND entity_id = #{entityId}
+      AND del_flg = false
     ORDER BY id
   </select>
 

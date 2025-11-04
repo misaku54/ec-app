@@ -125,4 +125,10 @@ public class ProductServiceImpl implements ProductService {
       throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
     }
   }
+
+  @Override
+  @Transactional
+  public void deleteProduct(int productId) {
+
+  }
 }

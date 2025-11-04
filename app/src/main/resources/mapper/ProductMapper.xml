@@ -13,15 +13,23 @@
   </resultMap>
 
   <select id="getProductList" resultMap="productResultMap">
-    SELECT id, name, description, price, stock, created_at, updated_at
-    FROM products
+    SELECT
+      id, name, description, price, stock, created_at, updated_at
+    FROM
+      products
+    WHERE
+      del_flg = false
     ORDER BY id
   </select>
 
   <select id="getProductById" resultMap="productResultMap">
-    SELECT id, name, description, price, stock, created_at, updated_at
-    FROM products
-    WHERE id = #{productId}
+    SELECT
+      id, name, description, price, stock, created_at, updated_at
+    FROM
+      products
+    WHERE
+      id = #{productId}
+      AND del_flg = false
   </select>
 
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
@@ -38,6 +46,7 @@
       updated_at = CURRENT_TIMESTAMP
     WHERE
       id = #{id}
+      AND del_flg = false
   </update>
 
 </mapper>
