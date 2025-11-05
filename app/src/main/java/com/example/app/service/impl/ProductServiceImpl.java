@@ -88,12 +88,8 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public void updateProduct(ProductDto product, MultipartFile imageFile) throws Exception {
 
-    if (productMapper.getProductById(product.getId()) == null) {
-      throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
-    }
-
     if (productMapper.updateProduct(product) == 0) {
-      throw new ApiInvalidUpdateException("商品更新に失敗しました。");
+      throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
     }
 
     if (Objects.isNull(imageFile)) {
@@ -129,6 +125,10 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public void deleteProduct(int productId) {
+    if (productMapper.deleteProduct(productId) == 0) {
+      throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
+    }
 
+    s3FileMapper.deleteS3File(EntityType.PRODUCT, productId);
   }
 }

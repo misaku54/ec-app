@@ -26,5 +26,15 @@
     VALUES (#{entityType.value}, #{entityId}, #{s3Path})
   </insert>
 
+  <update id="deleteS3File">
+    UPDATE S3_FILES SET
+      del_flg = true,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      entity_type = #{entityType.value}
+      AND entity_id = #{entityId}
+      AND del_flg = false
+  </update>
+
 </mapper>
 

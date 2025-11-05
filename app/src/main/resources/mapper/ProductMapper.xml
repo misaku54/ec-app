@@ -49,4 +49,13 @@
       AND del_flg = false
   </update>
 
+  <update id="deleteProduct">
+    UPDATE products SET
+      del_flg = true,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{id}
+      AND del_flg = false
+  </update>
+
 </mapper>

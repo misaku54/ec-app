@@ -20,5 +20,9 @@ public interface S3FileMapper {
    */
   int insertS3File(S3FileDto s3File);
 
+  int deleteS3File(
+    @Param("entityType") EntityType entityType,
+    @Param("entityId") int entityId);
+
 }
 
