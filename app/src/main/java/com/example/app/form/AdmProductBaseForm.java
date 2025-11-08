@@ -1,11 +1,13 @@
 package com.example.app.form;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class AdmProductBaseForm {
 
+  @NotBlank
   private String name;
 
   private String description;

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { EventBasic } from './practice/EventBasic';
+import { StateBasic } from './practice/StateBasic';
 // import './index.css'
 // import App from './App.tsx'
 
@@ -23,5 +24,6 @@ root.render(
     <App/>
     <EventBasic type="date" />
     <EventBasic type="time" />
+    <StateBasic init={0}/>
   </StrictMode>
 );
