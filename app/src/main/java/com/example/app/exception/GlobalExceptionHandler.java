@@ -1,6 +1,7 @@
 package com.example.app.exception;
 
-import com.example.app.dto.ResponseErrorDto;
+import com.example.app.dto.ApiErrorDto;
+import com.example.app.dto.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -19,28 +20,26 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ApiNotFoundException.class)
-  public ResponseEntity<ResponseErrorDto> handleApiNotFound(ApiNotFoundException ex) {
+  public ResponseEntity<ErrorDto> handleApiNotFound(ApiNotFoundException ex) {
     log.warn("データが見つかりませんでした。", ex);
-    ResponseErrorDto responseError = new ResponseErrorDto(
-      HttpStatus.NOT_FOUND.value(),
-      HttpStatus.NOT_FOUND.getReasonPhrase(),
-      ex.getMessage()
+    ApiErrorDto apiErrorDto = new ApiErrorDto(
+      ex.getMessage(),
+      HttpStatus.NOT_FOUND
     );
 
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseError);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiErrorDto);
   }
 
   // DBアクセスエラーハンドリング
   @ExceptionHandler(DataAccessException.class)
-  public ResponseEntity<ResponseErrorDto> handleDataAccess(DataAccessException ex) {
+  public ResponseEntity<ErrorDto> handleDataAccess(DataAccessException ex) {
     log.error("データベース操作中にエラーが発生しました。", ex);
-    ResponseErrorDto responseError = new ResponseErrorDto(
-      HttpStatus.INTERNAL_SERVER_ERROR.value(),
-      HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-      ex.getMessage()
+    ApiErrorDto apiErrorDto = new ApiErrorDto(
+      ex.getMessage(),
+      HttpStatus.INTERNAL_SERVER_ERROR
     );
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseError);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiErrorDto);
   }
 
   @ExceptionHandler(Exception.class)
