@@ -8,7 +8,10 @@ import com.example.app.form.AdmProductCreateForm;
 import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
 import com.example.app.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +42,7 @@ public class AdmProductApi {
   }
 
   @PostMapping("/create")
-  public ResponseDto<String> createProduct(@ModelAttribute AdmProductCreateForm admProductCreateForm) throws Exception {
+  public ResponseDto<String> createProduct(@ModelAttribute @Validated AdmProductCreateForm admProductCreateForm, BindingResult br) throws Exception {
     ProductDto product = new ProductDto();
     product.setName(admProductCreateForm.getName());
     product.setDescription(admProductCreateForm.getDescription());
