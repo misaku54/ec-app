@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const Effect = () => {
+export const Effect = () => {
   const [count, setCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 

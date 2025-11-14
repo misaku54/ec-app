@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { EventBasic } from './practice/EventBasic';
 import { StateBasic } from './practice/StateBasic';
+import { Effect } from './practice/Effect';
 // import './index.css'
 // import App from './App.tsx'
 
@@ -21,9 +22,10 @@ const App = () => {
 
 root.render(
   <StrictMode>
-    <App/>
+    {/* <App/>
     <EventBasic type="date" />
     <EventBasic type="time" />
-    <StateBasic init={0}/>
+    <StateBasic init={0}/> */}
+    <Effect/>
   </StrictMode>
 );
