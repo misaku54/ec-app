@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { EventBasic } from './practice/EventBasic';
 import { StateBasic } from './practice/StateBasic';
 import { Effect } from './practice/Effect';
+import { Task } from './practice/Task';
 // import './index.css'
 // import App from './App.tsx'
 
@@ -26,6 +27,7 @@ root.render(
     <EventBasic type="date" />
     <EventBasic type="time" />
     <StateBasic init={0}/> */}
-    <Effect/>
+    {/* <Effect/> */}
+    <Task/>
   </StrictMode>
 );
