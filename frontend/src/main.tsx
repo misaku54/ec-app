@@ -4,6 +4,7 @@ import { EventBasic } from './practice/EventBasic';
 import { StateBasic } from './practice/StateBasic';
 import { Effect } from './practice/Effect';
 import { Task } from './practice/Task';
+import { RenderTracker } from './practice/RenderTracker';
 // import './index.css'
 // import App from './App.tsx'
 
@@ -22,12 +23,15 @@ const App = () => {
 }
 
 root.render(
-  <StrictMode>
+  // <StrictMode>
+  <>
     {/* <App/>
     <EventBasic type="date" />
     <EventBasic type="time" />
     <StateBasic init={0}/> */}
     {/* <Effect/> */}
-    <Task/>
-  </StrictMode>
+    {/* <Task/> */}
+    <RenderTracker/>
+  </>
+  // </StrictMode>
 );
