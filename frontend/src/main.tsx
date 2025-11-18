@@ -1,10 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { EventBasic } from './practice/EventBasic';
-import { StateBasic } from './practice/StateBasic';
-import { Effect } from './practice/Effect';
-import { Task } from './practice/Task';
-import { RenderTracker } from './practice/RenderTracker';
+
+import { RoutePractice } from './practice/RoutePractice';
 // import './index.css'
 // import App from './App.tsx'
 
@@ -25,13 +22,7 @@ const App = () => {
 root.render(
   // <StrictMode>
   <>
-    {/* <App/>
-    <EventBasic type="date" />
-    <EventBasic type="time" />
-    <StateBasic init={0}/> */}
-    {/* <Effect/> */}
-    {/* <Task/> */}
-    <RenderTracker/>
+    <RoutePractice />
   </>
   // </StrictMode>
 );
