@@ -1,11 +1,18 @@
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 
 export const UrlParameter = () => {
-  let param = useParams();
+  const param = useParams();
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+
+  console.log(search);
+  console.log(query);
+
   return (
     <div>
       <h1>UrlParameter</h1>
-      <p>指定されたidは{param.id}です</p>
+      <p>パスパラメーターidは{param.id}です</p>
+      <p>クエリパラメーターは{query.get("hoge")}です</p>
     </div>
   );
 }
