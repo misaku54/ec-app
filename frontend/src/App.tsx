@@ -1,17 +1,15 @@
-import ProductList from './components/ProductList'
 import './App.css'
+import { PrimaryButton } from './components/atoms/button/PrimaryButton';
+import { SecondaryButton } from './components/atoms/button/SecondaryButton';
+import { SearchInput } from './components/atoms/molecules/SearchInput';
 
-function App() {
+export const App = () => {
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>ECサイト</h1>
-      </header>
-      <main>
-        <ProductList />
-      </main>
+      <PrimaryButton>ボタン</PrimaryButton>
+      <SecondaryButton>セカンド</SecondaryButton>
+      <SearchInput />
     </div>
   )
 }
 
-export default App
