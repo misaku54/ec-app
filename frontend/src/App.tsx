@@ -1,9 +1,12 @@
 import './App.css'
 import { PrimaryButton } from './components/atoms/button/PrimaryButton';
 import { SecondaryButton } from './components/atoms/button/SecondaryButton';
-import { SearchInput } from './components/atoms/molecules/SearchInput';
-import { UserCard } from './components/atoms/organisms/user/UserCard';
+import { SearchInput } from './components/molecules/SearchInput';
+import { UserCard } from './components/organisms/user/UserCard';
+import { HeaderOnly } from './components/templates/HeaderOnly';
+import { DefaultLayout } from './components/templates/DefaultLayout';
 import "./practice/styles.css";
+import { BrowserRouter } from "react-router";
 
 const user = {
   name: "name1",
@@ -18,12 +21,14 @@ const user = {
 
 export const App = () => {
   return (
-    <div className="app">
-      <PrimaryButton>ボタン</PrimaryButton>
-      <SecondaryButton>セカンド</SecondaryButton>
-      <SearchInput />
-      <UserCard user={user}/>
-    </div>
+    <BrowserRouter>
+      <DefaultLayout>
+        <PrimaryButton>ボタン</PrimaryButton>
+        <SecondaryButton>セカンド</SecondaryButton>
+        <SearchInput />
+        <UserCard user={user}/>
+      </DefaultLayout>
+    </BrowserRouter>
   )
 }
 
