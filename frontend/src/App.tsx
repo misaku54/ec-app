@@ -7,6 +7,7 @@ import { HeaderOnly } from './components/templates/HeaderOnly';
 import { DefaultLayout } from './components/templates/DefaultLayout';
 import "./practice/styles.css";
 import { BrowserRouter } from "react-router";
+import { Router } from './router/Router';
 
 const user = {
   name: "name1",
@@ -21,14 +22,7 @@ const user = {
 
 export const App = () => {
   return (
-    <BrowserRouter>
-      <DefaultLayout>
-        <PrimaryButton>ボタン</PrimaryButton>
-        <SecondaryButton>セカンド</SecondaryButton>
-        <SearchInput />
-        <UserCard user={user}/>
-      </DefaultLayout>
-    </BrowserRouter>
+    <Router />
   )
 }
 
