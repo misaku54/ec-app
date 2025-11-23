@@ -8,6 +8,7 @@ import { DefaultLayout } from './components/templates/DefaultLayout';
 import "./practice/styles.css";
 import { BrowserRouter } from "react-router";
 import { Router } from './router/Router';
+import { UserProvider } from './providers/UserProvider';
 
 const user = {
   name: "name1",
@@ -22,7 +23,9 @@ const user = {
 
 export const App = () => {
   return (
-    <Router />
+    <UserProvider>
+      <Router />
+    </UserProvider>
   )
 }
 
