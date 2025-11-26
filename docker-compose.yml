@@ -17,9 +17,6 @@ services:
     env_file: ./.env
     ports:
       - "8888:8080"
-      - "5005:5005"  # デバッグポート追加
-    environment:
-      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
       - ./app:/app
     command: ./mvnw spring-boot:run
