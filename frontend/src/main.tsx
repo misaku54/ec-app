@@ -1,5 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { App } from './App'
+
 // import './index.css'
 // import App from './App.tsx'
 
@@ -9,16 +11,18 @@ if (!rootElement) {
 }
 const root = createRoot(rootElement);
 
-const App = () => {
-  return (
-    <>
-      <h1>aaaa</h1>
-    </>
-  )
-}
+// const App = () => {
+//   return (
+//     <>
+//       <h1>aaaa</h1>
+//     </>
+//   )
+// }
 
 root.render(
-  <StrictMode>
-    <App/>
-  </StrictMode>
+  // <StrictMode>
+  <>
+    <App />
+  </>
+  // </StrictMode>
 );

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* 全体のレイアウト */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ヘッダー */
+    .header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px 40px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header nav {
+      margin-top: 15px;
+    }
+
+    .header nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 20px;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .header nav a:hover {
+      background-color: #34495e;
+    }
+
+    /* メインコンテンツ */
+    .content {
+      flex: 1;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .content h2 {
+      color: #2c3e50;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .content p {
+      color: #555;
+      line-height: 1.6;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    /* フッター */
+    .footer {
+      background-color: #34495e;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      margin-top: auto;
+    }
+
+    .footer p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>株式会社太郎</h1>
+        <nav>
+          <a href="#home">ホーム</a>
+          <a href="#about">会社概要</a>
+          <a href="#contact">お問い合わせ</a>
+        </nav>
+      </header>
+
+      <main class="content">
+        <h2>ようこそ株式会社太郎へ</h2>
+        <p>これはメインコンテンツです。</p>
+        <p>ここに記事や情報を表示します。</p>
+      </main>
+
+      <footer class="footer">
+        <p>&copy; 2025 株式会社太郎</p>
+        <p>お問い合わせ: info@example.com</p>
+      </footer>
+    </div>
+  </body>
+</html>
