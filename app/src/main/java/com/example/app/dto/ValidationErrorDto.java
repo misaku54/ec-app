@@ -20,5 +20,4 @@ public class ValidationErrorDto extends ErrorDto {
     this.fieldError.get(field).add(message);
   }
 
-
 }

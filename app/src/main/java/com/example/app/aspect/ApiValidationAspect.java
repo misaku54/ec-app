@@ -1,6 +1,7 @@
 package com.example.app.aspect;
 
 import com.example.app.exception.ErrorMessageException;
+import com.example.app.util.DtoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,8 +38,9 @@ public class ApiValidationAspect {
       }
     }
 
-//    if (bindingResult.hasErrors()) {
-//      throw new ErrorMessageException();
-//    }
+    if (bindingResult.hasErrors()) {
+      throw new ErrorMessageException(DtoUtils.toValidationErrorDto(bindingResult, this.messageSource, locale));
+    }
+
   }
 }

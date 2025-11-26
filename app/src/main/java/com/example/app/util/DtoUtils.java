@@ -6,7 +6,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Locale;
 
-public class ValidationErrorMapper {
+public class DtoUtils {
 
   public static ValidationErrorDto toValidationErrorDto(BindingResult bindingResult, MessageSource messageSource, Locale locale) {
     ValidationErrorDto validationErrorDto = new ValidationErrorDto();

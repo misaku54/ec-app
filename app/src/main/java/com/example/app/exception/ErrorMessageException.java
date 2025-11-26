@@ -1,8 +1,11 @@
 package com.example.app.exception;
 
+
 import com.example.app.dto.ApiErrorDto;
 import com.example.app.dto.ValidationErrorDto;
+import lombok.Data;
 
+@Data
 public class ErrorMessageException extends RuntimeException {
 
   private ValidationErrorDto validationErrorDto;

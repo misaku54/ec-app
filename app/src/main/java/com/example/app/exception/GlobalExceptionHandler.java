@@ -2,7 +2,10 @@ package com.example.app.exception;
 
 import com.example.app.dto.ApiErrorDto;
 import com.example.app.dto.ErrorDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+  // APIバリデーションエラーハンドリング
+  @ExceptionHandler(ErrorMessageException.class)
+  public ResponseEntity<ErrorDto> handleApiValidationErrorMessageException(ErrorMessageException ex) {
+    ErrorDto errorDto = null;
+
+    if (ex.getValidationErrorDto() == null) {
+      errorDto = ex.getApiErrorDto();
+    } else {
+      errorDto = ex.getValidationErrorDto();
+    }
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    try {
+      String apiErrorMessageJson = objectMapper.writeValueAsString(errorDto);
+      log.warn(apiErrorMessageJson);
+    } catch (JsonProcessingException jsonProcessingException) {
+      log.error("errorDtoをJSONに変換できませんでした", jsonProcessingException);
+    }
+    return new ResponseEntity<>(errorDto,
+      HttpStatus.valueOf(errorDto.getStatus()));
+  }
+
   // APIエラーハンドリング
   @ExceptionHandler(ApiInvalidUpdateException.class)
   public ResponseEntity<String> handleApiInvalidUpdate(ApiInvalidUpdateException ex) {
