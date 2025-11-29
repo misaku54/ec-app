@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './App'
+import { Call } from './Call';
 
 // import './index.css'
 // import App from './App.tsx'
@@ -22,7 +23,8 @@ const root = createRoot(rootElement);
 root.render(
   // <StrictMode>
   <>
-    <App />
+    {/* <App /> */}
+    <Call />
   </>
   // </StrictMode>
 );
