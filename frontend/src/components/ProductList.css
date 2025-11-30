@@ -1,4 +1,4 @@
-.product-list-container {
+/* .product-list-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -171,19 +171,4 @@
   margin-bottom: 1rem;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  
-  .product-list-container {
-    padding: 1rem;
-  }
-  
-  .product-list-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-}
+/* */
