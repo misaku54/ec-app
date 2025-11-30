@@ -7,7 +7,7 @@ import { HeaderOnly } from './components/templates/HeaderOnly';
 import { DefaultLayout } from './components/templates/DefaultLayout';
 import "./practice/styles.css";
 import { BrowserRouter } from "react-router";
-import { Router } from './router/Router';
+import { Router } from './practice/router/Router';
 import { UserProvider } from './providers/UserProvider';
 
 const user = {
