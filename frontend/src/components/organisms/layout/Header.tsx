@@ -1,5 +1,6 @@
 import { FC, memo } from "react";
-import { Flex, Heading, Box, Link } from "@chakra-ui/react";
+import { Flex, Heading, Box, Link, IconButton } from "@chakra-ui/react";
+import { FaBars } from "react-icons/fa";
 
 export const Header: FC = memo(() => {
   return (
@@ -22,6 +23,8 @@ export const Header: FC = memo(() => {
         </Box>
         <Link color="inherit">設定</Link>
       </Flex>
+      <IconButton aria-label='メニューボタン' size="sm" variant="unstyled" 
+        display={{ base: "block", md: "none" }}><FaBars /></IconButton>
     </Flex>
   );
 })
