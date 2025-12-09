@@ -1,12 +1,16 @@
-import { styled } from "styled-components";
-import { BaseButton } from "./BaseButton";
+import { FC, memo, ReactNode } from "react";
+import { Button } from "@chakra-ui/react";
 
-export const PrimaryButton = (props) => {
-  const { children } = props;
+type Props = {
+  children: ReactNode;
+};
 
-  return <SButton>{children}</SButton>;
-}
+export const PrimaryButton:FC<Props> = memo((props) => {
+  const { children } = props ;
 
-const SButton = styled(BaseButton)`
-  background-color: #40514e;
-`
+  return (
+    <Button bg="teal.400" color="white" _hover={{ opacity: 0.8}}>
+      {children}
+    </Button>
+  );
+});
