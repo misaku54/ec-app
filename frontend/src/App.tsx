@@ -1,13 +1,6 @@
-import './App.css'
-import { PrimaryButton } from './components/atoms/button/PrimaryButton';
-import { SecondaryButton } from './components/atoms/button/SecondaryButton';
-import { SearchInput } from './components/molecules/SearchInput';
-import { UserCard } from './components/organisms/user/UserCard';
-import { HeaderOnly } from './components/templates/HeaderOnly';
-import { DefaultLayout } from './components/templates/DefaultLayout';
-import "./practice/styles.css";
-import { BrowserRouter } from "react-router";
+import './App.css';
 import { Router } from './practice/router/Router';
+import "./practice/styles.css";
 import { UserProvider } from './providers/UserProvider';
 
 const user = {

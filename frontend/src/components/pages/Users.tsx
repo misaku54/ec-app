@@ -1,7 +1,7 @@
+import { useLocation } from "react-router";
 import { styled } from "styled-components";
 import { SearchInput } from "../molecules/SearchInput";
-import { UserCard } from "../organisms/user/UserCard";
-import { useLocation } from "react-router";
+import { UserCard } from "../organisms/user/UserCardwww";
 
 const users = [...Array(10).keys()].map((val) => {
   return {
