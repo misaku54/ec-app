@@ -3,9 +3,9 @@ import { useCallback, useState } from "react";
 import { User } from "../types/api/user";
 
 // APIを叩いてユーザー一覧を取得するhooks
-export const useAllUser = () => {
+export const useAllUsers = () => {
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<Array<User>>();
+  const [users, setUsers] = useState<Array<User>>([]);
 
   const getUsers = useCallback(() => {
     // ローディング中
