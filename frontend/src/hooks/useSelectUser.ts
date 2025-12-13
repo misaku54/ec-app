@@ -8,13 +8,13 @@ type Props = {
 
 // ユーザーの詳細情報を取得するhooks
 export const useSelectUser = () => {
-  const [selectedUser, setSelectedUser] = useState<User>();
+  const [selectedUser, setSelectedUser] = useState<User | null>();
 
   const onSelectUser = useCallback((props: Props) => {
     const { id, users } = props;
 
     const targetUser = users.find((user) => user.id === id);
-    setSelectedUser(targetUser);
+    setSelectedUser(targetUser ?? null);
   },[])
 
   return { onSelectUser, selectedUser }
