@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
 import { User } from "../types/api/user";
 
@@ -14,12 +13,9 @@ export const useSelectUser = () => {
   const onSelectUser = useCallback((props: Props) => {
     const { id, users } = props;
 
-    axios
-      .get<User>("https://jsonplaceholder.typicode.com/users/1")
-      .then((res) => setSelectedUser(res.data))
-      .catch(() => alert('ユーザーを取得できませんでした。'))
-      .finally(() => )
-
-
+    const targetUser = users.find((user) => user.id === id);
+    setSelectedUser(targetUser);
   },[])
+
+  return { onSelectUser, selectedUser }
 }
