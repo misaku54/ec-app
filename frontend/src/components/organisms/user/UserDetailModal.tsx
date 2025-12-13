@@ -1,13 +1,15 @@
 import { CloseButton, DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogHeader, DialogPositioner, DialogRoot, Input, Stack } from "@chakra-ui/react";
 import { FC, memo } from "react";
+import { User } from "../../../types/api/user";
 
 type Props = {
+  user: User;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const UserDetailModal:FC<Props> = memo((props) => {
-  const { isOpen, onClose } = props;
+  const { user, isOpen, onClose } = props;
   return (
     <DialogRoot open={isOpen} onOpenChange={onClose}>
       <DialogBackdrop />
@@ -19,21 +21,22 @@ export const UserDetailModal:FC<Props> = memo((props) => {
           </DialogCloseTrigger>
           <DialogBody>
             <Stack>
+              {/* オプショナルチェイン */}
               <div>
                 <label>名前</label>
-                <Input value="ユーザー名" readOnly />
+                <Input value={user?.username} readOnly />
               </div>
               <div>
                 <label>フルネーム</label>
-                <Input value="フルネーム" readOnly />
+                <Input value={user?.name} readOnly />
               </div>
               <div>
                 <label>メール</label>
-                <Input value="email@example.com" readOnly />
+                <Input value={user?.email} readOnly />
               </div>
               <div>
                 <label>電話番号</label>
-                <Input value="000-0000-0000" readOnly />
+                <Input value={user?.phone} readOnly />
               </div>
             </Stack>
           </DialogBody>

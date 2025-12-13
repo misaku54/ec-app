@@ -11,9 +11,13 @@ export const useSelectUser = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>();
 
   const onSelectUser = useCallback((props: Props) => {
+    // console.log(props)
     const { id, users } = props;
+    // console.log(id);
+    // console.log(users);
 
     const targetUser = users.find((user) => user.id === id);
+    // console.log(targetUser);
     setSelectedUser(targetUser ?? null);
   },[])
 
