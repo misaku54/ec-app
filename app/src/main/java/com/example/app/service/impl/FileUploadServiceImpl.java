@@ -49,6 +49,8 @@ public class FileUploadServiceImpl implements FileUploadService {
     if (Objects.isNull(objectKey)) {
       return null;
     }
-    return "https://" + bucketName + ".s3.ap-northeast-1.amazonaws.com/" + objectKey;
+    // TODO:本番はhttps://my-bucket.s3.ap-northeast-1.amazonaws.com/PRODUCT/10/product.pngとなる
+    // ymlファイルなどでローカルと本番で切り替えられるように修正する
+    return "http://localhost:9000/" + bucketName + "/" + objectKey;
   }
 }
