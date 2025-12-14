@@ -1,9 +1,6 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { App2 } from './App2'
-import { Call } from './Call';
+import { createRoot } from 'react-dom/client';
 import { App } from './App';
-
+import './index.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,18 +8,10 @@ if (!rootElement) {
 }
 const root = createRoot(rootElement);
 
-// const App = () => {
-//   return (
-//     <>
-//       <h1>aaaa</h1>
-//     </>
-//   )
-// }
-
 root.render(
   // <StrictMode>
   <>
-    <App2 />
+    <App/>
   </>
   // </StrictMode>
 );
