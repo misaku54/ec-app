@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useAllProduct } from "../../hooks/useAllProducts";
+import { Loader } from "../atoms/loader/Loader";
+import { ProductTable } from "../organisms/table/ProductTable";
 
 export const ProductManegement:React.FC = () => {
   const { loading, products, getProducts } = useAllProduct();
@@ -9,6 +11,12 @@ export const ProductManegement:React.FC = () => {
   console.log(products);
 
   return (
-    <div>商品一覧</div>
+    <>
+      {loading ? (
+        <Loader />
+      ) : ( 
+        <ProductTable products={products}/>
+      )}
+  </>
   )
 }
