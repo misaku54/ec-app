@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 import type { Product } from "../../../types/Product";
 
 type Props = {
@@ -24,13 +25,17 @@ export const ProductTable: React.FC<Props> = (props) => {
       <tbody>
         {products.map((product) => (
           <tr  key={product.id}>
-          <td className="border border-gray-300">{product.id}</td>
-          <td className="border border-gray-300">{product.name}</td>
-          <td className="border border-gray-300">{product.description}</td>
-          <td className="border border-gray-300">{product.price}</td>
-          <td className="border border-gray-300">{product.stock}</td>
-          <td className="border border-gray-300">{product.createdAt}</td>
-          <td className="border border-gray-300">{product.updatedAt}</td>
+            <td className="border border-gray-300">{product.id}</td>
+            <td className="border border-gray-300">
+              <Link to={`/admin/product/${product.id}`} className="text-blue-500 hover:underline">
+                {product.name}
+              </Link>
+            </td>
+            <td className="border border-gray-300">{product.description}</td>
+            <td className="border border-gray-300">{product.price}</td>
+            <td className="border border-gray-300">{product.stock}</td>
+            <td className="border border-gray-300">{product.createdAt}</td>
+            <td className="border border-gray-300">{product.updatedAt}</td>
           </tr>
         ))}
       </tbody>

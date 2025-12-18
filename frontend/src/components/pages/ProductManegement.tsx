@@ -8,7 +8,6 @@ export const ProductManegement:React.FC = () => {
   
   // 初回レンダリング後に商品一覧を取得
   useEffect(() => getProducts(), []);
-  console.log(products);
 
   return (
     <>
