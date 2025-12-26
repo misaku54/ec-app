@@ -6,7 +6,9 @@
     <result property="id" column="id"/>
     <result property="entityType" column="entity_type"/>
     <result property="entityId" column="entity_id"/>
-    <result property="s3Path" column="s3_path"/>
+    <result property="s3Key" column="s3_key"/>
+    <result property="sortOrder" column="sort_order"/>
+    <result property="mainImage" column="is_main_image"/>
     <result property="createdAt" column="created_at"/>
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
@@ -22,8 +24,8 @@
   </select>
 
   <insert id="insertS3File" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO S3_FILES (entity_type, entity_id, s3_path)
-    VALUES (#{entityType.value}, #{entityId}, #{s3Path})
+    INSERT INTO S3_FILES (entity_type, entity_id, s3_key, sort_order, is_main_image, del_flg)
+    VALUES (#{entityType.value}, #{entityId}, #{s3Path}, #{sortOrder}, #{isMainImage}, false)
   </insert>
 
   <update id="deleteS3File">

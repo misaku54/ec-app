@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public interface FileUploadService {
 
-  String generateOjbectKey(EntityType entityType, Integer id) throws Exception;
+  String generateOjbectKey(EntityType entityType, Integer id, int sortOrder) throws Exception;
 
   void uploadImage(String objectKey, MultipartFile imageFile) throws Exception;
 

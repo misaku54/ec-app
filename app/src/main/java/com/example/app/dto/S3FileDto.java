@@ -14,7 +14,11 @@ public class S3FileDto {
 
   private int entityId;
 
-  private String s3Path;
+  private String s3Key;
+
+  private int sortOrder;
+
+  private boolean isMainImage;
 
   private LocalDateTime createdAt;
 

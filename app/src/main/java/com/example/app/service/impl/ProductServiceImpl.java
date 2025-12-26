@@ -13,6 +13,7 @@ import com.example.app.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -70,18 +71,15 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public void createProduct(ProductDto product, MultipartFile imageFile) throws Exception {
+  public void createProduct(ProductDto product, List<MultipartFile> imageFiles) throws Exception {
 
     if (productMapper.createProduct(product) == 0) {
       throw new ApiInvalidUpdateException("商品登録に失敗しました。");
     }
 
-    // 画像があれば、S3にアップロードし、prefixをDBに保存
-    if (Objects.isNull(imageFile)) {
-      return;
+    if (!CollectionUtils.isEmpty(imageFiles)) {
+      uploadAndSaveProductImage(product.getId(), imageFiles);
     }
-
-    uploadAndSaveProductImage(product.getId(), imageFile);
   }
 
   @Override
@@ -102,24 +100,33 @@ public class ProductServiceImpl implements ProductService {
     );
 
     if (Objects.isNull(objectKey)) {
-      uploadAndSaveProductImage(product.getId(), imageFile);
+//      uploadAndSaveProductImage(product.getId(), imageFile);
     } else {
       fileUploadService.uploadImage(objectKey, imageFile);
     }
   }
 
-  private void uploadAndSaveProductImage(int productId, MultipartFile imageFile) throws Exception {
-    String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId);
+  private void uploadAndSaveProductImage(int productId, List<MultipartFile> imageFiles) throws Exception {
+    for (int sortOrder = 0; sortOrder < imageFiles.size(); sortOrder++) {
+      String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId, sortOrder);
+      MultipartFile imageFile = imageFiles.get(sortOrder);
 
-    fileUploadService.uploadImage(objectKey, imageFile);
-    S3FileDto s3File = new S3FileDto();
-    s3File.setEntityId(productId);
-    s3File.setEntityType(EntityType.PRODUCT);
-    s3File.setS3Path(objectKey);
+      // イメージアップロード
+      fileUploadService.uploadImage(objectKey, imageFile);
 
-    if (s3FileMapper.insertS3File(s3File) == 0) {
-      throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
+      S3FileDto s3File = new S3FileDto();
+      s3File.setEntityId(productId);
+      s3File.setEntityType(EntityType.PRODUCT);
+      s3File.setS3Key(objectKey);
+      s3File.setSortOrder(sortOrder);
+      s3File.setMainImage(sortOrder == 0);
+
+      // アップロードしたパスをテーブルに保存
+      if (s3FileMapper.insertS3File(s3File) == 0) {
+        throw new ApiInvalidUpdateException("商品画像URLの更新に失敗しました。");
+      }
     }
+
   }
 
   @Override

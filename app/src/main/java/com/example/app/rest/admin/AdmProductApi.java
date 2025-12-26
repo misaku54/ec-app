@@ -8,7 +8,6 @@ import com.example.app.form.AdmProductCreateForm;
 import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
 import com.example.app.service.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -49,28 +48,29 @@ public class AdmProductApi {
     product.setPrice(admProductCreateForm.getPrice());
     product.setStock(admProductCreateForm.getStock());
 
-    productService.createProduct(product, admProductCreateForm.getImageFile());
+    productService.createProduct(product, admProductCreateForm.getImageFiles());
 
     ResponseDto<String> response = new ResponseDto<>();
     response.setData("success");
     return response;
   }
-
-  @PostMapping("/update")
-  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
-    ProductDto product = new ProductDto();
-    product.setId(admProductUpdateForm.getId());
-    product.setName(admProductUpdateForm.getName());
-    product.setDescription(admProductUpdateForm.getDescription());
-    product.setPrice(admProductUpdateForm.getPrice());
-    product.setStock(admProductUpdateForm.getStock());
-
-    productService.updateProduct(product, admProductUpdateForm.getImageFile());
-
-    ResponseDto<String> response = new ResponseDto<>();
-    response.setData("success");
-    return response;
-  }
+  // TODO:あとで修正
+//  @PostMapping("/update")
+//  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
+//    ProductDto product = new ProductDto();
+//    product.setId(admProductUpdateForm.getId());
+//    product.setName(admProductUpdateForm.getName());
+//    product.setDescription(admProductUpdateForm.getDescription());
+//    product.setPrice(admProductUpdateForm.getPrice());
+//    product.setStock(admProductUpdateForm.getStock());
+//
+//
+//    productService.updateProduct(product, admProductUpdateForm.getImageFile());
+//
+//    ResponseDto<String> response = new ResponseDto<>();
+//    response.setData("success");
+//    return response;
+//  }
 
   @PostMapping("delete")
   public ResponseDto<String> deleteProduct(@RequestBody AdmProductDeleteForm admProductDeleteForm) throws Exception {

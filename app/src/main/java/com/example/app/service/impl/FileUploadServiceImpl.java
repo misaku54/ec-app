@@ -22,15 +22,15 @@ public class FileUploadServiceImpl implements FileUploadService {
   private final S3Client s3Client;
 
   @Override
-  public String generateOjbectKey(EntityType entityType, Integer id) throws Exception {
+  public String generateOjbectKey(EntityType entityType, Integer id, int sortOrder) throws Exception {
     String prefix = entityType.name();
 
     switch (entityType) {
       case PRODUCT -> {
-        return prefix + "/" + id + "/product.png";
+        return prefix + "/" + id + "/product_" + sortOrder + ".png";
       }
       case USER -> {
-        return prefix + "/" + id + "/user.png";
+        return prefix + "/" + id + "/user_" + sortOrder + ".png";
       }
       default -> throw new Exception();
     }
