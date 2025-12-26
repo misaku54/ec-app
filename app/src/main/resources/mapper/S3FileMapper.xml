@@ -25,7 +25,7 @@
 
   <insert id="insertS3File" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO S3_FILES (entity_type, entity_id, s3_key, sort_order, is_main_image, del_flg)
-    VALUES (#{entityType.value}, #{entityId}, #{s3Path}, #{sortOrder}, #{isMainImage}, false)
+    VALUES (#{entityType.value}, #{entityId}, #{s3Key}, #{sortOrder}, #{isMainImage}, false)
   </insert>
 
   <update id="deleteS3File">
