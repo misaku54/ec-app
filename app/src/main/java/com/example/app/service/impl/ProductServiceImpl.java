@@ -45,41 +45,28 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductDetailDto getProductDetail(int productId) {
-    ProductDto product = productMapper.getProductById(productId);
-    if (Objects.isNull(product)) {
+    ProductDetailDto productDetail = productMapper.getProductById(productId);
+    if (Objects.isNull(productDetail)) {
       throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
     }
 
-    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(
-      EntityType.PRODUCT,
-      productId
-    );
-    String imageUrl = fileUploadService.getImageUrl(objectKey);
-
-    ProductDetailDto detail = new ProductDetailDto();
-    detail.setId(product.getId());
-    detail.setName(product.getName());
-    detail.setDescription(product.getDescription());
-    detail.setPrice(product.getPrice());
-    detail.setStock(product.getStock());
-    detail.setCreatedAt(product.getCreatedAt());
-    detail.setUpdatedAt(product.getUpdatedAt());
-    detail.setImageUrl(imageUrl);
-
-    return detail;
+    return productDetail;
   }
 
   @Override
   @Transactional
-  public void createProduct(ProductDto product, List<MultipartFile> imageFiles) throws Exception {
+  public ProductDetailDto createProduct(ProductDto product, List<MultipartFile> imageFiles) throws Exception {
 
     if (productMapper.createProduct(product) == 0) {
       throw new ApiInvalidUpdateException("商品登録に失敗しました。");
     }
 
+    int createdProductId = product.getId();
     if (!CollectionUtils.isEmpty(imageFiles)) {
-      uploadAndSaveProductImage(product.getId(), imageFiles);
+      uploadAndSaveProductImage(createdProductId, imageFiles);
     }
+
+    return productMapper.getProductById(createdProductId);
   }
 
   @Override

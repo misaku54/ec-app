@@ -3,6 +3,7 @@ package com.example.app.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ProductDetailDto {
@@ -11,7 +12,7 @@ public class ProductDetailDto {
   private String description;
   private int price;
   private int stock;
-  private String imageUrl;
+  private List<ProductImageDto> productImageList;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

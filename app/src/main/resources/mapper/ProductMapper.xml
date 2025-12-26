@@ -3,13 +3,29 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.mapper.ProductMapper">
   <resultMap id="productResultMap" type="com.example.app.dto.ProductDto">
-    <result property="id" column="id"/>
+    <id property="id" column="id"/>
     <result property="name" column="name"/>
     <result property="description" column="description"/>
     <result property="price" column="price"/>
     <result property="stock" column="stock"/>
     <result property="createdAt" column="created_at"/>
     <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <resultMap id="productDetailResultMap" type="com.example.app.dto.ProductDetailDto">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="description" column="description"/>
+    <result property="price" column="price"/>
+    <result property="stock" column="stock"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+    <collection property="productImageList" resultMap="productImage" columnPrefix="s3_"/>
+  </resultMap>
+  <resultMap id="productImage" type="com.example.app.dto.ProductImageDto">
+    <result property="s3Key" column="s3_key"/>
+    <result property="sortOrder" column="sort_order"/>
+    <result property="mainImage" column="is_main_image"/>
   </resultMap>
 
   <select id="getProductList" resultMap="productResultMap">
@@ -22,14 +38,29 @@
     ORDER BY id
   </select>
 
-  <select id="getProductById" resultMap="productResultMap">
+  <select id="getProductById" resultMap="productDetailResultMap">
     SELECT
-      id, name, description, price, stock, created_at, updated_at
+      pr.id,
+      pr.name,
+      pr.description,
+      pr.price,
+      pr.stock,
+      pr.created_at,
+      pr.updated_at,
+      s3.s3_key as s3_s3_key,
+      s3.sort_order as s3_sort_order,
+      s3.is_main_image as s3_is_main_image
     FROM
-      products
+      products pr
+    LEFT JOIN
+      S3_files s3
+    ON
+      pr.id = s3.entity_id
+      AND s3.entity_type = 1
+      AND s3.del_flg = false
     WHERE
-      id = #{productId}
-      AND del_flg = false
+      pr.id = #{productId}
+      AND pr.del_flg = false
   </select>
 
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">

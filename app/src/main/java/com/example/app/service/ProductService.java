@@ -13,7 +13,7 @@ public interface ProductService {
 
   ProductDetailDto getProductDetail(int productId) throws Exception;
 
-  void createProduct(ProductDto productDto, List<MultipartFile> imageFiles) throws Exception;
+  ProductDetailDto createProduct(ProductDto productDto, List<MultipartFile> imageFiles) throws Exception;
 
   void updateProduct(ProductDto productDto, MultipartFile imageFile) throws Exception;
 

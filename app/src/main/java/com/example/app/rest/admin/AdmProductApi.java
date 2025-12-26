@@ -9,6 +9,8 @@ import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
 import com.example.app.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,18 +43,19 @@ public class AdmProductApi {
   }
 
   @PostMapping("/create")
-  public ResponseDto<String> createProduct(@ModelAttribute @Validated AdmProductCreateForm admProductCreateForm, BindingResult br) throws Exception {
+  public ResponseEntity<ResponseDto<ProductDetailDto>> createProduct(@ModelAttribute @Validated AdmProductCreateForm admProductCreateForm, BindingResult br) throws Exception {
     ProductDto product = new ProductDto();
     product.setName(admProductCreateForm.getName());
     product.setDescription(admProductCreateForm.getDescription());
     product.setPrice(admProductCreateForm.getPrice());
     product.setStock(admProductCreateForm.getStock());
 
-    productService.createProduct(product, admProductCreateForm.getImageFiles());
+    ProductDetailDto createdProductDetail = productService.createProduct(product, admProductCreateForm.getImageFiles());
 
-    ResponseDto<String> response = new ResponseDto<>();
-    response.setData("success");
-    return response;
+    ResponseDto<ProductDetailDto> response = new ResponseDto<>();
+    response.setMessage("success");
+    response.setData(createdProductDetail);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
   // TODO:あとで修正
 //  @PostMapping("/update")
