@@ -34,12 +34,13 @@ public class AdmProductApi {
   }
 
   @GetMapping("/{productId}")
-  public ResponseDto<ProductDetailDto> detailProduct(@PathVariable("productId") int productId) throws Exception {
+  public ResponseEntity<ResponseDto<ProductDetailDto>> detailProduct(@PathVariable("productId") int productId) throws Exception {
     ProductDetailDto productDetailDto = productService.getProductDetail(productId);
 
     ResponseDto<ProductDetailDto> response = new ResponseDto<>();
+    response.setMessage("success");
     response.setData(productDetailDto);
-    return response;
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PostMapping("/create")

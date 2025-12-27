@@ -12,7 +12,7 @@ public interface ProductMapper {
 
   List<ProductDto> getProductList();
 
-  ProductDetailDto getProductById(@Param("productId") int productId);
+  ProductDetailDto getProductDetailById(@Param("productId") int productId);
 
   int createProduct(ProductDto product);
 

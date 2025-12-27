@@ -38,7 +38,7 @@
     ORDER BY id
   </select>
 
-  <select id="getProductById" resultMap="productDetailResultMap">
+  <select id="getProductDetailById" resultMap="productDetailResultMap">
     SELECT
       pr.id,
       pr.name,

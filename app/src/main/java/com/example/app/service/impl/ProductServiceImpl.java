@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductDetailDto getProductDetail(int productId) {
-    ProductDetailDto productDetail = productMapper.getProductById(productId);
+    ProductDetailDto productDetail = productMapper.getProductDetailById(productId);
     if (Objects.isNull(productDetail)) {
       throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
     }
@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
       uploadAndSaveProductImage(createdProductId, imageFiles);
     }
 
-    return productMapper.getProductById(createdProductId);
+    return productMapper.getProductDetailById(createdProductId);
   }
 
   @Override
