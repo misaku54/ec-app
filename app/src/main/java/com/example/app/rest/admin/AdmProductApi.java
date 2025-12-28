@@ -59,22 +59,22 @@ public class AdmProductApi {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
   // TODO:あとで修正
-//  @PostMapping("/update")
-//  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
-//    ProductDto product = new ProductDto();
-//    product.setId(admProductUpdateForm.getId());
-//    product.setName(admProductUpdateForm.getName());
-//    product.setDescription(admProductUpdateForm.getDescription());
-//    product.setPrice(admProductUpdateForm.getPrice());
-//    product.setStock(admProductUpdateForm.getStock());
-//
-//
-//    productService.updateProduct(product, admProductUpdateForm.getImageFile());
-//
-//    ResponseDto<String> response = new ResponseDto<>();
-//    response.setData("success");
-//    return response;
-//  }
+  @PostMapping("/update")
+  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
+    ProductDto product = new ProductDto();
+    product.setId(admProductUpdateForm.getId());
+    product.setName(admProductUpdateForm.getName());
+    product.setDescription(admProductUpdateForm.getDescription());
+    product.setPrice(admProductUpdateForm.getPrice());
+    product.setStock(admProductUpdateForm.getStock());
+
+
+    productService.updateProduct(product, admProductUpdateForm.getImageFile());
+
+    ResponseDto<String> response = new ResponseDto<>();
+    response.setData("success");
+    return response;
+  }
 
   @PostMapping("delete")
   public ResponseDto<String> deleteProduct(@RequestBody AdmProductDeleteForm admProductDeleteForm) throws Exception {
