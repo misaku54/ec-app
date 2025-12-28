@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     // 商品登録
     createProductInfo(product);
 
-    // ファイルアップロード＆画像URL登録
+    // 画像をS3アップロード＆画像URL登録
     int createdProductId = product.getId();
     uploadAndSaveProductImage(createdProductId, imageFiles);
 
