@@ -13,6 +13,16 @@
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
 
+  <select id="getS3FileById" resultMap="s3FileResultMap">
+    SELECT
+      *
+    FROM
+      S3_FILES
+    WHERE
+      id = #{id}
+    ORDER BY id
+  </select>
+
   <select id="getS3FilePathByEntityTypeAndId" resultType="String">
     SELECT s3_path
     FROM S3_FILES
@@ -28,7 +38,21 @@
     VALUES (#{entityType.value}, #{entityId}, #{s3Key}, #{sortOrder}, #{isMainImage}, false)
   </insert>
 
-  <update id="deleteS3File">
+  <update id="updateS3FileOrderAndMainImageById">
+    UPDATE S3_FILES SET
+      sort_order = #{sortOrder},
+      is_main_image = #{isMainImage},
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{id}
+      AND del_flg = false
+  </update>
+
+  <update id="deleteS3FileById">
+    UPDATE S3_FILES SET is_deleted = true WHERE id = #{id}
+  </update>
+
+  <update id="deleteS3FileByEntityTypeAndId">
     UPDATE S3_FILES SET
       del_flg = true,
       updated_at = CURRENT_TIMESTAMP
@@ -37,6 +61,5 @@
       AND entity_id = #{entityId}
       AND del_flg = false
   </update>
-
 </mapper>
 

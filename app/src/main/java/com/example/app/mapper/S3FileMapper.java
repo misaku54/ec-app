@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface S3FileMapper {
 
+  S3FileDto getS3FileById(@Param("id") int id);
+
   String getS3FilePathByEntityTypeAndId(
     @Param("entityType") EntityType entityType,
     @Param("entityId") int entityId);
@@ -20,7 +22,14 @@ public interface S3FileMapper {
    */
   int insertS3File(S3FileDto s3File);
 
-  int deleteS3File(
+  int deleteS3FileById(@Param("id") int id);
+
+  int updateS3FileOrderAndMainImageById(
+    @Param("id") int id,
+    @Param("sortOrder") int sortOrder,
+    @Param("isMainImage") boolean isMainImage);
+
+  int deleteS3FileByEntityTypeAndId(
     @Param("entityType") EntityType entityType,
     @Param("entityId") int entityId);
 

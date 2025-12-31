@@ -117,10 +117,10 @@ public class ProductServiceImpl implements ProductService {
       throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
     }
 
-    s3FileMapper.deleteS3File(EntityType.PRODUCT, productId);
+    s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
   }
 
-  private ProductDetailDto detailProductInfo(int productId) {
+  public ProductDetailDto detailProductInfo(int productId) {
     ProductDetailDto productDetail = productMapper.getProductDetailById(productId);
     if (Objects.isNull(productDetail)) {
       throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
@@ -128,15 +128,35 @@ public class ProductServiceImpl implements ProductService {
     return productDetail;
   }
 
-  private void createProductInfo(ProductDto product) {
+  public S3FileDto getS3FileById(int id) {
+    S3FileDto s3File = s3FileMapper.getS3FileById(id);
+    if (Objects.isNull(s3File)) {
+      throw new ApiNotFoundException("不正なリクエストです。");
+    }
+    return s3File;
+  }
+
+  public void createProductInfo(ProductDto product) {
     if (productMapper.createProduct(product) == 0) {
       throw new ApiInvalidUpdateException("商品登録に失敗しました。");
     }
   }
 
-  private void updateProductInfo(ProductDto product) {
+  public void updateProductInfo(ProductDto product) {
     if (productMapper.updateProduct(product) == 0) {
       throw new ApiNotFoundException("指定された商品は見つかりませんでした。");
+    }
+  }
+
+  public void updateS3FileOrderAndMainImageById(int id, int sortOrder, boolean isMainImage) {
+    if (s3FileMapper.updateS3FileOrderAndMainImageById(id, sortOrder, isMainImage) == 0) {
+      throw new ApiNotFoundException("不正なリクエストです。");
+    }
+  }
+
+  public void deleteS3FileById(int id) {
+    if (s3FileMapper.deleteS3FileById(id) == 0) {
+      throw new ApiNotFoundException("不正なリクエストです。");
     }
   }
 
@@ -146,6 +166,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
     for (ImageUpdateDto image : existingImages) {
+      // idが入っているもの
+      if (image.getId() == 0) {
+        continue;
+      }
+
+      S3FileDto s3File = getS3FileById(image.getId());
+
+      switch (image.getAction()) {
+        // 既存画像の更新
+        case "keep" -> {
+          // sortOrderとメインイメージ更新
+          updateS3FileOrderAndMainImageById(
+            s3File.getId(),
+            s3File.getSortOrder(),
+            s3File.isMainImage());
+
+          // イメージがあったらストレージのイメージを入れ替え
+          
+        }
+        // 画像の削除
+        case "delete" -> {
+          deleteS3FileById(s3File.getId());
+        }
+        // 新規画像の追加
+        case "add" -> {
+
+        }
+      }
+      if (image.isDelete()) {
+
+      } else {
+
+      }
+
+
+
 
     }
   }
