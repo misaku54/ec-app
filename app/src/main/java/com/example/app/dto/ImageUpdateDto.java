@@ -1,6 +1,7 @@
 package com.example.app.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ImageUpdateDto {
@@ -14,6 +15,8 @@ public class ImageUpdateDto {
   private int sortOrder;
 
   private boolean isMainImage;
+
+  private MultipartFile file;
 
   private boolean delFlg;
 

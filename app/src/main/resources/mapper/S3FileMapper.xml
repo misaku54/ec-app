@@ -61,5 +61,16 @@
       AND entity_id = #{entityId}
       AND del_flg = false
   </update>
+
+  <select id="getMaxSortOrderByEntityTypeAndId" resultType="int">
+    SELECT
+      COALESCE(MAX(sort_order), 0)
+    FROM
+      S3_FILES
+    WHERE
+      entity_type = #{entityType.value}
+      AND entity_id = #{entityId}
+      AND del_flg = false
+  </select>
 </mapper>
 

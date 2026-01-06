@@ -33,5 +33,9 @@ public interface S3FileMapper {
     @Param("entityType") EntityType entityType,
     @Param("entityId") int entityId);
 
+  int getMaxSortOrderByEntityTypeAndId(
+    @Param("entityType") EntityType entityType,
+    @Param("entityId") int entityId);
+
 }
 

@@ -65,11 +65,11 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public void updateProduct(ProductDto product, MultipartFile imageFile) throws Exception {
+  public void updateProduct(ProductDto product, List<ImageUpdateDto> existingImages) throws Exception {
 
     updateProductInfo(product);
 
-    if (Objects.isNull(imageFile)) {
+    if (CollectionUtils.isEmpty(existingImages)) {
       return;
     }
 
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
     if (Objects.isNull(objectKey)) {
 //      uploadAndSaveProductImage(product.getId(), imageFile);
     } else {
-      fileUploadService.uploadImage(objectKey, imageFile);
+//      fileUploadService.uploadImage(objectKey, imageFile);
     }
   }
 
@@ -160,49 +160,45 @@ public class ProductServiceImpl implements ProductService {
     }
   }
 
-  private void processExistingImages(int productId, List<ImageUpdateDto> existingImages) {
+  private void processExistingImages(int productId, List<ImageUpdateDto> existingImages) throws Exception {
     if (CollectionUtils.isEmpty(existingImages)) {
       return;
     }
 
     for (ImageUpdateDto image : existingImages) {
-      // idが入っているもの
-      if (image.getId() == 0) {
-        continue;
-      }
-
-      S3FileDto s3File = getS3FileById(image.getId());
 
       switch (image.getAction()) {
         // 既存画像の更新
         case "keep" -> {
+          S3FileDto s3File = getS3FileById(image.getId());
           // sortOrderとメインイメージ更新
           updateS3FileOrderAndMainImageById(
             s3File.getId(),
-            s3File.getSortOrder(),
-            s3File.isMainImage());
+            image.getSortOrder(),
+            image.isMainImage());
 
           // イメージがあったらストレージのイメージを入れ替え
-          
+          fileUploadService.uploadImage(s3File.getS3Key(), image.getFile());
         }
         // 画像の削除
         case "delete" -> {
+          S3FileDto s3File = getS3FileById(image.getId());
           deleteS3FileById(s3File.getId());
         }
         // 新規画像の追加
         case "add" -> {
+          int newSort = image.getSortOrder();
+          String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId, image.getSortOrder());
+          fileUploadService.uploadImage(objectKey, image.getFile());
 
+          S3FileDto new3File = new S3FileDto();
+          new3File.setEntityId(productId);
+          new3File.setEntityType(EntityType.PRODUCT);
+          new3File.setS3Key(objectKey);
+          new3File.setSortOrder(newSort);
+          new3File.setMainImage(image.isMainImage());
         }
       }
-      if (image.isDelete()) {
-
-      } else {
-
-      }
-
-
-
-
     }
   }
 }

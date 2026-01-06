@@ -69,7 +69,7 @@ public class AdmProductApi {
     product.setStock(admProductUpdateForm.getStock());
 
 
-    productService.updateProduct(product, admProductUpdateForm.getImageFile());
+    productService.updateProduct(product, admProductUpdateForm.getUpdateImages());
 
     ResponseDto<String> response = new ResponseDto<>();
     response.setData("success");

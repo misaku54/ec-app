@@ -18,6 +18,4 @@ public class AdmProductBaseForm {
 
   private int stock;
 
-  private List<MultipartFile> imageFiles;
-
 }

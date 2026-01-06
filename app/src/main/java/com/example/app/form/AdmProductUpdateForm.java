@@ -11,6 +11,6 @@ public class AdmProductUpdateForm extends AdmProductBaseForm  {
 
   private int id;
 
-  private List<ImageUpdateDto> existingImages;
+  private List<ImageUpdateDto> updateImages;
 
 }
