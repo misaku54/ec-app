@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -22,7 +23,7 @@ public class FileUploadServiceImpl implements FileUploadService {
   private final S3Client s3Client;
 
   @Override
-  public String generateOjbectKey(EntityType entityType, Integer id, int sortOrder) throws Exception {
+  public String generateObjectKey(EntityType entityType, Integer id, int sortOrder) throws Exception {
     String prefix = entityType.name();
 
     switch (entityType) {
@@ -52,5 +53,13 @@ public class FileUploadServiceImpl implements FileUploadService {
     // TODO:本番はhttps://my-bucket.s3.ap-northeast-1.amazonaws.com/PRODUCT/10/product.pngとなる
     // ymlファイルなどでローカルと本番で切り替えられるように修正する
     return "http://localhost:9000/" + bucketName + "/" + objectKey;
+  }
+
+  @Override
+  public void deleteImages(List<String> objectKeys) throws Exception {
+    if (Objects.isNull(objectKeys)) {
+      throw new Exception();
+    }
+    S3Util.deleteFiles(s3Client, bucketName, objectKeys);
   }
 }

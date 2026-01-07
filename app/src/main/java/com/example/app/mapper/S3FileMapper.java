@@ -6,12 +6,14 @@ import com.example.app.enums.EntityType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface S3FileMapper {
 
   S3FileDto getS3FileById(@Param("id") int id);
 
-  String getS3FilePathByEntityTypeAndId(
+  List<String> getS3FileKeyByEntityTypeAndId(
     @Param("entityType") EntityType entityType,
     @Param("entityId") int entityId);
 

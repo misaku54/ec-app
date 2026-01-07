@@ -72,12 +72,12 @@ public class ProductServiceImpl implements ProductService {
       return;
     }
 
-    String objectKey = s3FileMapper.getS3FilePathByEntityTypeAndId(
+    List<String> objectKeys = s3FileMapper.getS3FileKeyByEntityTypeAndId(
       EntityType.PRODUCT,
       product.getId()
     );
 
-    if (Objects.isNull(objectKey)) {
+    if (Objects.isNull(objectKeys)) {
 //      uploadAndSaveProductImage(product.getId(), imageFile);
     } else {
 //      fileUploadService.uploadImage(objectKey, imageFile);
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     for (int sortOrder = 0; sortOrder < imageFiles.size(); sortOrder++) {
-      String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId, sortOrder);
+      String objectKey = fileUploadService.generateObjectKey(EntityType.PRODUCT, productId, sortOrder);
       MultipartFile imageFile = imageFiles.get(sortOrder);
 
       fileUploadService.uploadImage(objectKey, imageFile);
@@ -111,11 +111,12 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public void deleteProduct(int productId) {
+  public void deleteProduct(int productId) throws Exception {
     if (productMapper.deleteProduct(productId) == 0) {
       throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
     }
-
+    List<String> objectKeys = s3FileMapper.getS3FileKeyByEntityTypeAndId(EntityType.PRODUCT, productId);
+    fileUploadService.deleteImages(objectKeys);
     s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
   }
 
@@ -187,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
         // 新規画像の追加
         case "add" -> {
           int newSort = image.getSortOrder();
-          String objectKey = fileUploadService.generateOjbectKey(EntityType.PRODUCT, productId, image.getSortOrder());
+          String objectKey = fileUploadService.generateObjectKey(EntityType.PRODUCT, productId, image.getSortOrder());
           fileUploadService.uploadImage(objectKey, image.getFile());
 
           S3FileDto new3File = new S3FileDto();

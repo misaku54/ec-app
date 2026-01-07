@@ -23,10 +23,12 @@
     ORDER BY id
   </select>
 
-  <select id="getS3FilePathByEntityTypeAndId" resultType="String">
-    SELECT s3_path
-    FROM S3_FILES
-    where
+  <select id="getS3FileKeyByEntityTypeAndId" resultType="String">
+    SELECT
+      s3_key
+    FROM
+      S3_FILES
+    WHERE
       entity_type = #{entityType.value}
       AND entity_id = #{entityId}
       AND del_flg = false
