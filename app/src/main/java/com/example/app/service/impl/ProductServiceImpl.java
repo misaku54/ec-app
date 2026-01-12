@@ -109,15 +109,15 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public ProductDeleteDto deleteProduct(int productId) throws Exception {
-    if (productMapper.deleteProduct(productId) == 0) {
-      throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
-    }
     List<String> objectKeys = s3FileMapper.getS3FileKeyByEntityTypeAndId(EntityType.PRODUCT, productId);
     int deleteImageCount = fileUploadService.deleteImages(objectKeys);
 
+    if (productMapper.deleteProduct(productId) == 0) {
+      throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
+    }
     s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
 
-    // 削除用レスポンスを整形
+    // 削除用レスポンスを生成
     ProductDeleteDto dto = new ProductDeleteDto();
     dto.setProductId(productId);
     dto.setDeletedImageCount(deleteImageCount);
