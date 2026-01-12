@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.Delete;
-import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
-import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +30,7 @@ public class S3Util {
     }
   }
 
-  public static void deleteFiles(S3Client s3Client, String bucketName, List<String> objectKeys) throws IOException{
+  public static int deleteFiles(S3Client s3Client, String bucketName, List<String> objectKeys) throws IOException{
     List<ObjectIdentifier> keys = objectKeys.stream()
       .filter(Objects::nonNull)
       .map(key -> ObjectIdentifier.builder().key(key).build())
@@ -47,7 +44,10 @@ public class S3Util {
         .delete(del)
         .build();
 
-      s3Client.deleteObjects(multiObjectDeleteRequest);
+      DeleteObjectsResponse response = s3Client.deleteObjects(multiObjectDeleteRequest);
+
+      return response.deleted().size();
+
     } catch (Exception e) {
       log.error("S3オブジェクトの削除に失敗しました。bucket={} and fileName={}. Error:{}",
         bucketName, objectKeys, e.getMessage() ,e);

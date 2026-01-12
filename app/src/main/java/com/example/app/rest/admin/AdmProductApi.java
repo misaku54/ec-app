@@ -1,9 +1,6 @@
 package com.example.app.rest.admin;
 
-import com.example.app.dto.ProductDetailDto;
-import com.example.app.dto.ProductDto;
-import com.example.app.dto.ResponseDto;
-import com.example.app.dto.ResponseListDto;
+import com.example.app.dto.*;
 import com.example.app.form.AdmProductCreateForm;
 import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
@@ -77,12 +74,13 @@ public class AdmProductApi {
   }
 
   @PostMapping("delete")
-  public ResponseDto<String> deleteProduct(@RequestBody AdmProductDeleteForm admProductDeleteForm) throws Exception {
-    productService.deleteProduct(admProductDeleteForm.getId());
+  public ResponseEntity<ResponseDto<ProductDeleteDto>> deleteProduct(@RequestBody AdmProductDeleteForm admProductDeleteForm) throws Exception {
+    ProductDeleteDto dto = productService.deleteProduct(admProductDeleteForm.getId());
 
-    ResponseDto<String> response = new ResponseDto<>();
-    response.setData("success");
-    return response;
+    ResponseDto<ProductDeleteDto> response = new ResponseDto<>();
+    response.setMessage("success");
+    response.setData(dto);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
 }

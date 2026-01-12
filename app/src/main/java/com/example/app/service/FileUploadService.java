@@ -13,6 +13,6 @@ public interface FileUploadService {
 
   String getImageUrl(String objectKey);
 
-  void deleteImages(List<String> objectKeys) throws Exception ;
+  int deleteImages(List<String> objectKeys) throws Exception ;
 
 }

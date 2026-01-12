@@ -56,10 +56,10 @@ public class FileUploadServiceImpl implements FileUploadService {
   }
 
   @Override
-  public void deleteImages(List<String> objectKeys) throws Exception {
+  public int deleteImages(List<String> objectKeys) throws Exception {
     if (Objects.isNull(objectKeys)) {
       throw new Exception();
     }
-    S3Util.deleteFiles(s3Client, bucketName, objectKeys);
+    return S3Util.deleteFiles(s3Client, bucketName, objectKeys);
   }
 }

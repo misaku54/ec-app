@@ -1,6 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.dto.ImageUpdateDto;
+import com.example.app.dto.ProductDeleteDto;
 import com.example.app.dto.ProductDetailDto;
 import com.example.app.dto.ProductDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,6 @@ public interface ProductService {
 
   void updateProduct(ProductDto productDto, List<ImageUpdateDto> existingImages) throws Exception;
 
-  void deleteProduct(int productId) throws Exception;
+  ProductDeleteDto deleteProduct(int productId) throws Exception;
 
 }

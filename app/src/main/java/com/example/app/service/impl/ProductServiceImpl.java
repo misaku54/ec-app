@@ -1,9 +1,6 @@
 package com.example.app.service.impl;
 
-import com.example.app.dto.ImageUpdateDto;
-import com.example.app.dto.ProductDetailDto;
-import com.example.app.dto.ProductDto;
-import com.example.app.dto.S3FileDto;
+import com.example.app.dto.*;
 import com.example.app.enums.EntityType;
 import com.example.app.exception.ApiInvalidUpdateException;
 import com.example.app.exception.ApiNotFoundException;
@@ -111,13 +108,20 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Transactional
-  public void deleteProduct(int productId) throws Exception {
+  public ProductDeleteDto deleteProduct(int productId) throws Exception {
     if (productMapper.deleteProduct(productId) == 0) {
       throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
     }
     List<String> objectKeys = s3FileMapper.getS3FileKeyByEntityTypeAndId(EntityType.PRODUCT, productId);
-    fileUploadService.deleteImages(objectKeys);
+    int deleteImageCount = fileUploadService.deleteImages(objectKeys);
+
     s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
+
+    // 削除用レスポンスを整形
+    ProductDeleteDto dto = new ProductDeleteDto();
+    dto.setProductId(productId);
+    dto.setDeletedImageCount(deleteImageCount);
+    return dto;
   }
 
   public ProductDetailDto detailProductInfo(int productId) {
