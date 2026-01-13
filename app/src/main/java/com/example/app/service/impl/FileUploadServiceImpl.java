@@ -1,11 +1,13 @@
 package com.example.app.service.impl;
 
 import com.example.app.enums.EntityType;
+import com.example.app.exception.ApiNotFoundException;
 import com.example.app.service.FileUploadService;
 import com.example.app.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
@@ -57,8 +59,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 
   @Override
   public int deleteImages(List<String> objectKeys) throws Exception {
-    if (Objects.isNull(objectKeys)) {
-      throw new Exception();
+    if (CollectionUtils.isEmpty(objectKeys)) {
+      throw new ApiNotFoundException("不正なリクエストです。");
     }
     return S3Util.deleteFiles(s3Client, bucketName, objectKeys);
   }

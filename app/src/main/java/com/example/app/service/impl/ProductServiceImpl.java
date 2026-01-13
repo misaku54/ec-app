@@ -109,12 +109,16 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public ProductDeleteDto deleteProduct(int productId) throws Exception {
+    // ストレージの画像削除
     List<String> objectKeys = s3FileMapper.getS3FileKeyByEntityTypeAndId(EntityType.PRODUCT, productId);
     int deleteImageCount = fileUploadService.deleteImages(objectKeys);
 
+    // 商品削除
     if (productMapper.deleteProduct(productId) == 0) {
       throw new ApiInvalidUpdateException("指定された商品は見つかりませんでした。");
     }
+
+    // オブジェクトキー削除
     s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
 
     // 削除用レスポンスを生成

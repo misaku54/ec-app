@@ -86,7 +86,7 @@
       del_flg = true,
       updated_at = CURRENT_TIMESTAMP
     WHERE
-      id = #{id}
+      id = #{productId}
       AND del_flg = false
   </update>
 

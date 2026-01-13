@@ -73,7 +73,7 @@ public class AdmProductApi {
     return response;
   }
 
-  @PostMapping("delete")
+  @PostMapping("/delete")
   public ResponseEntity<ResponseDto<ProductDeleteDto>> deleteProduct(@RequestBody AdmProductDeleteForm admProductDeleteForm) throws Exception {
     ProductDeleteDto dto = productService.deleteProduct(admProductDeleteForm.getId());
 
