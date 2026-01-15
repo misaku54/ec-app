@@ -1,5 +1,6 @@
 package com.example.app.mapper;
 
+import com.example.app.dto.ProductDetailDto;
 import com.example.app.dto.ProductDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,7 +12,7 @@ public interface ProductMapper {
 
   List<ProductDto> getProductList();
 
-  ProductDto getProductById(@Param("productId") int productId);
+  ProductDetailDto getProductDetailById(@Param("productId") int productId);
 
   int createProduct(ProductDto product);
 
