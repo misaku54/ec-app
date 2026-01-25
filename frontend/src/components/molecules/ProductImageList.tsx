@@ -1,10 +1,5 @@
+import type { ImageData } from '../../types/ImageData';
 import { ProductImage } from "../atoms/ProductImage";
-
-type ImageData = {
-  s3Key: string;
-  sortOrder: number;
-  mainImage: boolean;
-};
 
 type Props = {
   images: ImageData[]

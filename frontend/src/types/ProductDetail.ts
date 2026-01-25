@@ -1,8 +1,4 @@
-type ImageData = {
-  s3Key: string;
-  sortOrder: number;
-  mainImage: boolean;
-};
+import type { ImageData } from '../types/ImageData';
 
 export interface ProductDetail {
   id: number;
