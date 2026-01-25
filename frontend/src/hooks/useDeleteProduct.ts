@@ -7,6 +7,7 @@ interface ResponseData {
   data: ProductDelete;
 }
 
+// 商品削除するhooks
 export const useDeleteProduct = () => {
   const [loading, setLoading] = useState(false);
   const [deletedProduct, setDeletedProduct] = useState<ProductDelete | null>();

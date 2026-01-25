@@ -16,7 +16,7 @@ export const useAllProduct = () => {
 
     axios.get<ResponseData>("http://localhost:8888/api/admin/product/list")
       .then((res) => setProducts(res.data.data))
-      .catch(() => alert("商品一覧の抽出に失敗しました。。"))
+      .catch(() => alert("商品一覧の抽出に失敗しました"))
       .finally(() => setLoading(false));
   },[]);
 
