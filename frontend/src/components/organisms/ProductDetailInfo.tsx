@@ -1,4 +1,5 @@
 import type { ProductDetail } from "../../types/ProductDetail";
+import { ProductImageList } from "../molecules/ProductImageList";
 
 type Props = {
   selectedProduct: ProductDetail;
@@ -6,6 +7,7 @@ type Props = {
 export const ProductDetailInfo:React.FC<Props> = (props) => {
   const {selectedProduct} = props;
 
+  console.log(selectedProduct);
   return (
     <>
       <div>{selectedProduct?.id}</div>
@@ -15,6 +17,7 @@ export const ProductDetailInfo:React.FC<Props> = (props) => {
       <div>{selectedProduct?.stock}</div>
       <div>{selectedProduct?.createdAt}</div>
       <div>{selectedProduct?.updatedAt}</div>
+      <ProductImageList images={selectedProduct.productImageList} />
     </>
   )
 }

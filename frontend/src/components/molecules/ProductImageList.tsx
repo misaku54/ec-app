@@ -13,6 +13,11 @@ type Props = {
 export const ProductImageList: React.FC<Props> = (props) => {
   const {images} = props;
 
+  console.log(images);
+  if (!images || images.length === 0) {
+    return <div className="product_images">画像がありません</div>
+  }
+
   return (
     <div className="product_images">
       {images.map((image) => (
