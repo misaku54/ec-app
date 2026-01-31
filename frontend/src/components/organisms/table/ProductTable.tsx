@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import type { Product } from "../../../types/Product";
+import { Button } from "../../atoms/button/Button";
 
 type Props = {
   products: Product[];
@@ -36,6 +37,9 @@ export const ProductTable: React.FC<Props> = (props) => {
             <td className="border border-gray-300">{product.stock}</td>
             <td className="border border-gray-300">{product.createdAt}</td>
             <td className="border border-gray-300">{product.updatedAt}</td>
+            <td className="border border-gray-300">
+              <Button>削除</Button>
+            </td>
           </tr>
         ))}
       </tbody>
