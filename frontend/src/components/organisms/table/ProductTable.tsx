@@ -5,10 +5,11 @@ import { Button } from "../../atoms/button/Button";
 
 type Props = {
   products: Product[];
-}
+  onDelete: (id: number) => void;
+};
 
 export const ProductTable: React.FC<Props> = (props) => {
-  const { products } = props;
+  const { products, onDelete } = props;
 
   return (
     <table className="border-collapse border border-gray-400">
@@ -25,10 +26,13 @@ export const ProductTable: React.FC<Props> = (props) => {
       </thead>
       <tbody>
         {products.map((product) => (
-          <tr  key={product.id}>
+          <tr key={product.id}>
             <td className="border border-gray-300">{product.id}</td>
             <td className="border border-gray-300">
-              <Link to={`/admin/product/${product.id}`} className="text-blue-500 hover:underline">
+              <Link
+                to={`/admin/product/${product.id}`}
+                className="text-blue-500 hover:underline"
+              >
                 {product.name}
               </Link>
             </td>
@@ -38,11 +42,11 @@ export const ProductTable: React.FC<Props> = (props) => {
             <td className="border border-gray-300">{product.createdAt}</td>
             <td className="border border-gray-300">{product.updatedAt}</td>
             <td className="border border-gray-300">
-              <Button>削除</Button>
+              <Button onClick={() => onDelete(product.id)}>削除</Button>
             </td>
           </tr>
         ))}
       </tbody>
     </table>
   );
-}
+};
