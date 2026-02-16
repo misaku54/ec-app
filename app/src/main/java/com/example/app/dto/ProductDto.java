@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ProductDto {
-  private int id;
+  private Integer id;
   private String name;
   private String description;
   private int price;

@@ -1,5 +1,5 @@
 aws:
-  endpoint: http://localhost:9000
+  endpoint: http://minio:9000
   region: us-east-1
   minio-user: minioadmin
   minio-pass: minioadmin
