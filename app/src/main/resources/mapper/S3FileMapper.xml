@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.S3FileMapper">
+  <resultMap id="s3FileResultMap" type="com.example.app.dto.S3FileDto">
+    <result property="id" column="id"/>
+    <result property="entityType" column="entity_type"/>
+    <result property="entityId" column="entity_id"/>
+    <result property="s3Key" column="s3_key"/>
+    <result property="sortOrder" column="sort_order"/>
+    <result property="mainImage" column="is_main_image"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <select id="getS3FileById" resultMap="s3FileResultMap">
+    SELECT
+      *
+    FROM
+      S3_FILES
+    WHERE
+      id = #{id}
+    ORDER BY id
+  </select>
+
+  <select id="getS3FileKeyByEntityTypeAndId" resultType="String">
+    SELECT
+      s3_key
+    FROM
+      S3_FILES
+    WHERE
+      entity_type = #{entityType.value}
+      AND entity_id = #{entityId}
+      AND del_flg = false
+    ORDER BY id
+  </select>
+
+  <insert id="insertS3File" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO S3_FILES (entity_type, entity_id, s3_key, sort_order, is_main_image, del_flg)
+    VALUES (#{entityType.value}, #{entityId}, #{s3Key}, #{sortOrder}, #{isMainImage}, false)
+  </insert>
+
+  <update id="updateS3FileOrderAndMainImageById">
+    UPDATE S3_FILES SET
+      sort_order = #{sortOrder},
+      is_main_image = #{isMainImage},
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{id}
+      AND del_flg = false
+  </update>
+
+  <update id="deleteS3FileById">
+    UPDATE S3_FILES SET is_deleted = true WHERE id = #{id}
+  </update>
+
+  <update id="deleteS3FileByEntityTypeAndId">
+    UPDATE S3_FILES SET
+      del_flg = true,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      entity_type = #{entityType.value}
+      AND entity_id = #{entityId}
+      AND del_flg = false
+  </update>
+
+  <select id="getMaxSortOrderByEntityTypeAndId" resultType="int">
+    SELECT
+      COALESCE(MAX(sort_order), 0)
+    FROM
+      S3_FILES
+    WHERE
+      entity_type = #{entityType.value}
+      AND entity_id = #{entityId}
+      AND del_flg = false
+  </select>
+</mapper>
+
