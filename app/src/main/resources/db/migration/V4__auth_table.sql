@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS account_roles (
   role_id INT NOT NULL,
   PRIMARY KEY(account_id, role_id),
   CONSTRAINT fk_account_roles_account
-    FOREIGN KEY(account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    FOREIGN KEY(account_id) REFERENCES accounts(id) ON DELETE CASCADE,
   CONSTRAINT fk_account_roles_role
     FOREIGN KEY(role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
