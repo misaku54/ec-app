@@ -29,7 +29,7 @@ public class AccountUserDetailsService implements UserDetailsService {
     AccountDto account = accountMapper.findByEmail(email)
       .orElseThrow(() -> new UsernameNotFoundException(email));
 
-    return User.withUsername(account.getName())
+    return User.withUsername(account.getEmail())
       .password(account.getPassword())
       .roles(account.getRoles().toArray(new String[0]))
       .build();
