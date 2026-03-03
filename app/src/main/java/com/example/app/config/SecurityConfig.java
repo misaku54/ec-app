@@ -80,6 +80,9 @@ public class SecurityConfig {
       )
 
       // JSONログインフィルターを差し込む
+      // addFilterAtは指定したフィルタークラスの場所にフィルターを追加するメソッド。
+      // ここではUsernamePasswordAuthenticationFilterの場所にカスタムフィルターを配置するという意味で
+      // つまり、デフォルトのフォーム認証フィルターを置き換えるという意味になる
       .addFilterAt(jsonEmailPasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     // sessionManegermentはデフォルト設定でよければ、記載はいらない。
