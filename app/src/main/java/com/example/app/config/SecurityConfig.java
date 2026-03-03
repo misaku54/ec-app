@@ -76,7 +76,7 @@ public class SecurityConfig {
         .requestMatchers("/login").permitAll()           // ログインは誰でもOK
         .requestMatchers("/api/admin/**").hasRole("ADMIN")              // 管理者のみ
         .requestMatchers("/api/customer/**").hasAnyRole("USER", "ADMIN") // 顧客・管理者
-        .anyRequest().authenticated()
+        .anyRequest().authenticated() // マッチャー以外のすべてのリクエストは 認証済みであること を要求
       )
 
       // JSONログインフィルターを差し込む
