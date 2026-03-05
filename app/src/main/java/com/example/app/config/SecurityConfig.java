@@ -48,6 +48,10 @@ public class SecurityConfig {
       res.setContentType("application/json;charset=UTF-8");
       res.getWriter().write("{\"message\":\"login success\"}");
     });
+
+    /*
+     * setAuthenticationSuccessHandler：ログイン失敗時の処理を設定
+     */
     jsonEmailPasswordAuthenticationFilter.setAuthenticationFailureHandler((req, res, auth) -> {
       res.setStatus(HttpStatus.FORBIDDEN.value());
       res.setContentType("application/json;charset=UTF-8");
@@ -83,7 +87,20 @@ public class SecurityConfig {
       // addFilterAtは指定したフィルタークラスの場所にフィルターを追加するメソッド。
       // ここではUsernamePasswordAuthenticationFilterの場所にカスタムフィルターを配置するという意味で
       // つまり、デフォルトのフォーム認証フィルターを置き換えるという意味になる
-      .addFilterAt(jsonEmailPasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+      .addFilterAt(jsonEmailPasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+      // ログアウト設定
+      // POST /logout でセッションを無効化し、Cookieを削除する
+      .logout(logout -> logout
+        .logoutUrl("/logout")                   // ログアウトエンドポイント（POST /logout）
+        .invalidateHttpSession(true)            // サーバー側のセッションを破棄
+        .deleteCookies("JSESSIONID")            // クライアントのCookieを削除
+        .logoutSuccessHandler((req, res, auth) -> {
+          res.setStatus(HttpStatus.OK.value());
+          res.setContentType("application/json;charset=UTF-8");
+          res.getWriter().write("{\"message\":\"logout success\"}");
+        })
+      );
 
     // sessionManegermentはデフォルト設定でよければ、記載はいらない。
 

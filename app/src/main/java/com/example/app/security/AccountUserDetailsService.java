@@ -35,9 +35,13 @@ public class AccountUserDetailsService implements UserDetailsService {
     AccountDto account = accountMapper.findByEmail(email)
       .orElseThrow(() -> new UsernameNotFoundException(email));
 
+    String[] roles = account.getRoles().stream()
+      .filter(role -> role != null)
+      .toArray(String[]::new);
+
     return User.withUsername(account.getEmail())
       .password(account.getPassword())
-      .roles(account.getRoles().toArray(new String[0]))
+      .roles(roles)
       .build();
   }
 
