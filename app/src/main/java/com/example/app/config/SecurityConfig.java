@@ -25,7 +25,7 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  // securityFilterChainで必要になるため、authenticationManagerをBean登録しておく
+  // securityFilterChainで必要になるため、authenticationManagerをBean登録しておく。本来は設定不要である。
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
