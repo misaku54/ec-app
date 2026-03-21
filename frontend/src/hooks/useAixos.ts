@@ -1,6 +1,6 @@
 import { AxiosError, type AxiosInstance, type AxiosResponse } from "axios";
 import { useState } from "react";
-import { ApiClient } from "./apiClinent";
+import { ApiClient } from "../api/ApiClinent";
 
 // axiosカスタムフック
 export const useAxios = (
