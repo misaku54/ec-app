@@ -12,7 +12,10 @@ export const Login = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    mode: "onSubmit", // 初回バリデーション：submit時のみ
+    reValidateMode: "onSubmit", // 再バリデーション：submit時のみ（←これが重要）
+  });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
@@ -44,7 +47,7 @@ export const Login = () => {
                 type="email"
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
-              <p className="mt-1 text-sm text-red-600">
+              <p className="mt-1 text-sm text-red-600 min-h-[20px]">
                 <ErrorMessage errors={errors} name="email" />
               </p>
             </div>
@@ -68,7 +71,7 @@ export const Login = () => {
                 type="password"
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
-              <p className="mt-1 text-sm text-red-600">
+              <p className="mt-1 text-sm text-red-600 min-h-[20px]">
                 <ErrorMessage errors={errors} name="password" />
               </p>
             </div>
