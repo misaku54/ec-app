@@ -20,14 +20,14 @@ export const useAxios = (
   // レスポンスのインターセプター設定
   axiosInstance.interceptors.response.use(
     (response) => {
-      setIsLoading(true);
+      setIsLoading(false);
       if (typeof successCallBack === "function") {
         successCallBack(response);
       }
       return response;
     },
     (error) => {
-      setIsLoading(true);
+      setIsLoading(false);
       if (typeof failedCallBack === "function") {
         failedCallBack(error);
       }
