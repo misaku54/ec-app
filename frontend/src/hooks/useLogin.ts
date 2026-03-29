@@ -1,3 +1,4 @@
+import type { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAxios } from "./useAixos";
@@ -15,13 +16,19 @@ export const useLogin = (): {
   const nagative = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { isLoading, axiosInstance } = useAxios(
-    () => nagative("/admin/product/list"),
-    () => setErrorMessage("ログインに失敗しました"),
-  );
+  const { isLoading, axiosInstance } = useAxios();
 
   const login = (data: LoginInput) => {
-    axiosInstance.post("http://localhost:8888/login", data);
+    axiosInstance
+      .post("http://localhost:8888/login", data)
+      .then(() => nagative("/admin/product/list"))
+      .catch((error: AxiosError) => {
+        if (error.response?.status === 403) {
+          setErrorMessage("メールアドレスまたはパスワードが間違っています");
+        } else {
+          setErrorMessage("サーバーエラーが発生しました");
+        }
+      });
   };
 
   return {

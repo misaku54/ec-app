@@ -1,11 +1,11 @@
 import { AxiosError, type AxiosInstance, type AxiosResponse } from "axios";
 import { useState } from "react";
-import { ApiClient } from "../api/ApiClinent";
+import { ApiClient } from "../api/ApiClient";
 
 // axiosカスタムフック
 export const useAxios = (
-  successCallBack: (response: AxiosResponse) => void,
-  failedCallBack: (error: AxiosError) => void,
+  successCallBack?: (response: AxiosResponse) => void,
+  failedCallBack?: (error: AxiosError) => void,
 ): { isLoading: boolean; axiosInstance: AxiosInstance } => {
   const axiosInstance = ApiClient;
 

@@ -1,5 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useLogin } from "../../hooks/useLogin";
 
 type Inputs = {
   email: string;
@@ -10,16 +11,16 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<Inputs>({
     mode: "onSubmit", // 初回バリデーション：submit時のみ
     reValidateMode: "onSubmit", // 再バリデーション：submit時のみ（←これが重要）
   });
 
+  const { isLoading, errorMessage, login } = useLogin();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    reset();
+    login(data);
   };
 
   return (
@@ -30,6 +31,9 @@ export const Login = () => {
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <p className="mb-4 min-h-[20px] text-center text-sm text-red-600">
+          {errorMessage}
+        </p>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
