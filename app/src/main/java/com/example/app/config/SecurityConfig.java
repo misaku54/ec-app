@@ -1,6 +1,8 @@
 package com.example.app.config;
 
+import com.example.app.dto.LoginSuccessDto;
 import com.example.app.security.JsonEmailPasswordAuthenticationFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -52,6 +55,8 @@ public class SecurityConfig {
     JsonEmailPasswordAuthenticationFilter jsonEmailPasswordAuthenticationFilter =
       new JsonEmailPasswordAuthenticationFilter(authenticationManager);
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     /*
      * setAuthenticationSuccessHandler：ログイン成功時の処理を設定
      * setAuthenticationSuccessHandlerの引数はAuthenticationSuccessHandler型。
@@ -60,9 +65,13 @@ public class SecurityConfig {
      * といった３つの流れをラムダ式で１本で書くことができる。
      */
     jsonEmailPasswordAuthenticationFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
+      LoginSuccessDto dto = new LoginSuccessDto();
+      dto.setMessage("success");
+      dto.setRoles(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
+
       res.setStatus(HttpStatus.OK.value());
       res.setContentType("application/json;charset=UTF-8");
-      res.getWriter().write("{\"message\":\"login success\"}");
+      res.getWriter().write(objectMapper.writeValueAsString(dto));
     });
 
     /*
