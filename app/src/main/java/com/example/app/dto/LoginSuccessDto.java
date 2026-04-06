@@ -9,6 +9,8 @@ public class LoginSuccessDto {
 
   String message;
 
+  Boolean authenticated;
+
   List<String> roles;
 
 }

@@ -67,6 +67,7 @@ public class SecurityConfig {
     jsonEmailPasswordAuthenticationFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
       LoginSuccessDto dto = new LoginSuccessDto();
       dto.setMessage("success");
+      dto.setAuthenticated(true);
       dto.setRoles(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
 
       res.setStatus(HttpStatus.OK.value());
