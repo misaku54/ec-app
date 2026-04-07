@@ -1,6 +1,6 @@
 package com.example.app.config;
 
-import com.example.app.dto.LoginSuccessDto;
+import com.example.app.dto.LoginResponseDto;
 import com.example.app.security.JsonEmailPasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -65,10 +64,9 @@ public class SecurityConfig {
      * といった３つの流れをラムダ式で１本で書くことができる。
      */
     jsonEmailPasswordAuthenticationFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
-      LoginSuccessDto dto = new LoginSuccessDto();
+      LoginResponseDto dto = new LoginResponseDto();
       dto.setMessage("success");
-      dto.setAuthenticated(true);
-      dto.setRoles(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
+      dto.setStatus(HttpStatus.OK.value());
 
       res.setStatus(HttpStatus.OK.value());
       res.setContentType("application/json;charset=UTF-8");
