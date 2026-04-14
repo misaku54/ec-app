@@ -21,7 +21,9 @@ export const useLogin = (): {
   const login = (data: LoginInput) => {
     axiosInstance
       .post("http://localhost:8888/login", data)
-      .then(() => nagative("/admin/product/list"))
+      .then(() => {
+        nagative("/admin/product/list");
+      })
       .catch((error: AxiosError) => {
         if (error.response?.status === 403) {
           setErrorMessage("メールアドレスまたはパスワードが間違っています");
