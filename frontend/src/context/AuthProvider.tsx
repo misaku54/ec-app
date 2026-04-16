@@ -6,6 +6,7 @@ import { AuthContext } from "./AuthContext";
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [me, setMe] = useState<Me | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   // ログインユーザー取得
   const fetchMe = () => {
@@ -17,6 +18,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .catch(() => {
         setMe(null);
         setIsAuthenticated(false);
+      })
+      .finally(() => {
+        setIsAuthChecked(true);
       });
   };
 
@@ -35,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [me]);
 
   return (
-    <AuthContext.Provider value={{ me, isAuthenticated, fetchMe, clearMe }}>
+    <AuthContext.Provider value={{ me, isAuthenticated, isAuthChecked, fetchMe, clearMe }}>
       {children}
     </AuthContext.Provider>
   );

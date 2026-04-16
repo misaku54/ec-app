@@ -1,4 +1,8 @@
+import { useLogout } from "../../hooks/useLogout";
+import { Button } from "../atoms/button/Button";
+
 export const Header: React.FC = () => {
+  const { isLoading, errorMessage, logout } = useLogout();
   return (
     <header>
       <header className="text-gray-600 body-font bg-amber-200">
@@ -24,7 +28,7 @@ export const Header: React.FC = () => {
             <a className="mr-5 hover:text-gray-900">Third Link</a>
             <a className="mr-5 hover:text-gray-900">Fourth Link</a>
           </nav>
-          <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+          {/* <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
             ログアウト
             <svg
               fill="none"
@@ -37,7 +41,24 @@ export const Header: React.FC = () => {
             >
               <path d="M5 12h14M12 5l7 7-7 7"></path>
             </svg>
-          </button>
+          </button> */}
+          <Button
+            onClick={logout}
+            className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+          >
+            ログアウト
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="w-4 h-4 ml-1"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </Button>
         </div>
       </header>
     </header>

@@ -3,6 +3,7 @@ import type { Me } from "../types/Me";
 
 type AuthContextType = {
   isAuthenticated: boolean;
+  isAuthChecked: boolean;
   me: Me | null;
   fetchMe: () => void;
   clearMe: () => void;

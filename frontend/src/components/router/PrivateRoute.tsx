@@ -3,9 +3,9 @@ import { useAuth } from "../../context/AuthContext";
 import { Loader } from "../atoms/loader/Loader";
 
 export const PrivateRoute = () => {
-  const { me, isAuthenticated } = useAuth();
-  // ログインされていてかつ管理権限を持っている場合
-  if (!isAuthenticated) {
+  const { me, isAuthChecked } = useAuth();
+  // fetchMe完了前はローダーを表示
+  if (!isAuthChecked) {
     return <Loader />;
   }
   return me?.roles.includes("ADMIN") ? <Outlet /> : <Navigate to="/" replace />;
