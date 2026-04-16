@@ -24,17 +24,25 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-50">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-          Sign in
+        <div className="flex justify-center">
+          <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+        </div>
+        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
+          管理画面ログイン
         </h2>
       </div>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <p className="mb-4 min-h-[20px] text-center text-sm text-red-600">
-          {errorMessage}
-        </p>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-white py-8 px-6 shadow rounded-lg">
+          <p className="mb-4 min-h-[20px] text-center text-sm text-red-600">
+            {errorMessage}
+          </p>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="email"
@@ -90,6 +98,7 @@ export const Login = () => {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
