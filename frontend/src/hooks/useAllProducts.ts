@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
+import { ApiClient } from "../api/ApiClient";
 import type { Product } from "../types/Product";
 
 interface ResponseData {
@@ -14,11 +14,11 @@ export const useAllProduct = () => {
   const getProducts = useCallback(() => {
     setLoading(true);
 
-    axios.get<ResponseData>("http://localhost:8888/api/admin/product/list")
+    ApiClient.get<ResponseData>("/api/admin/product/list")
       .then((res) => setProducts(res.data.data))
       .catch(() => alert("商品一覧の抽出に失敗しました。"))
       .finally(() => setLoading(false));
-  },[]);
+  }, []);
 
   return { loading, products, getProducts };
 };
