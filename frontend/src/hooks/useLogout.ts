@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 import { useAxios } from "./useAixos";
 
 type LogoutResponse = {
@@ -14,11 +15,15 @@ export const useLogout = (): {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { isLoading, axiosInstance } = useAxios();
+  const { clearMe } = useAuth();
 
   const logout = () => {
     axiosInstance
       .post<LogoutResponse>("/logout")
-      .then(() => navigate("/"))
+      .then(() => {
+        clearMe();
+        navigate("/");
+      })
       .catch(() => setErrorMessage("ログアウトに失敗しました。"));
   };
 
