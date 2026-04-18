@@ -9,6 +9,6 @@ public class ProductImageDto {
 
   private int sortOrder;
 
-  private boolean isMainImage;
+  private boolean mainImage;
 
 }

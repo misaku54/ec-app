@@ -23,6 +23,7 @@ export const ProductManegement: React.FC = () => {
 
   return (
     <>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-indigo-600">商品一覧</h1>
       {loading || deleteLoding ? (
         <Loader />
       ) : (
