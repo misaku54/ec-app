@@ -1,6 +1,7 @@
 import type { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 import { useAxios } from "./useAixos";
 
 type LoginInput = {
@@ -13,16 +14,17 @@ export const useLogin = (): {
   errorMessage: string | null;
   login: (data: LoginInput) => void;
 } => {
-  const nagative = useNavigate();
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const { isLoading, axiosInstance } = useAxios();
+  const { fetchMe } = useAuth();
 
   const login = (data: LoginInput) => {
     axiosInstance
       .post("http://localhost:8888/login", data)
       .then(() => {
-        nagative("/admin/product/list");
+        fetchMe();
+        navigate("/admin/product/list");
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 403) {
