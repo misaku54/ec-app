@@ -103,6 +103,7 @@ public class SecurityConfig {
       // 認可ルール
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/login").permitAll()           // ログインは誰でもOK
+        .requestMatchers("/api/public/**").permitAll()
         .requestMatchers("/api/admin/**").hasRole("ADMIN")              // 管理者のみ
         .requestMatchers("/api/customer/**").hasAnyRole("USER", "ADMIN") // 顧客・管理者
         .anyRequest().authenticated() // マッチャー以外のすべてのリクエストは 認証済みであること を要求

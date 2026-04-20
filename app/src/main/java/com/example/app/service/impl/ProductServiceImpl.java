@@ -4,6 +4,7 @@ import com.example.app.dto.*;
 import com.example.app.enums.EntityType;
 import com.example.app.exception.ApiInvalidUpdateException;
 import com.example.app.exception.ApiNotFoundException;
+import com.example.app.form.ProductSearchParam;
 import com.example.app.mapper.ProductMapper;
 import com.example.app.mapper.S3FileMapper;
 import com.example.app.service.FileUploadService;
@@ -38,6 +39,10 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<ProductDto> getProductList() {
     return productMapper.getProductList();
+  }
+
+  public List<ProductDetailDto> searchProducts(ProductSearchParam param) {
+     return productMapper.searchProducts(param);
   }
 
   @Override
