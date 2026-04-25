@@ -55,9 +55,9 @@ public class ProductServiceImpl implements ProductService {
   public ProductDetailDto createProduct(ProductDto product, List<MultipartFile> imageFiles) throws Exception {
     // 商品登録
     createProductInfo(product);
+    int createdProductId = product.getId();
 
     // 画像をS3アップロード＆画像URL登録
-    int createdProductId = product.getId();
     uploadAndSaveProductImage(createdProductId, imageFiles);
 
     // 登録後、商品詳細を返却する
