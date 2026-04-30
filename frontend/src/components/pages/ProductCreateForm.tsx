@@ -1,12 +1,13 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useCreateProduct } from "../../hooks/useCreateProduct";
 
 type Inputs = {
   name: string;
   description: string;
   price: number;
   stock: number;
-  imageFiles: FileList; // 一旦考える
+  imageFiles: FileList;
 };
 
 export const ProductCreateForm = () => {
@@ -19,8 +20,11 @@ export const ProductCreateForm = () => {
     reValidateMode: "onSubmit",
   });
 
+  const { isLoading, createProduct } = useCreateProduct();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    createProduct(data);
   };
 
   return (
@@ -46,7 +50,10 @@ export const ProductCreateForm = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
               {...register("name", {
                 required: "商品名は必須です",
-                maxLength: { value: 60, message: "商品名は60文字以内で入力してください" },
+                maxLength: {
+                  value: 60,
+                  message: "商品名は60文字以内で入力してください",
+                },
               })}
             />
             <p className="text-red-500 text-xs mt-1">
@@ -69,8 +76,14 @@ export const ProductCreateForm = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
               {...register("price", {
                 required: "価格は必須です",
-                min: { value: 100, message: "価格は100円以上で入力してください" },
-                max: { value: 1000000, message: "価格は1,000,000円以下で入力してください" },
+                min: {
+                  value: 100,
+                  message: "価格は100円以上で入力してください",
+                },
+                max: {
+                  value: 1000000,
+                  message: "価格は1,000,000円以下で入力してください",
+                },
               })}
             />
             <p className="text-red-500 text-xs mt-1">
@@ -94,7 +107,10 @@ export const ProductCreateForm = () => {
               {...register("stock", {
                 required: "在庫数は必須です",
                 min: { value: 1, message: "在庫数は1以上で入力してください" },
-                max: { value: 100, message: "在庫数は100以下で入力してください" },
+                max: {
+                  value: 100,
+                  message: "在庫数は100以下で入力してください",
+                },
               })}
             />
             <p className="text-red-500 text-xs mt-1">
@@ -116,7 +132,10 @@ export const ProductCreateForm = () => {
               rows={4}
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
               {...register("description", {
-                maxLength: { value: 3000, message: "備考は3000文字以内で入力してください" },
+                maxLength: {
+                  value: 3000,
+                  message: "備考は3000文字以内で入力してください",
+                },
               })}
             />
             <p className="text-red-500 text-xs mt-1">
