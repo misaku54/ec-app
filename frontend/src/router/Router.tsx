@@ -10,11 +10,11 @@ export const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/test" element={<ProductCreateForm />} />
       <Route element={<PrivateRoute />}>
         <Route path="/admin/product" element={<DefaultLayout />}>
           <Route path="list" element={<ProductManegement />} />
           <Route path=":id" element={<ProductDetail />} />
+          <Route path="create" element={<ProductCreateForm />} />
         </Route>
       </Route>
       <Route path="*" element={<div>404</div>} />

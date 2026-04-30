@@ -41,7 +41,7 @@ export const useCreateProduct = () => {
           const id: number = res.data.data.id;
           navigate(`/admin/product/${id}`);
         } else {
-          throw new Error("idが取得できませんでした");
+          throw new Error();
         }
       })
       .catch(() => alert("商品の登録に失敗しました"));

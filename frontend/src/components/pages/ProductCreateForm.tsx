@@ -29,25 +29,25 @@ export const ProductCreateForm = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-indigo-600">
+      <h1 className="text-2xl font-bold text-zinc-800 mb-6 pb-2 border-b border-zinc-200">
         商品登録
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white rounded-lg shadow p-6 space-y-6"
+        className="bg-white rounded-lg border border-zinc-200 p-6 space-y-6"
       >
         <div className="flex items-start">
           <label
             htmlFor="name"
-            className="w-32 text-sm font-semibold text-gray-500 pt-2 shrink-0"
+            className="w-32 text-sm font-medium text-zinc-400 pt-2 shrink-0"
           >
-            商品名 <span className="text-red-500">*</span>
+            商品名 <span className="text-red-400">*</span>
           </label>
           <div className="flex-1">
             <input
               id="name"
               type="text"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
               {...register("name", {
                 required: "商品名は必須です",
                 maxLength: {
@@ -65,7 +65,7 @@ export const ProductCreateForm = () => {
         <div className="flex items-start">
           <label
             htmlFor="price"
-            className="w-32 text-sm font-semibold text-gray-500 pt-2 shrink-0"
+            className="w-32 text-sm font-medium text-zinc-400 pt-2 shrink-0"
           >
             価格(税抜き) <span className="text-red-500">*</span>
           </label>
@@ -73,8 +73,9 @@ export const ProductCreateForm = () => {
             <input
               id="price"
               type="number"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
               {...register("price", {
+                valueAsNumber: true,
                 required: "価格は必須です",
                 min: {
                   value: 100,
@@ -95,7 +96,7 @@ export const ProductCreateForm = () => {
         <div className="flex items-start">
           <label
             htmlFor="stock"
-            className="w-32 text-sm font-semibold text-gray-500 pt-2 shrink-0"
+            className="w-32 text-sm font-medium text-zinc-400 pt-2 shrink-0"
           >
             在庫数 <span className="text-red-500">*</span>
           </label>
@@ -103,8 +104,9 @@ export const ProductCreateForm = () => {
             <input
               id="stock"
               type="number"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
               {...register("stock", {
+                valueAsNumber: true,
                 required: "在庫数は必須です",
                 min: { value: 1, message: "在庫数は1以上で入力してください" },
                 max: {
@@ -122,7 +124,7 @@ export const ProductCreateForm = () => {
         <div className="flex items-start">
           <label
             htmlFor="description"
-            className="w-32 text-sm font-semibold text-gray-500 pt-2 shrink-0"
+            className="w-32 text-sm font-medium text-zinc-400 pt-2 shrink-0"
           >
             備考
           </label>
@@ -130,7 +132,7 @@ export const ProductCreateForm = () => {
             <textarea
               id="description"
               rows={4}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+              className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 resize-none"
               {...register("description", {
                 maxLength: {
                   value: 3000,
@@ -147,7 +149,7 @@ export const ProductCreateForm = () => {
         <div className="flex items-start">
           <label
             htmlFor="imageFiles"
-            className="w-32 text-sm font-semibold text-gray-500 pt-2 shrink-0"
+            className="w-32 text-sm font-medium text-zinc-400 pt-2 shrink-0"
           >
             商品画像
           </label>
@@ -157,7 +159,7 @@ export const ProductCreateForm = () => {
               type="file"
               multiple
               accept=".png"
-              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200"
               {...register("imageFiles")}
             />
             <p className="text-red-500 text-xs mt-1">
@@ -169,7 +171,8 @@ export const ProductCreateForm = () => {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="bg-indigo-600 text-white px-6 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors"
+            disabled={isLoading}
+            className="bg-zinc-900 text-white px-6 py-2 rounded-md text-sm font-semibold hover:bg-zinc-700 transition-colors"
           >
             登録する
           </button>
