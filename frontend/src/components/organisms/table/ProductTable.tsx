@@ -14,41 +14,41 @@ export const ProductTable: React.FC<Props> = (props) => {
   return (
     <div className="overflow-x-auto rounded-lg shadow">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-indigo-600">
+        <thead className="bg-zinc-800">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">商品ID</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">商品名</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">備考</th>
-            <th className="px-4 py-3 text-right text-xs font-semibold text-white uppercase tracking-wider">価格</th>
-            <th className="px-4 py-3 text-right text-xs font-semibold text-white uppercase tracking-wider">在庫</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">登録日時</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">更新日時</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">商品ID</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">商品名</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">備考</th>
+            <th className="px-4 py-3 text-right text-xs font-medium text-zinc-400 uppercase tracking-wider">価格</th>
+            <th className="px-4 py-3 text-right text-xs font-medium text-zinc-400 uppercase tracking-wider">在庫</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">登録日時</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">更新日時</th>
             <th className="px-4 py-3"></th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        <tbody className="bg-white divide-y divide-zinc-100">
           {products.map((product, index) => (
-            <tr key={product.id} className={index % 2 === 0 ? "bg-white hover:bg-indigo-50" : "bg-gray-50 hover:bg-indigo-50"}>
-              <td className="px-4 py-3 text-sm text-gray-500">{product.id}</td>
+            <tr key={product.id} className={index % 2 === 0 ? "bg-white hover:bg-zinc-50" : "bg-zinc-50 hover:bg-zinc-100"}>
+              <td className="px-4 py-3 text-sm text-zinc-400">{product.id}</td>
               <td className="px-4 py-3 text-sm font-medium">
                 <Link
                   to={`/admin/product/${product.id}`}
-                  className="text-indigo-600 hover:text-indigo-900 hover:underline"
+                  className="text-zinc-800 hover:text-zinc-500 hover:underline"
                 >
                   {product.name}
                 </Link>
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">{product.description}</td>
-              <td className="px-4 py-3 text-sm text-gray-800 text-right font-medium">¥{product.price.toLocaleString()}</td>
+              <td className="px-4 py-3 text-sm text-zinc-500 max-w-xs truncate">{product.description}</td>
+              <td className="px-4 py-3 text-sm text-zinc-800 text-right font-medium">¥{product.price.toLocaleString()}</td>
               <td className="px-4 py-3 text-sm text-right">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.stock > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.stock > 0 ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
                   {product.stock}
                 </span>
               </td>
-              <td className="px-4 py-3 text-sm text-gray-500">{product.createdAt}</td>
-              <td className="px-4 py-3 text-sm text-gray-500">{product.updatedAt}</td>
+              <td className="px-4 py-3 text-sm text-zinc-400">{product.createdAt}</td>
+              <td className="px-4 py-3 text-sm text-zinc-400">{product.updatedAt}</td>
               <td className="px-4 py-3 text-sm text-right">
-                <Button onClick={() => onDelete(product.id)}>削除</Button>
+                <Button onClick={() => onDelete(product.id)} className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:border-red-400 px-3 py-1 rounded transition-colors">削除</Button>
               </td>
             </tr>
           ))}

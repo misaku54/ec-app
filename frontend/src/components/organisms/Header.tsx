@@ -4,63 +4,34 @@ import { Button } from "../atoms/button/Button";
 export const Header: React.FC = () => {
   const { isLoading, errorMessage, logout } = useLogout();
   return (
-    <header>
-      <header className="text-white body-font bg-indigo-600">
-        <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-          <a className="flex title-font font-medium items-center text-white mb-4 md:mb-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-10 h-10 text-indigo-600 p-2 bg-white rounded-full"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span className="ml-3 text-xl font-bold">管理画面</span>
-          </a>
-          <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-            <a className="mr-5 text-indigo-100 hover:text-white">First Link</a>
-            <a className="mr-5 text-indigo-100 hover:text-white">Second Link</a>
-            <a className="mr-5 text-indigo-100 hover:text-white">Third Link</a>
-            <a className="mr-5 text-indigo-100 hover:text-white">Fourth Link</a>
-          </nav>
-          {/* <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
-            ログアウト
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button> */}
-          <Button
-            onClick={logout}
-            className="inline-flex items-center bg-white text-indigo-600 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-50 rounded text-base mt-4 md:mt-0 font-semibold"
+    <header className="bg-zinc-900 text-white border-b border-zinc-700">
+      <div className="container mx-auto flex flex-wrap px-6 py-4 flex-col md:flex-row items-center">
+        <a className="flex items-center mb-4 md:mb-0 select-none">
+          <span className="text-xs font-light tracking-[0.3em] text-zinc-400 uppercase">Admin</span>
+          <span className="mx-3 text-zinc-600">|</span>
+          <span className="text-lg font-semibold tracking-wide text-white">STORE</span>
+        </a>
+        <nav className="md:ml-auto flex flex-wrap items-center text-sm justify-center gap-6">
+          <a className="text-zinc-400 hover:text-white transition-colors tracking-wide">商品管理</a>
+        </nav>
+        <Button
+          onClick={logout}
+          className="inline-flex items-center gap-2 ml-6 border border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400 py-1.5 px-4 rounded text-sm transition-colors mt-4 md:mt-0"
+        >
+          ログアウト
+          <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            className="w-3.5 h-3.5"
+            viewBox="0 0 24 24"
           >
-            ログアウト
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </Button>
-        </div>
-      </header>
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </Button>
+      </div>
     </header>
   );
 };

@@ -4,6 +4,7 @@ import com.example.app.dto.*;
 import com.example.app.enums.EntityType;
 import com.example.app.exception.ApiInvalidUpdateException;
 import com.example.app.exception.ApiNotFoundException;
+import com.example.app.form.ProductSearchParam;
 import com.example.app.mapper.ProductMapper;
 import com.example.app.mapper.S3FileMapper;
 import com.example.app.service.FileUploadService;
@@ -40,6 +41,10 @@ public class ProductServiceImpl implements ProductService {
     return productMapper.getProductList();
   }
 
+  public List<ProductDetailDto> searchProducts(ProductSearchParam param) {
+     return productMapper.searchProducts(param);
+  }
+
   @Override
   public ProductDetailDto getProductDetail(int productId) {
     return detailProductInfo(productId);
@@ -50,9 +55,9 @@ public class ProductServiceImpl implements ProductService {
   public ProductDetailDto createProduct(ProductDto product, List<MultipartFile> imageFiles) throws Exception {
     // 商品登録
     createProductInfo(product);
+    int createdProductId = product.getId();
 
     // 画像をS3アップロード＆画像URL登録
-    int createdProductId = product.getId();
     uploadAndSaveProductImage(createdProductId, imageFiles);
 
     // 登録後、商品詳細を返却する
