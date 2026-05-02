@@ -24,40 +24,28 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-50">
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-zinc-950">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="flex justify-center">
-          <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              stroke="white"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-6 h-6"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-          </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs font-light tracking-[0.4em] text-zinc-500 uppercase">Admin</span>
+          <span className="text-2xl font-semibold tracking-wide text-white">STORE</span>
         </div>
-        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
-          ログイン
+        <h2 className="mt-8 text-center text-sm font-medium tracking-widest text-zinc-500 uppercase">
+          Sign in
         </h2>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="bg-white py-8 px-6 shadow rounded-lg">
-          <p className="mb-4 min-h-[20px] text-center text-sm text-red-600">
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-zinc-900 border border-zinc-800 py-8 px-6 rounded-lg">
+          <p className="mb-4 min-h-[20px] text-center text-xs text-red-400">
             {errorMessage}
           </p>
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-900"
+                className="block text-xs font-medium text-zinc-400 tracking-wide uppercase"
               >
-                Email address
+                Email
               </label>
               <div className="mt-2">
                 <input
@@ -66,9 +54,9 @@ export const Login = () => {
                     maxLength: 60,
                   })}
                   type="email"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                 />
-                <p className="mt-1 text-sm text-red-600 min-h-[20px]">
+                <p className="mt-1 text-xs text-red-400 min-h-[16px]">
                   <ErrorMessage errors={errors} name="email" />
                 </p>
               </div>
@@ -76,7 +64,7 @@ export const Login = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm/6 font-medium text-gray-900"
+                className="block text-xs font-medium text-zinc-400 tracking-wide uppercase"
               >
                 Password
               </label>
@@ -90,20 +78,20 @@ export const Login = () => {
                     },
                   })}
                   type="password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                 />
-                <p className="mt-1 text-sm text-red-600 min-h-[20px]">
+                <p className="mt-1 text-xs text-red-400 min-h-[16px]">
                   <ErrorMessage errors={errors} name="password" />
                 </p>
               </div>
             </div>
 
-            <div>
+            <div className="pt-2">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-100 transition-colors"
               >
-                Sign in
+                ログイン
               </button>
             </div>
           </form>

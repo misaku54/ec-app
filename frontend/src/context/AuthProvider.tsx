@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // ログインユーザー取得
   const fetchMe = () => {
+    setIsAuthChecked(false);
     ApiClient.get<Me>("/api/me")
       .then((res) => {
         setMe(res.data);

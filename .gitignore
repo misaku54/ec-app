@@ -82,3 +82,4 @@ http-client.private.env.json
 .idea/ApifoxUploaderProjectSetting.xml
 
 repo
+.github/
