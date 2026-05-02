@@ -11,7 +11,6 @@ export const ProductManegement: React.FC = () => {
     deletedProduct,
     deleteProduct,
   } = useDeleteProduct();
-  console.log(products);
 
   // 初回レンダリング後に商品一覧を取得
   useEffect(() => getProducts(), []);
