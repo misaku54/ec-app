@@ -1,5 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 import { useCreateProduct } from "../../hooks/useCreateProduct";
 
 type Inputs = {
@@ -22,9 +24,18 @@ export const ProductCreateForm = () => {
 
   const { isLoading, createProduct } = useCreateProduct();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
-    createProduct(data);
+    try {
+      const id = await createProduct(data);
+      navigate(`/admin/product/${id}`, {
+        state: { message: "商品を登録しました" },
+      });
+    } catch (e) {
+      toast.error("商品の登録に失敗しました");
+    }
   };
 
   return (

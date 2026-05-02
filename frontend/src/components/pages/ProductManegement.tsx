@@ -11,6 +11,7 @@ export const ProductManegement: React.FC = () => {
     deletedProduct,
     deleteProduct,
   } = useDeleteProduct();
+  console.log(products);
 
   // 初回レンダリング後に商品一覧を取得
   useEffect(() => getProducts(), []);
@@ -23,7 +24,9 @@ export const ProductManegement: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-zinc-800 mb-6 pb-2 border-b border-zinc-200">商品一覧</h1>
+      <h1 className="text-2xl font-bold text-zinc-800 mb-6 pb-2 border-b border-zinc-200">
+        商品一覧
+      </h1>
       {loading || deleteLoding ? (
         <Loader />
       ) : (
