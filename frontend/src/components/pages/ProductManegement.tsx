@@ -7,11 +7,7 @@ import { ProductTable } from "../organisms/table/ProductTable";
 
 export const ProductManegement: React.FC = () => {
   const { loading, products, getProducts } = useAllProduct();
-  const {
-    loading: deleteLoding,
-    deletedProduct,
-    deleteProduct,
-  } = useDeleteProduct();
+  const { isLoading, deletedProduct, deleteProduct } = useDeleteProduct();
   const { openDiaLog } = useDiaLogContext();
 
   const handleDelete = (id: number) => {
@@ -32,7 +28,7 @@ export const ProductManegement: React.FC = () => {
       <h1 className="text-2xl font-bold text-zinc-800 mb-6 pb-2 border-b border-zinc-200">
         商品一覧
       </h1>
-      {loading || deleteLoding ? (
+      {loading || isLoading ? (
         <Loader />
       ) : (
         <ProductTable products={products} onDelete={handleDelete} />

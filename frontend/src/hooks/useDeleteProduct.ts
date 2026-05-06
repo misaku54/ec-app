@@ -1,6 +1,6 @@
-import axios from "axios";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { ProductDelete } from "../types/ProductDelete";
+import { useAxios } from "./useAixos";
 
 interface RequestBody {
   id: number;
@@ -13,23 +13,17 @@ interface ResponseData {
 
 // 商品削除するhooks
 export const useDeleteProduct = () => {
-  const [loading, setLoading] = useState(false);
+  const { isLoading, axiosInstance } = useAxios();
   const [deletedProduct, setDeletedProduct] = useState<ProductDelete | null>();
 
-  const deleteProduct = useCallback((id: number) => {
-    setLoading(true);
-
+  const deleteProduct = (id: number) => {
     const requestBody: RequestBody = { id };
 
-    axios
-      .post<ResponseData>(
-        "http://localhost:8888/api/admin/product/delete",
-        requestBody,
-      )
+    axiosInstance
+      .post<ResponseData>("/api/admin/product/delete", requestBody)
       .then((res) => setDeletedProduct(res.data.data))
-      .catch(() => alert("商品の削除に失敗しました"))
-      .finally(() => setLoading(false));
-  }, []);
+      .catch(() => alert("商品の削除に失敗しました"));
+  };
 
-  return { loading, deletedProduct, deleteProduct };
+  return { isLoading, deletedProduct, deleteProduct };
 };

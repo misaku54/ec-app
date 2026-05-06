@@ -124,7 +124,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // オブジェクトキー削除
-    s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
+    if (deleteImageCount > 0) {
+      s3FileMapper.deleteS3FileByEntityTypeAndId(EntityType.PRODUCT, productId);
+    }
 
     // 削除用レスポンスを生成
     ProductDeleteDto dto = new ProductDeleteDto();
