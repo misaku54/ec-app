@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useDiaLogContext } from "../../context/DiaLogContext";
 import { useAllProduct } from "../../hooks/useAllProducts";
 import { useDeleteProduct } from "../../hooks/useDeleteProduct";
 import { Loader } from "../atoms/loader/Loader";
@@ -11,6 +12,11 @@ export const ProductManegement: React.FC = () => {
     deletedProduct,
     deleteProduct,
   } = useDeleteProduct();
+  const { openDiaLog } = useDiaLogContext();
+
+  const handleDelete = (id: number) => {
+    openDiaLog("この商品を削除しますか？", () => deleteProduct(id));
+  };
 
   // 初回レンダリング後に商品一覧を取得
   useEffect(() => getProducts(), []);
@@ -29,7 +35,7 @@ export const ProductManegement: React.FC = () => {
       {loading || deleteLoding ? (
         <Loader />
       ) : (
-        <ProductTable products={products} onDelete={deleteProduct} />
+        <ProductTable products={products} onDelete={handleDelete} />
       )}
     </>
   );
