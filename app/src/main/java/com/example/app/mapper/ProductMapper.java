@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface ProductMapper {
 
-  List<ProductDto> getProductList();
+  List<ProductDto> getProductList(@Param("params") ProductSearchParam param);
 
   List<ProductDetailDto> searchProducts(@Param("params") ProductSearchParam param);
 

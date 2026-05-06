@@ -37,8 +37,8 @@ public class ProductServiceImpl implements ProductService {
 
 
   @Override
-  public List<ProductDto> getProductList() {
-    return productMapper.getProductList();
+  public List<ProductDto> getProductList(ProductSearchParam param) {
+    return productMapper.getProductList(param);
   }
 
   public List<ProductDetailDto> searchProducts(ProductSearchParam param) {
