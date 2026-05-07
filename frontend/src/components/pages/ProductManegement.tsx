@@ -3,10 +3,11 @@ import { useDiaLogContext } from "../../context/DiaLogContext";
 import { useAllProduct } from "../../hooks/useAllProducts";
 import { useDeleteProduct } from "../../hooks/useDeleteProduct";
 import { Loader } from "../atoms/loader/Loader";
+import { Paging } from "../molecules/Paging";
 import { ProductTable } from "../organisms/table/ProductTable";
 
 export const ProductManegement: React.FC = () => {
-  const { isLoading, products, getProducts } = useAllProduct();
+  const { isLoading, products, getProducts, pageInfo } = useAllProduct();
   const {
     isLoading: deleteLoading,
     deletedProduct,
@@ -18,6 +19,10 @@ export const ProductManegement: React.FC = () => {
     openDiaLog("この商品を削除しますか？", () => deleteProduct(id));
   };
 
+  const handlePageChange = (page: number) => {
+    getProducts(page);
+  };
+
   // 初回レンダリング後に商品一覧を取得
   useEffect(() => getProducts(), []);
 
@@ -25,7 +30,7 @@ export const ProductManegement: React.FC = () => {
     if (deletedProduct?.productId) {
       getProducts();
     }
-  }, [deletedProduct, getProducts]);
+  }, [deletedProduct]);
 
   return (
     <>
@@ -35,7 +40,12 @@ export const ProductManegement: React.FC = () => {
       {isLoading || deleteLoading ? (
         <Loader />
       ) : (
-        <ProductTable products={products} onDelete={handleDelete} />
+        <>
+          <ProductTable products={products} onDelete={handleDelete} />
+          {pageInfo && (
+            <Paging pageInfo={pageInfo} onPageChange={handlePageChange} />
+          )}
+        </>
       )}
     </>
   );
