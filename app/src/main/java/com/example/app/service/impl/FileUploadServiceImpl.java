@@ -60,7 +60,7 @@ public class FileUploadServiceImpl implements FileUploadService {
   @Override
   public int deleteImages(List<String> objectKeys) throws Exception {
     if (CollectionUtils.isEmpty(objectKeys)) {
-      throw new ApiNotFoundException("不正なリクエストです。");
+      return 0;
     }
     return S3Util.deleteFiles(s3Client, bucketName, objectKeys);
   }

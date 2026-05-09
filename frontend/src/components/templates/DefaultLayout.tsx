@@ -10,7 +10,11 @@ export const DefaultLayout: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.message) {
-      toast.success(location.state.message);
+      if (location.state.type === "error") {
+        toast.error(location.state.message);
+      } else {
+        toast.success(location.state.message);
+      }
       navigate(location.pathname, { replace: true, state: null });
     }
   }, [location, navigate]);
