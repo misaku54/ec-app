@@ -1,24 +1,30 @@
-import { useCallback, useState } from "react";
-import { ApiClient } from "../api/ApiClient";
+import { useState } from "react";
+import type { PageInfo } from "../types/PageInfo";
 import type { Product } from "../types/Product";
+import { useAxios } from "./useAixos";
 
 interface ResponseData {
   data: Product[];
+  pageInfo: PageInfo;
 }
 
 // 商品一覧を取得するhooks
 export const useAllProduct = () => {
-  const [loading, setLoading] = useState(false);
+  const { isLoading, axiosInstance } = useAxios();
   const [products, setProducts] = useState<Product[]>([]);
+  const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
 
-  const getProducts = useCallback(() => {
-    setLoading(true);
+  const getProducts = (page: number = 1) => {
+    axiosInstance
+      .get<ResponseData>("/api/admin/product/list", {
+        params: { page, size: 20 },
+      })
+      .then((res) => {
+        setProducts(res.data.data);
+        setPageInfo(res.data.pageInfo);
+      })
+      .catch(() => alert("商品一覧の抽出に失敗しました。"));
+  };
 
-    ApiClient.get<ResponseData>("/api/admin/product/list")
-      .then((res) => setProducts(res.data.data))
-      .catch(() => alert("商品一覧の抽出に失敗しました。"))
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { loading, products, getProducts };
+  return { isLoading, products, getProducts, pageInfo };
 };

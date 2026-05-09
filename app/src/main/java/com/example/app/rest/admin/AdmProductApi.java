@@ -4,7 +4,11 @@ import com.example.app.dto.*;
 import com.example.app.form.AdmProductCreateForm;
 import com.example.app.form.AdmProductDeleteForm;
 import com.example.app.form.AdmProductUpdateForm;
+import com.example.app.form.ProductSearchParam;
 import com.example.app.service.ProductService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +26,18 @@ public class AdmProductApi {
   private final ProductService productService;
 
   @GetMapping("/list")
-  public ResponseListDto<ProductDto> productList() {
-    List<ProductDto> productDtoList = productService.getProductList();
+  public ResponseListDto<ProductDto> productList(
+      ProductSearchParam param,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    PageHelper.startPage(page, size);
+
+    List<ProductDto> list = productService.getProductList(param);
+    PageInfo<ProductDto> pageInfo = new PageInfo<>(list);
 
     ResponseListDto<ProductDto> response = new ResponseListDto<>();
-    response.setData(productDtoList);
+    response.setData(list);
+    response.setPageInfo(new PageInfoDto(pageInfo.getTotal(), pageInfo.getPages(), pageInfo.getPageNum(), pageInfo.getPageSize()));
     return response;
   }
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ProductService {
 
-  List<ProductDto> getProductList();
+  List<ProductDto> getProductList(ProductSearchParam param);
 
   List<ProductDetailDto> searchProducts(ProductSearchParam param);
 
