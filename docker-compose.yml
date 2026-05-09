@@ -9,19 +9,6 @@ services:
     volumes:
       - db-storage:/var/lib/postgresql/data
 
-  app:
-    build: ./app
-    depends_on:
-      - postgresdb
-    env_file: ./.env
-    ports:
-      - "8888:8080"
-    volumes:
-      - ./app:/app
-    command: ./mvnw spring-boot:run
-    stdin_open: true
-    tty: true
-
   frontend:
     build: ./frontend
     ports:
