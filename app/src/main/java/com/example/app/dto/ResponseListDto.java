@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseListDto<T> {
+  private String status;
   private List<T> data;
   private PageInfoDto pageInfo;
 }

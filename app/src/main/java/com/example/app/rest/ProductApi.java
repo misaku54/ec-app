@@ -8,6 +8,7 @@ import com.example.app.service.ProductService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,7 @@ public class ProductApi {
   private final ProductService productService;
 
   @GetMapping("/list")
-  public ResponseListDto<ProductDetailDto> productList(
+  public ResponseEntity<ResponseListDto<ProductDetailDto>> productList(
       ProductSearchParam param,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "20") int size) {
@@ -34,8 +35,9 @@ public class ProductApi {
     PageInfo<ProductDetailDto> pageInfo = new PageInfo<>(list);
 
     ResponseListDto<ProductDetailDto> response = new ResponseListDto<>();
+    response.setStatus("success");
     response.setData(list);
     response.setPageInfo(new PageInfoDto(pageInfo.getTotal(), pageInfo.getPages(), pageInfo.getPageNum(), pageInfo.getPageSize()));
-    return response;
+    return ResponseEntity.ok(response);
   }
 }
