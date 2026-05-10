@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,7 +67,13 @@ public class GlobalExceptionHandler {
     log.warn("データが重複してます。", ex);
     return ResponseEntity
       .status(HttpStatus.CONFLICT)
-      .body(ErrorResponseDto.of(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+      .body(ErrorResponseDto.of(HttpStatus.CONFLICT.value(), ex.getMessage()));
+  }
+
+  @ExceptionHandler(DuplicateKeyException.class)
+  public ResponseEntity<ErrorResponseDto> handleDuplicateKey(DuplicateKeyException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+      .body(ErrorResponseDto.of(409, "既に登録されているデータです"));
   }
 
   @ExceptionHandler(DataAccessException.class)

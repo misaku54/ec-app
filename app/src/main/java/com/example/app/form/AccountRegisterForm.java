@@ -1,21 +1,22 @@
 package com.example.app.form;
 
-import com.example.app.dto.AddressDto;
+import com.example.app.valdation.StrongPassword;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class AccountRegisterForm {
 
   @NotBlank(message="{require}")
   private String name;
-  @NotBlank(message="{require}")
-  private String email;
-  @NotBlank(message="{require}")
-  private String password;
 
-  private List<AddressDto> addressList;
+  @NotBlank(message="{require}")
+  @Email(message = "メールアドレスの形式が無効です")
+  private String email;
+
+  @NotBlank(message="{require}")
+  @StrongPassword
+  private String password;
 
 }

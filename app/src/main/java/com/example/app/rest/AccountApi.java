@@ -42,6 +42,11 @@ public class AccountApi {
   @UseBindingResult
   public ResponseEntity<ResponseDto<Void>> register(@Validated AccountRegisterForm accountRegisterForm) {
 
+    accountService.register(
+      accountRegisterForm.getName(),
+      accountRegisterForm.getEmail(),
+      accountRegisterForm.getPassword()
+    );
     ResponseDto<Void> response = new ResponseDto<>();
     response.setStatus("success");
 

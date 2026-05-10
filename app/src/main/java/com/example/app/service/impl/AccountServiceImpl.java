@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   @Transactional
-  public void register(String name, String email, String password, List<AddressDto> addressList) {
+  public void register(String name, String email, String password) {
     Optional<AccountDto> account = accountMapper.findByEmail(email);
     if (account.isPresent()) {
       throw new ApiConflictException("すでに登録されているメールアドレスです");
@@ -48,7 +48,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     AccountDto insertedAccount = this.insertAccount(name, email, password);
-    addressMapper.insertAddresses(addressList, insertedAccount.getId());
     accountRoleMapper.insertAccountRole(insertedAccount.getId(), role.get().getId());
 
   }
