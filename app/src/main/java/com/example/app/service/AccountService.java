@@ -7,5 +7,4 @@ public interface AccountService {
 
   void register(String name, String email, String password);
 
-  AccountDto insertAccount(String name, String email, String password);
 }

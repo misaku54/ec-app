@@ -41,15 +41,14 @@ public class AccountApi {
   @PostMapping("/public/register")
   @UseBindingResult
   public ResponseEntity<ResponseDto<Void>> register(@Validated AccountRegisterForm accountRegisterForm) {
-
     accountService.register(
       accountRegisterForm.getName(),
       accountRegisterForm.getEmail(),
       accountRegisterForm.getPassword()
     );
+
     ResponseDto<Void> response = new ResponseDto<>();
     response.setStatus("success");
-
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

@@ -1,13 +1,11 @@
 package com.example.app.service.impl;
 
 import com.example.app.dto.AccountDto;
-import com.example.app.dto.AddressDto;
 import com.example.app.dto.RoleDto;
 import com.example.app.exception.ApiConflictException;
 import com.example.app.exception.ApiNotFoundException;
 import com.example.app.mapper.AccountMapper;
 import com.example.app.mapper.AccountRoleMapper;
-import com.example.app.mapper.AddressMapper;
 import com.example.app.mapper.RoleMapper;
 import com.example.app.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +22,6 @@ public class AccountServiceImpl implements AccountService {
   private final AccountMapper accountMapper;
   private final AccountRoleMapper accountRoleMapper;
   private final RoleMapper roleMapper;
-  private final AddressMapper addressMapper;
   private final PasswordEncoder passwordEncoder;
   private final String ROLE_USER = "USER";
 
@@ -49,11 +45,9 @@ public class AccountServiceImpl implements AccountService {
 
     AccountDto insertedAccount = this.insertAccount(name, email, password);
     accountRoleMapper.insertAccountRole(insertedAccount.getId(), role.get().getId());
-
   }
 
-  @Override
-  public AccountDto insertAccount(String name, String email, String password) {
+  private AccountDto insertAccount(String name, String email, String password) {
     String hashedPassword = passwordEncoder.encode(password);
 
     AccountDto account = new AccountDto();

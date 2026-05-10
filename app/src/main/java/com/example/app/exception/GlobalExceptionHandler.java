@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
     log.error("データベース操作中にエラーが発生しました。", ex);
     return ResponseEntity
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()));
+      .body(ErrorResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "サーバーエラーが発生しました"));
   }
 
   @ExceptionHandler(NoResourceFoundException.class)
