@@ -16,6 +16,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+  // カスタムバリデーションエラーをキャッチ
   @ExceptionHandler(ErrorMessageException.class)
   public ResponseEntity<ErrorResponseDto> handleErrorMessageException(ErrorMessageException ex) {
     ErrorResponseDto response;
@@ -43,6 +44,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(response.getError().getCode()).body(response);
   }
 
+  // API処理中のエラーをキャッチ
   @ExceptionHandler(ApiInvalidUpdateException.class)
   public ResponseEntity<ErrorResponseDto> handleApiInvalidUpdate(ApiInvalidUpdateException ex) {
     log.error("Apiエラーが発生しました。入力値を確認してください。", ex);
@@ -56,6 +58,14 @@ public class GlobalExceptionHandler {
     log.warn("データが見つかりませんでした。", ex);
     return ResponseEntity
       .status(HttpStatus.NOT_FOUND)
+      .body(ErrorResponseDto.of(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+  }
+
+  @ExceptionHandler(ApiConflictException.class)
+  public ResponseEntity<ErrorResponseDto> handleApiConflict(ApiConflictException ex) {
+    log.warn("データが重複してます。", ex);
+    return ResponseEntity
+      .status(HttpStatus.CONFLICT)
       .body(ErrorResponseDto.of(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
   }
 
@@ -77,7 +87,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponseDto> handleGeneral(Exception ex) {
-    log.error("予期しないエラーが発生しました。", ex);
     log.error("予期しないエラーが発生しました。", ex);
     return ResponseEntity
       .status(HttpStatus.INTERNAL_SERVER_ERROR)

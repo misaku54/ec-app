@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.AddressMapper">
+
+  <insert id="insertAddresses" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO addresses (account_id, name, postal_code, address, phone)
+    VALUES
+    <foreach collection="addresses" item="address" separator=",">
+      (#{accountId}, #{address.name}, #{address.postal_code}, #{address.address}, #{address.phone})
+    </foreach>
+  </insert>
+
+</mapper>

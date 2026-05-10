@@ -1,17 +1,18 @@
 package com.example.app.rest;
 
+import com.example.app.annotation.UseBindingResult;
 import com.example.app.dto.AccountDto;
 import com.example.app.dto.MeDto;
 import com.example.app.dto.ResponseDto;
+import com.example.app.form.AccountRegisterForm;
 import com.example.app.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -34,6 +35,16 @@ public class AccountApi {
     ResponseDto<MeDto> response = new ResponseDto<>();
     response.setStatus("success");
     response.setData(me);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @PostMapping("/public/register")
+  @UseBindingResult
+  public ResponseEntity<ResponseDto<Void>> register(@Validated AccountRegisterForm accountRegisterForm) {
+
+    ResponseDto<Void> response = new ResponseDto<>();
+    response.setStatus("success");
+
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }
