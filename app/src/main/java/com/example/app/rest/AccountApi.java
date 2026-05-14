@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
 
 @RestController
 @AllArgsConstructor
@@ -40,7 +43,7 @@ public class AccountApi {
 
   @PostMapping("/public/register")
   @UseBindingResult
-  public ResponseEntity<ResponseDto<Void>> register(@Validated AccountRegisterForm accountRegisterForm) {
+  public ResponseEntity<ResponseDto<Void>> register(@Validated @RequestBody AccountRegisterForm accountRegisterForm, BindingResult bindingResult, Locale locale) {
     accountService.register(
       accountRegisterForm.getName(),
       accountRegisterForm.getEmail(),

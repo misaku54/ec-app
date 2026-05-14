@@ -9,14 +9,14 @@ import lombok.Data;
 public class AccountRegisterForm {
 
   @NotBlank(message="{require}")
-  private String name;
-
-  @NotBlank(message="{require}")
   @Email(message = "メールアドレスの形式が無効です")
   private String email;
 
   @NotBlank(message="{require}")
   @StrongPassword
   private String password;
+
+  @NotBlank(message="{require}")
+  private String name;
 
 }

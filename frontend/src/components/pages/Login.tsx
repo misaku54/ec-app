@@ -1,5 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { Link } from "react-router";
 import { useLogin } from "../../hooks/useLogin";
 
 type Inputs = {
@@ -95,6 +96,12 @@ export const Login = () => {
               </button>
             </div>
           </form>
+          <p className="mt-6 text-center text-xs text-zinc-500">
+            アカウントをお持ちでない方は{" "}
+            <Link to="/register" className="text-zinc-300 hover:text-white underline">
+              新規登録
+            </Link>
+          </p>
         </div>
       </div>
     </div>
