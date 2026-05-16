@@ -1,3 +1,4 @@
+import type { ApiResponse } from "../types/ApiResponse";
 import type { ProductDetail } from "../types/ProductDetail";
 import { useAxios } from "./useAixos";
 
@@ -7,10 +8,6 @@ interface RequestBody {
   price: number;
   stock: number;
   imageFiles: FileList;
-}
-
-interface ResponseData {
-  data: ProductDetail;
 }
 
 // 商品登録するhooks
@@ -33,7 +30,7 @@ export const useCreateProduct = () => {
 
   const createProduct = (requestBody: RequestBody) => {
     return axiosInstance
-      .post<ResponseData>("/api/admin/product/create", toFormData(requestBody))
+      .post<ApiResponse<ProductDetail>>("/api/admin/product/create", toFormData(requestBody))
       .then((res) => {
         if (res.data.data.id && res.data.data.id > 0) {
           return res.data.data.id;

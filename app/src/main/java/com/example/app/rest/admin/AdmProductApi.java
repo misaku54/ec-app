@@ -26,7 +26,7 @@ public class AdmProductApi {
   private final ProductService productService;
 
   @GetMapping("/list")
-  public ResponseListDto<ProductDto> productList(
+  public ResponseEntity<ResponseListDto<ProductDto>> productList(
       ProductSearchParam param,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "20") int size) {
@@ -36,9 +36,10 @@ public class AdmProductApi {
     PageInfo<ProductDto> pageInfo = new PageInfo<>(list);
 
     ResponseListDto<ProductDto> response = new ResponseListDto<>();
+    response.setStatus("success");
     response.setData(list);
     response.setPageInfo(new PageInfoDto(pageInfo.getTotal(), pageInfo.getPages(), pageInfo.getPageNum(), pageInfo.getPageSize()));
-    return response;
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @GetMapping("/{productId}")
@@ -46,7 +47,7 @@ public class AdmProductApi {
     ProductDetailDto productDetailDto = productService.getProductDetail(productId);
 
     ResponseDto<ProductDetailDto> response = new ResponseDto<>();
-    response.setMessage("success");
+    response.setStatus("success");
     response.setData(productDetailDto);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -62,13 +63,14 @@ public class AdmProductApi {
     ProductDetailDto createdProductDetail = productService.createProduct(product, admProductCreateForm.getImageFiles());
 
     ResponseDto<ProductDetailDto> response = new ResponseDto<>();
-    response.setMessage("success");
+    response.setStatus("success");
     response.setData(createdProductDetail);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
+
   // TODO:あとで修正
   @PostMapping("/update")
-  public ResponseDto<String> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
+  public ResponseEntity<ResponseDto<Void>> updateProduct(@ModelAttribute AdmProductUpdateForm admProductUpdateForm) throws Exception {
     ProductDto product = new ProductDto();
     product.setId(admProductUpdateForm.getId());
     product.setName(admProductUpdateForm.getName());
@@ -76,12 +78,11 @@ public class AdmProductApi {
     product.setPrice(admProductUpdateForm.getPrice());
     product.setStock(admProductUpdateForm.getStock());
 
-
     productService.updateProduct(product, admProductUpdateForm.getUpdateImages());
 
-    ResponseDto<String> response = new ResponseDto<>();
-    response.setData("success");
-    return response;
+    ResponseDto<Void> response = new ResponseDto<>();
+    response.setStatus("success");
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PostMapping("/delete")
@@ -89,7 +90,7 @@ public class AdmProductApi {
     ProductDeleteDto dto = productService.deleteProduct(admProductDeleteForm.getId());
 
     ResponseDto<ProductDeleteDto> response = new ResponseDto<>();
-    response.setMessage("success");
+    response.setStatus("success");
     response.setData(dto);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

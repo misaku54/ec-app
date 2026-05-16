@@ -33,4 +33,9 @@
       a.email = #{email}
   </select>
 
+  <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO accounts (name, email, password)
+    VALUES (#{name}, #{email}, #{password})
+  </insert>
+
 </mapper>
