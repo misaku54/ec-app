@@ -1,14 +1,10 @@
 import { useState } from "react";
+import type { ApiResponse } from "../types/ApiResponse";
 import type { ProductDelete } from "../types/ProductDelete";
 import { useAxios } from "./useAixos";
 
 interface RequestBody {
   id: number;
-}
-
-interface ResponseData {
-  message: string;
-  data: ProductDelete;
 }
 
 // 商品削除するhooks
@@ -20,7 +16,7 @@ export const useDeleteProduct = () => {
     const requestBody: RequestBody = { id };
 
     axiosInstance
-      .post<ResponseData>("/api/admin/product/delete", requestBody)
+      .post<ApiResponse<ProductDelete>>("/api/admin/product/delete", requestBody)
       .then((res) => setDeletedProduct(res.data.data))
       .catch(() => alert("商品の削除に失敗しました"));
   };

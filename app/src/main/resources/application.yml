@@ -1,7 +1,4 @@
 aws:
-  endpoint: http://minio:9000
   region: us-east-1
-  minio-user: ${MINIO_ROOT_USER}
-  minio-pass: ${MINIO_ROOT_PASSWORD}
   s3:
     bucket-name: your-bucket

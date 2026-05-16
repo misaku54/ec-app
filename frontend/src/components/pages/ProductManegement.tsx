@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useDiaLogContext } from "../../context/DiaLogContext";
-import { useAllProduct } from "../../hooks/useAllProducts";
+import { useAdmProduct } from "../../hooks/useAdmProducts";
 import { useDeleteProduct } from "../../hooks/useDeleteProduct";
 import { Loader } from "../atoms/loader/Loader";
 import { Paging } from "../molecules/Paging";
 import { ProductTable } from "../organisms/table/ProductTable";
 
 export const ProductManegement: React.FC = () => {
-  const { isLoading, products, getProducts, pageInfo } = useAllProduct();
+  const { isLoading, products, getProducts, pageInfo } = useAdmProduct();
   const {
     isLoading: deleteLoading,
     deletedProduct,

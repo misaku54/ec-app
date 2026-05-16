@@ -1,27 +1,28 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link } from "react-router";
-import { useLogin } from "../../hooks/useLogin";
+import { useRegsiter } from "../../hooks/useRegister";
 
 type Inputs = {
   email: string;
   password: string;
+  name: string;
 };
 
-export const Login = () => {
+export const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    mode: "onSubmit", // 初回バリデーション：submit時のみ
-    reValidateMode: "onSubmit", // 再バリデーション：submit時のみ（←これが重要）
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
   });
 
-  const { isLoading, errorMessage, login } = useLogin();
+  const { isLoading, errorMessage, register: registerUser } = useRegsiter();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    login(data);
+    registerUser(data);
   };
 
   return (
@@ -32,7 +33,7 @@ export const Login = () => {
           <span className="text-2xl font-semibold tracking-wide text-white">STORE</span>
         </div>
         <h2 className="mt-8 text-center text-sm font-medium tracking-widest text-zinc-500 uppercase">
-          Sign in
+          Sign up
         </h2>
       </div>
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -41,6 +42,28 @@ export const Login = () => {
             {errorMessage}
           </p>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-xs font-medium text-zinc-400 tracking-wide uppercase"
+              >
+                Name
+              </label>
+              <div className="mt-2">
+                <input
+                  {...register("name", {
+                    required: "アカウント名は必須です",
+                    maxLength: { value: 50, message: "アカウント名は50文字以内で入力してください" },
+                  })}
+                  id="name"
+                  type="text"
+                  className="block w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                />
+                <p className="mt-1 text-xs text-red-400 min-h-[16px]">
+                  <ErrorMessage errors={errors} name="name" />
+                </p>
+              </div>
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -52,8 +75,9 @@ export const Login = () => {
                 <input
                   {...register("email", {
                     required: "メールアドレスは必須です",
-                    maxLength: 60,
+                    maxLength: { value: 60, message: "メールアドレスは60文字以内で入力してください" },
                   })}
+                  id="email"
                   type="email"
                   className="block w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                 />
@@ -78,6 +102,7 @@ export const Login = () => {
                       message: "パスワードは8文字以上でなくてはなりません",
                     },
                   })}
+                  id="password"
                   type="password"
                   className="block w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
                 />
@@ -86,20 +111,20 @@ export const Login = () => {
                 </p>
               </div>
             </div>
-
             <div className="pt-2">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-100 transition-colors"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-100 transition-colors disabled:opacity-50"
               >
-                ログイン
+                登録する
               </button>
             </div>
           </form>
           <p className="mt-6 text-center text-xs text-zinc-500">
-            アカウントをお持ちでない方は{" "}
-            <Link to="/register" className="text-zinc-300 hover:text-white underline">
-              新規登録
+            すでにアカウントをお持ちの方は{" "}
+            <Link to="/" className="text-zinc-300 hover:text-white underline">
+              ログイン
             </Link>
           </p>
         </div>
@@ -107,3 +132,4 @@ export const Login = () => {
     </div>
   );
 };
+

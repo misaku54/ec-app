@@ -3,13 +3,14 @@ package com.example.app.dto;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public class ValidationErrorDto extends ErrorDto {
-  private List<String> globalError;
-  private Map<String, List<String>> fieldError; // フィールドとそのフィールドで発生したエラーメッセージのリスト
+  private List<String> globalError = new ArrayList<>();
+  private Map<String, List<String>> fieldError = new HashMap<>();
 
   public void addGlobalError(String message) {
     this.globalError.add(message);
