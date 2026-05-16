@@ -8,7 +8,7 @@ function Counter() {
   console.log("Counterがレンダリングされた");
 
   return (
-    <div>
+    <div className="bg-rose-200 p-6">
       <h1>カウント：{count}</h1>
       <button onClick={increase}>+1</button>
       <button onClick={decrease}>-1</button>

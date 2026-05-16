@@ -7,7 +7,7 @@ function InputText() {
   console.log("InputTextがレンダリングされた");
 
   return (
-    <div>
+    <div className="bg-cyan-200 p-6">
       <input
         type="text"
         value={text}
