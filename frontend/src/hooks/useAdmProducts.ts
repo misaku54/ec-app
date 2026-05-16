@@ -4,10 +4,12 @@ import type { Product } from "../types/Product";
 import { useAxios } from "./useAixos";
 
 // 商品一覧を取得するhooks
-export const useAllProduct = () => {
+export const useAdmProduct = () => {
   const { isLoading, axiosInstance } = useAxios();
   const [products, setProducts] = useState<Product[]>([]);
-  const [pageInfo, setPageInfo] = useState<ApiListResponse<Product>["pageInfo"] | null>(null);
+  const [pageInfo, setPageInfo] = useState<
+    ApiListResponse<Product>["pageInfo"] | null
+  >(null);
 
   const getProducts = (page: number = 1) => {
     axiosInstance
