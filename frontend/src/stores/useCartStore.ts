@@ -22,29 +22,28 @@ export const useCartStore = create<CartState>()((set) => ({
   cart: [],
   addItem: (item: CartItem) =>
     set((state) => {
-      const existItem = state.cart.find((i) => i.productId === item.productId);
-      if (existItem) {
-        const newItems = state.cart.map((i) =>
-          i.productId === existItem.productId
-            ? { ...item, count: i.count + 1 }
-            : i,
-        );
-        return { cart: newItems };
-      } else {
-        return { cart: [...state.cart, { ...item, count: 1 }] };
+      const idx = state.cart.findIndex((i) => i.productId === item.productId);
+      const isInCart = idx !== -1;
+
+      if (isInCart) {
+        const newCart = [...state.cart];
+        newCart[idx] = { ...newCart[idx], count: newCart[idx].count + 1 };
+        return { cart: newCart };
       }
+
+      return { cart: [...state.cart, { ...item, count: 1 }] };
     }),
   removeItem: (targetId: number) =>
     set((state) => {
-      const newItems = state.cart.filter((item) => item.productId != targetId);
-      return { cart: newItems };
+      const newCart = state.cart.filter((item) => item.productId != targetId);
+      return { cart: newCart };
     }),
   updateCount: (targetId: number, count: number) =>
     set((state) => {
-      const newItems = state.cart.map((item) =>
+      const newCart = state.cart.map((item) =>
         item.productId === targetId ? { ...item, count: count } : item,
       );
-      return { cart: newItems };
+      return { cart: newCart };
     }),
   clearCart: () => set({ cart: [] }),
 }));
