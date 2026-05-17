@@ -8,9 +8,13 @@ interface Props {
 export const AddToCartButton = ({ item }: Props) => {
   const addItem = useCartStore((state) => state.addItem);
 
-  return item.stock !== 0 ? (
-    <button onClick={() => addItem(item)}>カートに追加</button>
-  ) : (
-    <span>在庫なし</span>
+  return (
+    <div>
+      {item.stock !== 0 ? (
+        <button onClick={() => addItem(item)}>カートに追加</button>
+      ) : (
+        <span>在庫なし</span>
+      )}
+    </div>
   );
 };
