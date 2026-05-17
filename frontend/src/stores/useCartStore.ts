@@ -1,22 +1,5 @@
 import { create } from "zustand";
-
-// カート内の商品情報
-interface CartItem {
-  productId: number;
-  price: number;
-  name: string;
-  stock: number;
-  count: number;
-}
-
-// 状態管理対象:カート情報
-interface CartState {
-  cart: CartItem[];
-  addItem: (item: CartItem) => void;
-  removeItem: (targetId: number) => void;
-  updateCount: (targetId: number, count: number) => void;
-  clearCart: () => void;
-}
+import type { CartItem, CartState } from "../types/Cart";
 
 export const useCartStore = create<CartState>()((set) => ({
   cart: [],
