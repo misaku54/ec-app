@@ -14,4 +14,5 @@ export interface CartState {
   removeItem: (targetId: number) => void;
   updateCount: (targetId: number, count: number) => void;
   clearCart: () => void;
+  getTotal: () => number | null;
 }
