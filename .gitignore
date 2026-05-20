@@ -83,3 +83,9 @@ http-client.private.env.json
 
 repo
 .github/
+
+# 環境変数
+.env
+
+# 学習メモ（個人用）
+learning/
