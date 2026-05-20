@@ -148,16 +148,16 @@ erDiagram
 }
 ```
 
-| フィールド         | 型     | 必須 | バリデーション              |
-|--------------------|--------|------|-----------------------------|
-| shippingName       | string | ✅   | 最大255文字                 |
-| shippingPostalCode | string | ✅   | 最大20文字                  |
-| shippingAddress    | string | ✅   | テキスト                    |
-| shippingPhone      | string | -    | 最大20文字                  |
-| note               | string | -    | テキスト                    |
-| items              | array  | ✅   | 1件以上                     |
-| items[].productId  | integer| ✅   | 存在する商品ID              |
-| items[].quantity   | integer| ✅   | 1以上                       |
+| フィールド         | 型      | 必須 | バリデーション              |
+|--------------------|---------|------|-----------------------------|
+| shippingName       | string  | ✅   | 最大255文字                 |
+| shippingPostalCode | string  | ✅   | 最大20文字                  |
+| shippingAddress    | string  | ✅   | テキスト                    |
+| shippingPhone      | string  | -    | 最大20文字                  |
+| note               | string  | -    | テキスト                    |
+| items              | array   | ✅   | 1件以上                     |
+| items[].productId  | integer | ✅   | 存在する商品ID              |
+| items[].quantity   | integer | ✅   | 1以上                       |
 
 #### レスポンス（成功 200）
 
@@ -313,7 +313,7 @@ resources/db/migration/
 ## 未対応事項（今フェーズのスコープ外）
 
 ### 住所まわり
-- 注文時に「この住所を保存する」→ addresses テーブルへの登録
+- 注文時に「この住所を保存する」→ addresses テーブルへの登録（`saveAddress` フィールド追加・重複チェックも必要）
 - マイページでの住所帳管理（追加・編集・削除）
 - 保存済み住所の選択UI（チェックアウト画面での addresses 一覧取得API）
 - ゲスト購入（`account_id = NULL` のフロー）
