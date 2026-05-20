@@ -87,6 +87,14 @@ atoms/ → molecules/ → organisms/ → templates/ → pages/
 
 テーブル定義・リレーションの詳細は [`docs/db-schema.md`](docs/db-schema.md) を参照。
 
+## Claudeへの行動指針
+
+- コミットはユーザーから明示的に依頼された場合のみ行う。修正・実装後に自動でコミットしない。
+
+## 開発ガイドライン
+
+コミット規約・コーディング規約の詳細は [`docs/development-guidelines.md`](docs/development-guidelines.md) を参照。
+
 ## ドキュメント構成
 
 ### `docs/`（永続ドキュメント）
