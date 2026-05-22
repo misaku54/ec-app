@@ -17,10 +17,14 @@ public interface ProductMapper {
 
   ProductDetailDto getProductDetailById(@Param("productId") int productId);
 
+  ProductDetailDto getProductByIdForUpdate(@Param("productId") int productId);
+
   int createProduct(ProductDto product);
 
   int updateProduct(ProductDto product);
 
   int deleteProduct(@Param("productId") int productId);
 
+  int updateProductStock(
+    @Param("productId") int productId, @Param("stock") int stock, @Param("quantity") int quantity);
 }

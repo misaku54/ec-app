@@ -6,7 +6,7 @@ import com.example.app.dto.MeDto;
 import com.example.app.dto.ResponseDto;
 import com.example.app.form.AccountRegisterForm;
 import com.example.app.service.AccountService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class AccountApi {
 

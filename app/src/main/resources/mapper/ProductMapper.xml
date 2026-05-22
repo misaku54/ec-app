@@ -103,6 +103,32 @@
     ORDER BY s3.sort_order ASC
   </select>
 
+  <select id="getProductByIdForUpdate" resultMap="productDetailResultMap">
+    SELECT
+      pr.id,
+      pr.name,
+      pr.description,
+      pr.price,
+      pr.stock,
+      pr.created_at,
+      pr.updated_at,
+      s3.s3_key as s3_s3_key,
+      s3.sort_order as s3_sort_order,
+      s3.is_main_image as s3_is_main_image
+    FROM
+      products pr
+    LEFT JOIN
+      S3_files s3
+    ON
+      pr.id = s3.entity_id
+      AND s3.entity_type = 1
+      AND s3.del_flg = false
+    WHERE
+      pr.id = #{productId}
+      AND pr.del_flg = false
+    ORDER BY s3.sort_order ASC
+  </select>
+
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO products (name, description, price, stock)
     VALUES (#{name}, #{description}, #{price}, #{stock})
@@ -129,4 +155,12 @@
       AND del_flg = false
   </update>
 
+  <update id="updateProductStock">
+    UPDATE products SET
+      stock = #{stock - quantity},
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{productId}
+      AND del_flg = false
+  </update>
 </mapper>
