@@ -126,7 +126,7 @@
     WHERE
       pr.id = #{productId}
       AND pr.del_flg = false
-    ORDER BY s3.sort_order ASC
+    ORDER BY s3.sort_order ASC FOR UPDATE
   </select>
 
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">

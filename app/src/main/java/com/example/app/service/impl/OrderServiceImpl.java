@@ -24,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
   public OrderResultDto createOrder(int accountId, OrderCreateForm form) {
     for (OrderItemForm item : form.getItems()) {
 
+      // 商品データ抽出＆ロック
       ProductDetailDto product = productMapper.getProductByIdForUpdate(item.getProductId());
 
       // 商品の存在チェック
@@ -34,10 +35,12 @@ public class OrderServiceImpl implements OrderService {
       if (product.getStock() < item.getQuantity()) {
         throw new ApiInvalidUpdateException(product.getName() + "が在庫不足です。");
       }
-      // 注文
-
+      // 在庫更新
+      productMapper.updateProductStock(item.getProductId(), item.getQuantity(), product.getStock());
 
     }
+    // 全商品のチェック後、注文データを登録
+
     return new OrderResultDto();
   }
 }
