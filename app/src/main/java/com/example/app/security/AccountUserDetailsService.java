@@ -3,7 +3,6 @@ package com.example.app.security;
 import com.example.app.dto.AccountDto;
 import com.example.app.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,14 +34,7 @@ public class AccountUserDetailsService implements UserDetailsService {
     AccountDto account = accountMapper.findByEmail(email)
       .orElseThrow(() -> new UsernameNotFoundException(email));
 
-    String[] roles = account.getRoles().stream()
-      .filter(role -> role != null)
-      .toArray(String[]::new);
-
-    return User.withUsername(account.getEmail())
-      .password(account.getPassword())
-      .roles(roles)
-      .build();
+    return new CustomUserDetails(account);
   }
 
 }
