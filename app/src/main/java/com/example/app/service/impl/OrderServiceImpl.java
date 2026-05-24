@@ -33,7 +33,6 @@ public class OrderServiceImpl implements OrderService {
     int totalAmount = 0;
 
     for (OrderItemForm item : form.getItems()) {
-
       // 商品データ抽出＆ロック
       ProductDetailDto product = productMapper.getProductByIdForUpdate(item.getProductId());
 
@@ -73,6 +72,11 @@ public class OrderServiceImpl implements OrderService {
     orderMapper.insertOrder(order);
     orderMapper.insertOrderItems(order.getId(), orderItems);
 
-    return new OrderResultDto();
+    // 注文結果
+    OrderResultDto orderResult = new OrderResultDto();
+    orderResult.setOrderId(order.getId());
+    orderResult.setStatus("PENDING");
+    orderResult.setTotalAmount(totalAmount);
+    return orderResult;
   }
 }
