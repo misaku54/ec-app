@@ -278,6 +278,7 @@ form/
 
 dto/
   └── OrderResultDto.java            # レスポンス
+  └── OrderItemDto.java              # order_items INSERT用
 
 service/
   └── OrderService.java              # インターフェース
