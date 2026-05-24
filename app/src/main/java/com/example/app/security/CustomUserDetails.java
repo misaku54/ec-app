@@ -24,6 +24,7 @@ public class CustomUserDetails extends User {
     this.account = account;
   }
 
+  // super()の引数として渡すためインスタンス生成前に呼ばれる → staticが必要
   private static List<GrantedAuthority> toAuthorities(List<String> roles) {
     return roles.stream().
                 filter(Objects::nonNull).
