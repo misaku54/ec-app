@@ -305,9 +305,9 @@ resources/db/migration/
 3. 商品が存在しない or `del_flg=true` → `ApiNotFoundException` をスロー
 4. `stock < quantity` → `ApiInvalidUpdateException` をスロー
 5. `UPDATE products SET stock = stock - quantity WHERE id = ?`
-6. 全商品のチェック・更新が完了したら `orders` にINSERT
-7. `order_items` に各明細をINSERT
-8. `total_amount` = `Σ(unit_price × quantity)` をアプリ側で計算してordersに保存
+6. 全商品のチェック・更新が完了したら `total_amount` = `Σ(unit_price × quantity)` をアプリ側で計算
+7. `orders` にINSERT
+8. `order_items` に各明細をINSERT
 
 ### バリデーション
 
