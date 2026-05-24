@@ -3,9 +3,42 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.mapper.OrderMapper">
 
-  <insert id="insertOrder">
-    INSERT INTO order (account_id, role_id)
-    VALUES (#{accountId}, #{roleId})
+  <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO orders (
+      account_id,
+      total_amount,
+      shipping_name,
+      shipping_postal_code,
+      shipping_address,
+      shipping_phone,
+      note
+    ) VALUES (
+      #{accountId},
+      #{totalAmount},
+      #{shippingName},
+      #{shippingPostalCode},
+      #{shippingAddress},
+      #{shippingPhone},
+      #{note}
+    )
   </insert>
 
+  <insert id="insertOrderItems" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO order_items (
+      order_id,
+      product_id,
+      product_name,
+      unit_price,
+      quantity,
+    ) VALUES
+    <foreach collection="orderItems" item="orderItem" separator=",">
+    (
+      #{orderId},
+      #{orderItem.productId},
+      #{orderItem.productName},
+      #{orderItem.unitPrice},
+      #{orderItem.quantity},
+    )
+    </foreach>
+  </insert>
 </mapper>
