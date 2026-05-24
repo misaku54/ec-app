@@ -5,12 +5,12 @@ import com.example.app.dto.AccountDto;
 import com.example.app.dto.MeDto;
 import com.example.app.dto.ResponseDto;
 import com.example.app.form.AccountRegisterForm;
+import com.example.app.security.CustomUserDetails;
 import com.example.app.service.AccountService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +18,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class AccountApi {
 
   private final AccountService accountService;
 
   @GetMapping("/me")
-  public ResponseEntity<ResponseDto<MeDto>> getMe(@AuthenticationPrincipal UserDetails user) {
-    String email = user.getUsername();
-
-    AccountDto account = accountService.findByEmail(email);
+  public ResponseEntity<ResponseDto<MeDto>> getMe(@AuthenticationPrincipal CustomUserDetails loginUser) {
+    AccountDto account = loginUser.getAccount();
 
     MeDto me = new MeDto();
     me.setId(account.getId());
