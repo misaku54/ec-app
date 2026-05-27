@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,37 +28,52 @@ public class OrderServiceImpl implements OrderService {
   @Override
   @Transactional
   public OrderResultDto createOrder(int accountId, OrderCreateForm form) {
-    List<OrderItemDto> orderItems = new ArrayList<>();
-    int totalAmount = 0;
+    List<OrderItemDto> orderItems = buildOrderItems(form);
+    int totalAmount = calcTotalAmount(orderItems);
+    OrderDto order = insertOrder(accountId, form, totalAmount);
+    orderMapper.insertOrderItems(order.getId(), orderItems);
 
-    for (OrderItemForm item : form.getItems()) {
-      // 商品データ抽出＆ロック
+    OrderResultDto orderResult = new OrderResultDto();
+    orderResult.setOrderId(order.getId());
+    orderResult.setStatus("PENDING");
+    orderResult.setTotalAmount(totalAmount);
+    return orderResult;
+  }
+
+  // 在庫チェック・減算・OrderItemDto組み立て
+  private List<OrderItemDto> buildOrderItems(OrderCreateForm form) {
+    List<OrderItemDto> orderItems = new ArrayList<>();
+
+    for (OrderItemForm item: form.getItems()) {
       ProductDetailDto product = productMapper.getProductByIdForUpdate(item.getProductId());
 
-      // 商品の存在チェック
       if (product == null) {
         throw new ApiNotFoundException("商品が見つかりません。 id:" + item.getProductId());
       }
-      // 商品の在庫チェック
       if (product.getStock() < item.getQuantity()) {
         throw new ApiInvalidUpdateException(product.getName() + "が在庫不足です。");
       }
-      // 在庫更新
       productMapper.updateProductStock(item.getProductId(), item.getQuantity());
 
-      // 注文明細インサート用
       OrderItemDto orderItem = new OrderItemDto();
       orderItem.setProductId(item.getProductId());
       orderItem.setProductName(product.getName()); // 注文時点の商品名（スナップショット）
       orderItem.setUnitPrice(product.getPrice());  // 注文時点の単価（スナップショット）
       orderItem.setQuantity(item.getQuantity());
       orderItems.add(orderItem);
-
-      // 合計金額算出
-      totalAmount += product.getPrice() * item.getQuantity();
     }
 
-    // 全商品のチェック後、注文データを登録
+    return orderItems;
+  }
+
+  private int calcTotalAmount(List<OrderItemDto> orderItems) {
+    return orderItems.stream()
+          .filter(Objects::nonNull)
+          .mapToInt(item -> item.getUnitPrice() * item.getQuantity())
+          .sum();
+  }
+
+  private OrderDto insertOrder(int accountId, OrderCreateForm form, int totalAmount) {
     OrderDto order = new OrderDto();
     order.setAccountId(accountId);
     order.setTotalAmount(totalAmount);
@@ -66,14 +82,8 @@ public class OrderServiceImpl implements OrderService {
     order.setShippingAddress(form.getShippingAddress());
     order.setShippingPhone(form.getShippingPhone());
     order.setNote(form.getNote());
-    orderMapper.insertOrder(order);
-    orderMapper.insertOrderItems(order.getId(), orderItems);
 
-    // 注文結果
-    OrderResultDto orderResult = new OrderResultDto();
-    orderResult.setOrderId(order.getId());
-    orderResult.setStatus("PENDING");
-    orderResult.setTotalAmount(totalAmount);
-    return orderResult;
+    orderMapper.insertOrder(order);
+    return order;
   }
 }
