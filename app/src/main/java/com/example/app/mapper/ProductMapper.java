@@ -17,7 +17,7 @@ public interface ProductMapper {
 
   ProductDetailDto getProductDetailById(@Param("productId") int productId);
 
-  ProductDetailDto getProductByIdForUpdate(@Param("productId") int productId);
+  ProductDto getProductByIdForUpdate(@Param("productId") int productId);
 
   int createProduct(ProductDto product);
 

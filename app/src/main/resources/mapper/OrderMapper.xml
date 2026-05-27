@@ -23,7 +23,7 @@
     )
   </insert>
 
-  <insert id="insertOrderItems" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertOrderItems">
     INSERT INTO order_items (
       order_id,
       product_id,

@@ -3,7 +3,7 @@ package com.example.app.service.impl;
 import com.example.app.dto.OrderDto;
 import com.example.app.dto.OrderItemDto;
 import com.example.app.dto.OrderResultDto;
-import com.example.app.dto.ProductDetailDto;
+import com.example.app.dto.ProductDto;
 import com.example.app.exception.ApiInvalidUpdateException;
 import com.example.app.exception.ApiNotFoundException;
 import com.example.app.form.OrderCreateForm;
@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     List<OrderItemDto> orderItems = new ArrayList<>();
 
     for (OrderItemForm item: form.getItems()) {
-      ProductDetailDto product = productMapper.getProductByIdForUpdate(item.getProductId());
+      ProductDto product = productMapper.getProductByIdForUpdate(item.getProductId());
 
       if (product == null) {
         throw new ApiNotFoundException("商品が見つかりません。 id:" + item.getProductId());
