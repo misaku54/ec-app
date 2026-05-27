@@ -36,6 +36,14 @@ docker compose up -d          # DB (PostgreSQL:5433), LocalStack, MinIO, Fronten
 docker compose down
 ```
 
+### DB接続（psql）
+
+```bash
+docker exec $(docker ps --filter "name=postgresdb" -q) psql -U ecuser -d ecdb -c "<SQL>"
+```
+
+接続情報の詳細は [`docs/db-schema.md`](docs/db-schema.md) の「接続」セクションを参照。
+
 ## Architecture
 
 ### Backend
