@@ -157,7 +157,7 @@
 
   <update id="updateProductStock">
     UPDATE products SET
-      stock = #{stock - quantity},
+      stock = stock - #{quantity},
       updated_at = CURRENT_TIMESTAMP
     WHERE
       id = #{productId}

@@ -26,5 +26,5 @@ public interface ProductMapper {
   int deleteProduct(@Param("productId") int productId);
 
   int updateProductStock(
-    @Param("productId") int productId, @Param("quantity") int quantity, @Param("stock") int stock);
+    @Param("productId") int productId, @Param("quantity") int quantity);
 }

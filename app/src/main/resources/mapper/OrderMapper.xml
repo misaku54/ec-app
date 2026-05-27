@@ -29,7 +29,7 @@
       product_id,
       product_name,
       unit_price,
-      quantity,
+      quantity
     ) VALUES
     <foreach collection="orderItems" item="orderItem" separator=",">
     (
@@ -37,7 +37,7 @@
       #{orderItem.productId},
       #{orderItem.productName},
       #{orderItem.unitPrice},
-      #{orderItem.quantity},
+      #{orderItem.quantity}
     )
     </foreach>
   </insert>

@@ -11,14 +11,12 @@ import com.example.app.form.OrderItemForm;
 import com.example.app.mapper.OrderMapper;
 import com.example.app.mapper.ProductMapper;
 import com.example.app.service.OrderService;
-import com.example.app.util.CurrentUserSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
       ProductDetailDto product = productMapper.getProductByIdForUpdate(item.getProductId());
 
       // 商品の存在チェック
-      if (Objects.isNull(product)) {
+      if (product == null) {
         throw new ApiNotFoundException("商品が見つかりません。 id:" + item.getProductId());
       }
       // 商品の在庫チェック
@@ -45,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
         throw new ApiInvalidUpdateException(product.getName() + "が在庫不足です。");
       }
       // 在庫更新
-      productMapper.updateProductStock(item.getProductId(), item.getQuantity(), product.getStock());
+      productMapper.updateProductStock(item.getProductId(), item.getQuantity());
 
       // 注文明細インサート用
       OrderItemDto orderItem = new OrderItemDto();
@@ -60,7 +58,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // 全商品のチェック後、注文データを登録
-    int currentUserId = CurrentUserSupport.getAccountId();
     OrderDto order = new OrderDto();
     order.setAccountId(accountId);
     order.setTotalAmount(totalAmount);
