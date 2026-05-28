@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class AdmProductApi {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<ResponseDto<ProductDetailDto>> createProduct(@ModelAttribute @Validated AdmProductCreateForm admProductCreateForm, BindingResult br) throws Exception {
+  public ResponseEntity<ResponseDto<ProductDetailDto>> createProduct(@ModelAttribute @Validated AdmProductCreateForm admProductCreateForm, BindingResult br, Locale locale) throws Exception {
     ProductDto product = new ProductDto();
     product.setName(admProductCreateForm.getName());
     product.setDescription(admProductCreateForm.getDescription());

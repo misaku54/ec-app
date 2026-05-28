@@ -17,7 +17,7 @@ public interface ProductMapper {
 
   ProductDetailDto getProductDetailById(@Param("productId") int productId);
 
-  ProductDetailDto getProductByIdForUpdate(@Param("productId") int productId);
+  ProductDto getProductByIdForUpdate(@Param("productId") int productId);
 
   int createProduct(ProductDto product);
 
@@ -26,5 +26,5 @@ public interface ProductMapper {
   int deleteProduct(@Param("productId") int productId);
 
   int updateProductStock(
-    @Param("productId") int productId, @Param("quantity") int quantity, @Param("stock") int stock);
+    @Param("productId") int productId, @Param("quantity") int quantity);
 }
