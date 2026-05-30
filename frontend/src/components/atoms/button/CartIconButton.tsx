@@ -1,5 +1,5 @@
 import { Link } from "react-router";
 
 export const CartIconButton = () => {
-  return <Link to="/#">カートアイコン予定</Link>;
+  return <Link to="/cart">カートアイコン予定</Link>;
 };
