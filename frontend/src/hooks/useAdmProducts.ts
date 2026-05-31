@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ApiListResponse } from "../types/ApiResponse";
+import type { PageInfo } from "../types/PageInfo";
 import type { Product } from "../types/Product";
 import { useAxios } from "./useAixos";
 
@@ -7,9 +8,7 @@ import { useAxios } from "./useAixos";
 export const useAdmProduct = () => {
   const { isLoading, axiosInstance } = useAxios();
   const [products, setProducts] = useState<Product[]>([]);
-  const [pageInfo, setPageInfo] = useState<
-    ApiListResponse<Product>["pageInfo"] | null
-  >(null);
+  const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
 
   const getProducts = (page: number = 1) => {
     axiosInstance
