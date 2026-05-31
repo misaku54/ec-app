@@ -4,6 +4,7 @@ import { ProductCard } from "../molecules/ProductCard";
 type Props = {
   products: Product[];
 };
+
 export const ProductCardList = ({ products }: Props) => {
   return (
     <div>
