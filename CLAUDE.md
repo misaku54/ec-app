@@ -99,10 +99,23 @@ atoms/ → molecules/ → organisms/ → templates/ → pages/
 
 - コミットはユーザーから明示的に依頼された場合のみ行う。修正・実装後に自動でコミットしない。
 - 新規テーブルの作成・既存テーブルの変更を伴う実装を行った場合、`docs/db-schema.md` のメンテナンスが必要か確認する。
+- フロントエンドの型定義やコンポーネントを提案する前に、対応するバックエンドの既存コードを確認する。バックエンドの実装を提案する前に、対応するフロントエンドの既存コードを確認する。
 
 ## 開発ガイドライン
 
 コミット規約・コーディング規約の詳細は [`docs/development-guidelines.md`](docs/development-guidelines.md) を参照。
+
+### フロントエンド参照リポジトリ
+
+Reactのコード指摘・サンプルコード提示・コード作成を行う際は、以下のリポジトリを参照した上で対応すること。
+
+- **パス:** `~/referenceRepo/bulletproof-react/`
+- **内容:** React アーキテクチャのベストプラクティス集
+  - プロジェクト構造（`docs/project-structure.md`）: featuresベースのディレクトリ構成、単方向依存ルール
+  - コンポーネント設計（`docs/components-and-styling.md`）: コロケーション、分割基準、抽象化指針
+  - APIレイヤー（`docs/api-layer.md`）: APIクライアントの一元管理、リクエスト定義の分離
+  - 状態管理（`docs/state-management.md`）: Component / Application / Server Cache / Form / URL の5分類
+- **実装例:** `apps/react-vite/src/` 配下に具体的なコードサンプルあり
 
 ## ドキュメント構成
 
