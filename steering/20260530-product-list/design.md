@@ -125,7 +125,7 @@ name=キーワード&minPrice=100&maxPrice=5000&inStock=true&page=1&size=20
       "description": "説明",
       "price": 1000,
       "stock": 5,
-      "productImageList": [{ "id": 1, "url": "https://..." }],
+      "productImageList": [{ "s3Key": "...", "sortOrder": 1, "mainImage": true }],
       "createdAt": "2026-05-01T00:00:00",
       "updatedAt": "2026-05-01T00:00:00"
     }
@@ -161,9 +161,11 @@ frontend/src/
 
   hooks/
     useProducts.ts               # 公開商品一覧取得（/api/public/product/list）
+                                 # getProducts(page, searchForm?: SearchForm)
 
   types/
-    Product.ts                   # 既存（流用）
+    Product.ts                   # 既存（流用）。productImageList: ImageData[] を追加
+    Form.ts                      # SearchForm 型を追加
 ```
 
 ---
