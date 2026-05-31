@@ -1,3 +1,5 @@
+import type { ImageData } from "./ImageData";
+
 export interface Product {
   id: number;
   name: string;
