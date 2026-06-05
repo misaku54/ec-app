@@ -7,22 +7,12 @@ type Props = {
 
 export const ProductCardList = ({ products }: Props) => {
   return (
-    <div>
-      {products.map((product) => {
-        return (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            stock={product.stock}
-            mainImageKey={
-              product.productImageList.find((img) => img.mainImage)?.s3Key ??
-              null
-            }
-          />
-        );
-      })}
-    </div>
+    <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {products.map((product) => (
+        <li key={product.id}>
+          <ProductCard product={product} />
+        </li>
+      ))}
+    </ul>
   );
 };

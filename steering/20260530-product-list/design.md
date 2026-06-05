@@ -1,9 +1,25 @@
-# お客様向け商品一覧・詳細 詳細設計書（フロントエンド）
+# お客様向け商品一覧 詳細設計書（フロントエンド）
 
 ## 概要
 
-お客様が商品を閲覧し、カートに追加するための画面。  
+お客様が商品を閲覧し、カートに追加するための画面。
 認証済みユーザー（USER・ADMIN）のみ利用可能。
+
+本設計は今後のサンプル実装として保守性・可読性を重視する。
+
+---
+
+## 設計方針
+
+1. **責務分離**
+   - ページコンポーネントは「データ取得のトリガー」「子への配線」のみを行う
+   - URL ↔ 検索条件の変換はカスタムhookに閉じ込める
+   - S3 画像URL生成は util に集約し、コンポーネントからベースURLを排除する
+2. **状態の単一の源は URL**
+   - 検索条件・ページ番号は `useSearchParams` のみで保持する
+   - リロード・ブラウザバック・URL共有に自然対応
+3. **見た目とロジックの分離**
+   - 検索フォームは表示と入力ハンドリングのみ。検索実行後の挙動（page=1 リセット等）は呼び出し側で決める
 
 ---
 
@@ -16,15 +32,13 @@
 | 商品一覧 | `/products` |
 | 商品詳細 | `/products/:id` |
 
----
-
 ### 商品一覧（`/products`）
 
 #### レイアウト
 
 ```
 ┌─────────────────────────────────────────────┐
-│ [名前検索      ] [最小価格] [最大価格] [在庫あり□] [検索] │
+│ [名前検索] [最小価格] [最大価格] [在庫あり□] [検索] │
 ├─────────────────────────────────────────────┤
 │ ┌────┐ ┌────┐ ┌────┐ ┌────┐                │
 │ │画像│ │画像│ │画像│ │画像│                │
@@ -38,14 +52,15 @@
 └─────────────────────────────────────────────┘
 ```
 
-#### 商品カード仕様
+- 商品カードクリックで詳細ページへ遷移。一覧からの直接カート追加はしない
+- 商品0件時は「該当する商品はありません」を表示
 
-カードクリックで詳細ページへ遷移。一覧からの直接カート追加はしない。
+#### 商品カード仕様
 
 | 状態 | 表示 |
 |---|---|
-| 在庫あり | 商品画像・商品名・価格 |
-| 在庫切れ | 商品画像・商品名・価格・「在庫切れ」ラベル |
+| 在庫あり | 画像・商品名・価格 |
+| 在庫切れ | 画像・商品名・価格・「在庫切れ」ラベル |
 
 #### 検索・フィルタ項目
 
@@ -54,64 +69,80 @@
 | 商品名 | `name` | string | 部分一致 |
 | 最小価格 | `minPrice` | number | 任意 |
 | 最大価格 | `maxPrice` | number | 任意 |
-| 在庫ありのみ | `inStock` | boolean | チェックボックス |
+| 在庫ありのみ | `inStock` | boolean | チェックボックス。`true` の時だけURLに付与 |
 
 ---
 
-### 商品詳細（`/products/:id`）
-
-#### レイアウト
+## ファイル構成
 
 ```
-┌───────────────────────────────────────┐
-│ ┌──────────┐  商品名                   │
-│ │          │  ¥X,XXX                  │
-│ │  画像    │                           │
-│ │ ギャラリー│  説明文                   │
-│ │          │                           │
-│ └──────────┘  数量: [1 ▼]             │
-│               [カートに追加]            │
-│                                       │
-│  ※在庫切れの場合: [在庫切れ] ラベルのみ  │
-└───────────────────────────────────────┘
-```
-
-#### 数量選択仕様
-
-- 1〜在庫数の範囲でセレクトボックス表示
-- カートにすでに同商品がある場合は**加算**する
-  - 例: カートに3個 + 詳細で2個選択 → カートは5個
-
----
-
-## 画面遷移
-
-```
-商品一覧（/products）
-  └── 商品カードクリック → 商品詳細（/products/:id）
-        └── 「カートに追加」 → カート状態更新（画面遷移なし）
+frontend/src/
+  components/
+    pages/
+      ProductListPage.tsx          # 描画と配線のみ。検索状態は useProductSearchParams に委譲
+    organisms/
+      ProductSearchForm.tsx        # react-hook-form。defaultValues で URL 復元対応
+      ProductCardList.tsx          # 商品カードのグリッド表示
+    molecules/
+      ProductCard.tsx              # 商品カード1枚（Product 型を直接受け取る）
+  hooks/
+    useProducts.ts                 # 公開商品一覧取得（既存）
+    useProductSearchParams.ts      # URL ↔ SearchForm/page 変換（新規）
+  utils/
+    productImageUrl.ts             # S3 画像URL生成（新規）
+  types/
+    Product.ts                     # 既存流用
+    Form.ts                        # SearchForm（inStock は boolean）
 ```
 
 ---
 
-## エラーハンドリング
+## 状態管理
 
-| エラー種別 | 表示方法 |
-|---|---|
-| 商品一覧取得失敗 | トースト通知 |
-| 商品詳細取得失敗（404含む） | トースト通知 + 一覧へ戻る |
+### useProductSearchParams
+
+```
+URL: /products?page=2&name=シャツ&minPrice=1000
+
+       ┌────────────────────────────────┐
+       │     useProductSearchParams     │
+       ├────────────────────────────────┤
+URL ──▶│ page: number                   │
+       │ searchForm: SearchForm         │
+       │ setSearch(form)  → page=1 で更新│
+       │ setPage(n)       → 条件を維持   │
+       └────────────────────────────────┘
+```
+
+`ProductListPage` は `useEffect([page, searchForm])` で `getProducts` を呼ぶだけ。
+URL が変わると hook の戻り値が更新され、副作用として API が走る。
+
+### 値の解釈ルール
+
+| URL                   | searchForm の値                |
+|-----------------------|-------------------------------|
+| `?name=シャツ`         | `name: "シャツ"`               |
+| なし                   | `name: null`                  |
+| `?minPrice=1000`      | `minPrice: 1000`              |
+| `?minPrice=`（空）     | `minPrice: null`              |
+| `?inStock=true`       | `inStock: true`               |
+| なし or `inStock=false`| `inStock: false`              |
+
+`searchForm` は `useMemo` で `searchParams.toString()` を依存に持たせ、参照を安定させる。
 
 ---
 
-## APIリクエスト
+## API
 
 ### GET /api/public/product/list
 
 **クエリパラメータ:**
 
 ```
-name=キーワード&minPrice=100&maxPrice=5000&inStock=true&page=1&size=20
+name=...&minPrice=...&maxPrice=...&inStock=true&page=1&size=20
 ```
+
+`useProducts.getProducts(page, searchForm)` が値が存在するパラメータだけを送る。
 
 **レスポンス:**
 
@@ -131,72 +162,41 @@ name=キーワード&minPrice=100&maxPrice=5000&inStock=true&page=1&size=20
     }
   ],
   "pageInfo": {
-    "total": 100,
-    "pages": 5,
-    "pageNum": 1,
-    "pageSize": 20
+    "totalCount": 100,
+    "totalPage": 5,
+    "currentPage": 1,
+    "size": 20
   }
 }
 ```
 
-### GET /api/public/product/:id
-
-※ 既存の `useSelectProduct` フックが `/api/public/product/{id}` を叩いている。詳細ページはこれを流用する。
-
 ---
 
-## 実装クラス構成
+## 画像URL生成
 
-```
-frontend/src/
-  components/
-    pages/
-      ProductListPage.tsx        # 商品一覧ページ
-      ProductDetailPage.tsx      # 商品詳細ページ（お客様向け）
-    organisms/
-      ProductSearchForm.tsx      # 検索・フィルタフォーム
-      ProductCardList.tsx        # 商品カード一覧
-    molecules/
-      ProductCard.tsx            # 商品カード1枚
+`utils/productImageUrl.ts` に集約。コンポーネントからベースURLのハードコードを排除する。
 
-  hooks/
-    useProducts.ts               # 公開商品一覧取得（/api/public/product/list）
-                                 # getProducts(page, searchForm?: SearchForm)
-
-  types/
-    Product.ts                   # 既存（流用）。productImageList: ImageData[] を追加
-    Form.ts                      # SearchForm 型を追加
+```ts
+buildProductImageUrl(s3Key)  // s3Key が null/undefined のときは NO_IMAGE_URL
+NO_IMAGE_URL                 // onError フォールバック用
 ```
 
 ---
 
-## カート追加ロジック
+## エラーハンドリング
 
-現在の `useCartStore.addItem` は1個固定で加算する実装。  
-詳細ページで数量選択に対応するため、`addItem` を修正して指定個数を加算できるようにする。
+| エラー種別 | 表示方法 |
+|---|---|
+| 商品一覧取得失敗 | トースト通知 |
+| 画像読み込み失敗 | `onError` で `NO_IMAGE_URL` にフォールバック |
 
-**修正前:**
-```ts
-addItem: (item: CartItem) =>
-  set((state) => {
-    const idx = state.cart.findIndex((i) => i.productId === item.productId);
-    if (isInCart) {
-      newCart[idx] = { ...newCart[idx], count: newCart[idx].count + 1 };  // 固定で+1
-    }
-    return { cart: [...state.cart, { ...item, count: 1 }] };
-  }),
+---
+
+## 画面遷移
+
 ```
-
-**修正後:**
-```ts
-addItem: (item: CartItem, quantity: number = 1) =>
-  set((state) => {
-    const idx = state.cart.findIndex((i) => i.productId === item.productId);
-    if (isInCart) {
-      newCart[idx] = { ...newCart[idx], count: newCart[idx].count + quantity };  // 指定個数を加算
-    }
-    return { cart: [...state.cart, { ...item, count: quantity }] };
-  }),
+商品一覧（/products）
+  └── 商品カードクリック → 商品詳細（/products/:id）
 ```
 
 ---
@@ -207,3 +207,4 @@ addItem: (item: CartItem, quantity: number = 1) =>
 - 並び替え（価格順・新着順）
 - お気に入り機能
 - 商品レビュー
+- 商品詳細ページのリファクタ（本設計は商品一覧のみを対象）

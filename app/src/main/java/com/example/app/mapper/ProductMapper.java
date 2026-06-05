@@ -2,6 +2,7 @@ package com.example.app.mapper;
 
 import com.example.app.dto.ProductDetailDto;
 import com.example.app.dto.ProductDto;
+import com.example.app.dto.ProductImageDto;
 import com.example.app.form.ProductSearchParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +15,8 @@ public interface ProductMapper {
   List<ProductDto> getProductList(@Param("params") ProductSearchParam param);
 
   List<ProductDetailDto> searchProducts(@Param("params") ProductSearchParam param);
+
+  List<ProductImageDto> findImagesByProductId(@Param("productId") int productId);
 
   ProductDetailDto getProductDetailById(@Param("productId") int productId);
 

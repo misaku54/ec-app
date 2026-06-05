@@ -8,5 +8,5 @@ export type SearchForm = {
   name: string | null;
   maxPrice: number | null;
   minPrice: number | null;
-  inStock: boolean | null;
+  inStock: boolean;
 };

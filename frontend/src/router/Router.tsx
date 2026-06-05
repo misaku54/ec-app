@@ -5,6 +5,7 @@ import { Login } from "../components/pages/Login";
 import { OrderCompletePage } from "../components/pages/OrderCompletePage";
 import { ProductCreateForm } from "../components/pages/ProductCreateForm";
 import { ProductDetail } from "../components/pages/ProductDetail";
+import { ProductListPage } from "../components/pages/ProductListPage";
 import { ProductManegement } from "../components/pages/ProductManegement";
 import { Register } from "../components/pages/Register";
 import { AdminRoute } from "../components/router/AdminRoute";
@@ -25,6 +26,7 @@ export const Router = () => {
           </Route>
         </Route>
         <Route element={<DefaultLayout />}>
+          <Route path="/products" element={<ProductListPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route
