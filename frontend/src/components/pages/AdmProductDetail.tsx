@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { useAdmProduct } from "../../hooks/useAdmProduct";
 import { AdmProductDetailInfo } from "../organisms/AdmProductDetailInfo";
 
-export const AdmProductDetail: React.FC = () => {
+export const AdmProductDetail = () => {
   const { isLoading, selectedProduct, selectProduct } = useAdmProduct();
   const { id = "0" } = useParams();
   useEffect(() => selectProduct(id), []);

@@ -1,4 +1,4 @@
-export const Footer: React.FC = () => {
+export const Footer = () => {
   return (
     <footer className="bg-zinc-900 border-t border-zinc-700 w-full">
       <div className="container px-6 py-4 mx-auto flex items-center sm:flex-row flex-col">

@@ -5,12 +5,12 @@ type Props = {
   className?: string;
 };
 
-export const Button: React.FC<Props> = ({
+export const Button = ({
   children,
   onClick,
   disabled,
   className,
-}) => {
+}: Props) => {
   return (
     <button onClick={onClick} disabled={disabled} className={className}>
       {children}

@@ -8,7 +8,7 @@ type Props = {
   onDelete: (id: number) => void;
 };
 
-export const ProductTable: React.FC<Props> = (props) => {
+export const ProductTable = (props: Props) => {
   const { products, onDelete } = props;
 
   return (

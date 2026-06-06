@@ -8,7 +8,7 @@ type Props = {
   isMain?: boolean;
 };
 
-export const ProductImage: React.FC<Props> = ({ s3Key, isMain }) => {
+export const ProductImage = ({ s3Key, isMain }: Props) => {
   return (
     <img
       src={buildProductImageUrl(s3Key)}
