@@ -4,7 +4,7 @@ import { CheckOutPage } from "../components/pages/CheckOutPage";
 import { Login } from "../components/pages/Login";
 import { OrderCompletePage } from "../components/pages/OrderCompletePage";
 import { ProductCreateForm } from "../components/pages/ProductCreateForm";
-import { ProductDetail } from "../components/pages/ProductDetail";
+import { AdmProductDetail } from "../components/pages/AdmProductDetail";
 import { ProductListPage } from "../components/pages/ProductListPage";
 import { ProductManegement } from "../components/pages/ProductManegement";
 import { Register } from "../components/pages/Register";
@@ -22,7 +22,7 @@ export const Router = () => {
           <Route path="/admin" element={<DefaultLayout />}>
             <Route index element={<Navigate to="products" replace />} />
             <Route path="products" element={<ProductManegement />} />
-            <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="products/:id" element={<AdmProductDetail />} />
             <Route path="products/create" element={<ProductCreateForm />} />
           </Route>
         </Route>

@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
-import { useSelectProduct } from "../../hooks/useSelectProduct";
-import { ProductDetailInfo } from "../organisms/ProductDetailInfo";
+import { useAdmProduct } from "../../hooks/useAdmProduct";
+import { AdmProductDetailInfo } from "../organisms/AdmProductDetailInfo";
 
-export const ProductDetail: React.FC = () => {
-  const { isLoading, selectedProduct, selectProduct } = useSelectProduct();
+export const AdmProductDetail: React.FC = () => {
+  const { isLoading, selectedProduct, selectProduct } = useAdmProduct();
   const { id = "0" } = useParams();
   useEffect(() => selectProduct(id), []);
 
@@ -16,5 +16,5 @@ export const ProductDetail: React.FC = () => {
     return <div className="flex justify-center items-center h-64 text-gray-500">商品が見つかりません</div>;
   }
 
-  return <ProductDetailInfo selectedProduct={selectedProduct} />;
+  return <AdmProductDetailInfo selectedProduct={selectedProduct} />;
 };

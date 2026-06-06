@@ -3,8 +3,8 @@ import type { ApiResponse } from "../types/ApiResponse";
 import type { ProductDetail } from "../types/ProductDetail";
 import { useAxios } from "./useAixos";
 
-// 商品詳細を取得するhooks
-export const useSelectProduct = () => {
+// 管理者向け商品詳細を取得するhooks
+export const useAdmProduct = () => {
   const [selectedProduct, setSelectedProduct] =
     useState<ProductDetail | null>();
   const { isLoading, axiosInstance } = useAxios();
