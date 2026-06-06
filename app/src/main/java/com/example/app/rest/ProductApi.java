@@ -2,6 +2,7 @@ package com.example.app.rest;
 
 import com.example.app.dto.PageInfoDto;
 import com.example.app.dto.ProductDetailDto;
+import com.example.app.dto.ResponseDto;
 import com.example.app.dto.ResponseListDto;
 import com.example.app.form.ProductSearchParam;
 import com.example.app.service.ProductService;
@@ -10,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +40,17 @@ public class ProductApi {
     response.setStatus("success");
     response.setData(list);
     response.setPageInfo(new PageInfoDto(pageInfo.getTotal(), pageInfo.getPages(), pageInfo.getPageNum(), pageInfo.getPageSize()));
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/{productId}")
+  public ResponseEntity<ResponseDto<ProductDetailDto>> productDetail(
+      @PathVariable("productId") int productId) throws Exception {
+    ProductDetailDto productDetailDto = productService.getProductDetail(productId);
+
+    ResponseDto<ProductDetailDto> response = new ResponseDto<>();
+    response.setStatus("success");
+    response.setData(productDetailDto);
     return ResponseEntity.ok(response);
   }
 }

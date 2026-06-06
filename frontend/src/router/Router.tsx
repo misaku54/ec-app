@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { CartPage } from "../components/pages/CartPage";
 import { CheckOutPage } from "../components/pages/CheckOutPage";
 import { Login } from "../components/pages/Login";
@@ -19,10 +19,11 @@ export const Router = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<PrivateRoute />}>
         <Route element={<AdminRoute />}>
-          <Route path="/admin/product" element={<DefaultLayout />}>
-            <Route path="list" element={<ProductManegement />} />
-            <Route path=":id" element={<ProductDetail />} />
-            <Route path="create" element={<ProductCreateForm />} />
+          <Route path="/admin" element={<DefaultLayout />}>
+            <Route index element={<Navigate to="products" replace />} />
+            <Route path="products" element={<ProductManegement />} />
+            <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="products/create" element={<ProductCreateForm />} />
           </Route>
         </Route>
         <Route element={<DefaultLayout />}>
