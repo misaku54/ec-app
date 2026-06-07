@@ -5,7 +5,7 @@ type Props = {
   images: ImageData[]
 };
 
-export const ProductImageList: React.FC<Props> = (props) => {
+export const ProductImageList = (props: Props) => {
   const {images} = props;
 
   console.log(images);

@@ -3,7 +3,7 @@ import { useLogout } from "../../hooks/useLogout";
 import { useCartStore } from "../../stores/useCartStore";
 import { Button } from "../atoms/button/Button";
 
-export const Header: React.FC = () => {
+export const Header = () => {
   const { isLoading, errorMessage, logout } = useLogout();
   const cart = useCartStore((state) => state.cart);
   const cartCount = cart.reduce((sum, item) => sum + item.count, 0);

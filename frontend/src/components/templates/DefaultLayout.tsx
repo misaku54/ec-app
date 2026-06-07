@@ -4,7 +4,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { Footer } from "../atoms/Footer";
 import { Header } from "../organisms/Header";
 
-export const DefaultLayout: React.FC = () => {
+export const DefaultLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 

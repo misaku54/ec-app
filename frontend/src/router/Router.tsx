@@ -1,10 +1,12 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
+import { AdmProductDetail } from "../components/pages/AdmProductDetail";
 import { CartPage } from "../components/pages/CartPage";
 import { CheckOutPage } from "../components/pages/CheckOutPage";
 import { Login } from "../components/pages/Login";
 import { OrderCompletePage } from "../components/pages/OrderCompletePage";
 import { ProductCreateForm } from "../components/pages/ProductCreateForm";
-import { ProductDetail } from "../components/pages/ProductDetail";
+import { ProductDetailPage } from "../components/pages/ProductDetailPage";
+import { ProductListPage } from "../components/pages/ProductListPage";
 import { ProductManegement } from "../components/pages/ProductManegement";
 import { Register } from "../components/pages/Register";
 import { AdminRoute } from "../components/router/AdminRoute";
@@ -18,13 +20,16 @@ export const Router = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<PrivateRoute />}>
         <Route element={<AdminRoute />}>
-          <Route path="/admin/product" element={<DefaultLayout />}>
-            <Route path="list" element={<ProductManegement />} />
-            <Route path=":id" element={<ProductDetail />} />
-            <Route path="create" element={<ProductCreateForm />} />
+          <Route path="/admin" element={<DefaultLayout />}>
+            <Route index element={<Navigate to="products" replace />} />
+            <Route path="products" element={<ProductManegement />} />
+            <Route path="products/:id" element={<AdmProductDetail />} />
+            <Route path="products/create" element={<ProductCreateForm />} />
           </Route>
         </Route>
         <Route element={<DefaultLayout />}>
+          <Route path="/products" element={<ProductListPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route

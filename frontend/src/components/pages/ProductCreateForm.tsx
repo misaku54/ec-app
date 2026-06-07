@@ -30,7 +30,7 @@ export const ProductCreateForm = () => {
     console.log(data);
     try {
       const id = await createProduct(data);
-      navigate(`/admin/product/${id}`, {
+      navigate(`/admin/products/${id}`, {
         state: { message: "商品を登録しました" },
       });
     } catch (e) {
