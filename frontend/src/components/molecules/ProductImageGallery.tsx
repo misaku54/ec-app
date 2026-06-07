@@ -8,11 +8,6 @@ type Props = {
 };
 
 export const ProductImageGallery = ({ images, productName }: Props) => {
-  // イメージを最大５つまで表示する
-  // mainイメージを大きく表示する
-  // 画像がなければmainimageをnoimageで表示し、サブイメージはnull
-
-  // mainイメージを求める
   const mainImage = images.find((img) => img.mainImage) ?? images[0] ?? null;
   const [mainKey, setMainKey] = useState(
     buildProductImageUrl(mainImage?.s3Key),
@@ -21,7 +16,11 @@ export const ProductImageGallery = ({ images, productName }: Props) => {
   return (
     <div className="space-y-3">
       <div className="aspect-square overflow-hidden rounded-lg bg-zinc-100">
-        <img src={mainKey} alt={productName} className="h-full w-full object-cover" />
+        <img
+          src={mainKey}
+          alt={productName}
+          className="h-full w-full object-cover"
+        />
       </div>
       <div className="flex gap-2">
         {images.map((img) => {
@@ -39,7 +38,10 @@ export const ProductImageGallery = ({ images, productName }: Props) => {
                   : "border-zinc-200 hover:border-zinc-400"
               }`}
             >
-              <img src={buildProductImageUrl(img.s3Key)} className="h-full w-full object-cover" />
+              <img
+                src={buildProductImageUrl(img.s3Key)}
+                className="h-full w-full object-cover"
+              />
             </button>
           );
         })}
