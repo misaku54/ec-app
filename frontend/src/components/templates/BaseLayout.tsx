@@ -1,10 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import toast from "react-hot-toast";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { Footer } from "../atoms/Footer";
-import { Header } from "../organisms/Header";
 
-export const DefaultLayout = () => {
+type Props = {
+  header: ReactNode;
+};
+
+export const BaseLayout = ({ header }: Props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,7 +24,7 @@ export const DefaultLayout = () => {
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col">
-      <Header />
+      {header}
       <main className="container mx-auto px-6 py-10 flex-1">
         <Outlet />
       </main>

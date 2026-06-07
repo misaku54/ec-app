@@ -164,24 +164,23 @@ export const CustomerDefaultLayout = () => <BaseLayout header={<CustomerHeader /
 
 ## 実装タスク
 
-1. **`templates/BaseLayout.tsx` を新規作成**
-   - 既存 `DefaultLayout` のロジックを移植
-   - `header: ReactNode` を props として受け取る
-2. **`organisms/AdmHeader.tsx` を新規作成**
-   - 現 `Header.tsx` をベースに、カート・顧客向け要素を削除
-   - ロゴと「商品管理」を `Link` に置き換え
-3. **`organisms/CustomerHeader.tsx` を新規作成**
-   - ブランドは「STORE」のみ
-   - ナビは「商品一覧」(`Link to="/products"`)
-   - カートアイコン（現 Header から移植）+ ログアウト
-4. **`templates/AdmDefaultLayout.tsx` / `CustomerDefaultLayout.tsx` を新規作成**
-   - `BaseLayout` のラッパ
-5. **`router/Router.tsx` を修正**
-   - 管理者ルートは `AdmDefaultLayout`、顧客ルートは `CustomerDefaultLayout` を使用
-6. **`pages/AdmProductDetail.tsx` のメンテ**
+凡例: ✅ 完了 / 🔶 部分完了 / ❌ 未着手
+
+1. ✅ **`templates/BaseLayout.tsx` を新規作成**
+2. ✅ **`organisms/AdmHeader.tsx` を新規作成**
+   - ロゴ・「商品管理」「商品登録」を `Link` で実装
+   - 🔶 未使用の `useCartStore` / `cart` / `cartCount` の dead code が残っている → 削除が必要
+   - 🔶 `useLogout` の戻り値から `isLoading`・`errorMessage` の未使用変数を取り除く必要あり（lint エラー）
+3. ✅ **`organisms/CustomerHeader.tsx` を新規作成**
+   - ブランドは「Lily STORE」
+   - ナビ：商品一覧、カートアイコン（バッジ付き）、ログアウト
+   - 🔶 `isLoading`・`errorMessage` の未使用変数を取り除く必要あり（lint エラー）
+4. ✅ **`templates/AdmDefaultLayout.tsx` / `CustomerDefaultLayout.tsx` を新規作成**
+5. ✅ **`router/Router.tsx` を修正**
+6. ❌ **`pages/AdmProductDetail.tsx` のメンテ**
    - ローディング表示を `<Loader />` に統一
    - `useEffect` の依存配列を `[id]` に修正
-7. **`templates/DefaultLayout.tsx` / `organisms/Header.tsx` を削除**
+7. ✅ **`templates/DefaultLayout.tsx` / `organisms/Header.tsx` を削除**
 
 ---
 

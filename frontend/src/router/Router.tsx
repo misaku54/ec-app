@@ -11,7 +11,8 @@ import { ProductManegement } from "../components/pages/ProductManegement";
 import { Register } from "../components/pages/Register";
 import { AdminRoute } from "../components/router/AdminRoute";
 import { PrivateRoute } from "../components/router/PrivateRoute";
-import { DefaultLayout } from "../components/templates/DefaultLayout";
+import { AdmDefaultLayout } from "../components/templates/AdmDefaultLayout";
+import { CustomerDefaultLayout } from "../components/templates/CustomerDefaultLayout";
 
 export const Router = () => {
   return (
@@ -20,14 +21,14 @@ export const Router = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<PrivateRoute />}>
         <Route element={<AdminRoute />}>
-          <Route path="/admin" element={<DefaultLayout />}>
+          <Route path="/admin" element={<AdmDefaultLayout />}>
             <Route index element={<Navigate to="products" replace />} />
             <Route path="products" element={<ProductManegement />} />
             <Route path="products/:id" element={<AdmProductDetail />} />
             <Route path="products/create" element={<ProductCreateForm />} />
           </Route>
         </Route>
-        <Route element={<DefaultLayout />}>
+        <Route element={<CustomerDefaultLayout />}>
           <Route path="/products" element={<ProductListPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
