@@ -3,24 +3,32 @@ import { useLogout } from "../../hooks/useLogout";
 import { useCartStore } from "../../stores/useCartStore";
 import { Button } from "../atoms/button/Button";
 
-export const Header = () => {
-  const { isLoading, errorMessage, logout } = useLogout();
+export const CustomerHeader = () => {
+  const { logout } = useLogout();
   const cart = useCartStore((state) => state.cart);
   const cartCount = cart.reduce((sum, item) => sum + item.count, 0);
 
   return (
     <header className="bg-zinc-900 text-white border-b border-zinc-700">
       <div className="container mx-auto flex flex-wrap px-6 py-4 flex-col md:flex-row items-center">
-        <a className="flex items-center mb-4 md:mb-0 select-none">
-          <span className="text-xs font-light tracking-[0.3em] text-zinc-400 uppercase">Admin</span>
-          <span className="mx-3 text-zinc-600">|</span>
-          <span className="text-lg font-semibold tracking-wide text-white">STORE</span>
-        </a>
+        <Link to="/products" className="flex items-center mb-4 md:mb-0 select-none">
+          <span className="text-xs font-light tracking-[0.3em] text-zinc-400 uppercase">
+            Lily STORE
+          </span>
+        </Link>
         <nav className="md:ml-auto flex flex-wrap items-center text-sm justify-center gap-6">
-          <a className="text-zinc-400 hover:text-white transition-colors tracking-wide">商品管理</a>
+          <Link
+            to="/products"
+            className="text-zinc-400 hover:text-white transition-colors tracking-wide"
+          >
+            商品一覧
+          </Link>
         </nav>
 
-        <Link to="/cart" className="relative ml-6 text-zinc-400 hover:text-white transition-colors mt-4 md:mt-0">
+        <Link
+          to="/cart"
+          className="relative ml-6 text-zinc-400 hover:text-white transition-colors mt-4 md:mt-0"
+        >
           <svg
             fill="none"
             stroke="currentColor"

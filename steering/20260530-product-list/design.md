@@ -108,8 +108,7 @@
 #### 在庫切れ表示
 
 `product.stock === 0` のとき：
-- 「在庫切れ」ラベルを表示
-- カート追加ボタンを非表示
+- `AddToCartButton` がボタンの代わりに「在庫切れ」ラベルを表示（ボタン非表示と兼用）
 - 価格・画像・説明は通常通り表示
 
 #### エラーハンドリング
@@ -131,21 +130,22 @@ frontend/src/
   components/
     pages/
       ProductListPage.tsx          ✅ 一覧。描画と配線のみ
-      ProductDetailPage.tsx        🔶 骨組みのみ（return が空）。本体実装が必要
+      ProductDetailPage.tsx        ✅ ローディング・null・本体の3状態を出し分け
     organisms/
       ProductSearchForm.tsx        ✅ react-hook-form。defaultValues で URL 復元対応
       ProductCardList.tsx          ✅ 商品カードのグリッド表示
-      ProductDetailContent.tsx     ❌ 詳細ページの本体（画像 + 情報 + ボタン）
+      ProductDetailContent.tsx     ✅ 画像ギャラリー + 商品情報 + AddToCartButton を配置
     molecules/
       ProductCard.tsx              ✅ 商品カード1枚
-      ProductImageList.tsx         ✅ 既存。画像ギャラリー（流用検討）
+      ProductImageList.tsx         ✅ 既存。管理画面側で使用
+      ProductImageGallery.tsx      ✅ 詳細画面用ギャラリー（サムネイル切替）
     atoms/
       button/
-        AddToCartButton.tsx        ✅ 既存。CartItem を受け取り、在庫0なら「在庫なし」表示
+        AddToCartButton.tsx        ✅ CartItem 受け取り。追加時にトースト通知（内蔵）
       ProductImage.tsx             ✅ 既存。1枚の画像（onError フォールバック）
   hooks/
     useProducts.ts                 ✅ 公開商品一覧取得
-    useProduct.ts                  ✅ 公開商品詳細取得（APIパス修正済み、エラー時は `/products` へ navigate + state でメッセージ伝達）
+    useProduct.ts                  ✅ 公開商品詳細取得（エラー時は `/products` へ navigate + state でメッセージ伝達）
     useProductSearchParams.ts      ✅ URL ↔ SearchForm/page 変換
   stores/
     useCartStore.ts                ✅ 既存。addItem を再利用
@@ -157,25 +157,31 @@ frontend/src/
     Form.ts                        ✅ SearchForm（inStock は boolean）
     Cart.ts                        ✅ CartItem 型
   router/
-    Router.tsx                     🔶 `/products/:id` ルート追加が必要
+    Router.tsx                     ✅ `/products/:id` を顧客側 Layout 配下に追加済み
 ```
 
 ---
 
-## 詳細画面の実装タスク
+## 詳細画面の実装方針（実装済み）
 
-1. ~~**`hooks/useProduct.ts` の修正**~~ ✅ 完了（APIパス修正済み、エラー時は `/products` へ navigate）
-2. **`router/Router.tsx` にルート追加**
-   - `<Route path="/products/:id" element={<ProductDetailPage />} />` を顧客側レイアウト配下に
-3. **`organisms/ProductDetailContent.tsx` を新規作成**
-   - 画像ギャラリー + 商品情報 + AddToCartButton を組み合わせる
-   - 既存 `ProductImageList` を流用するか、新規の画像ギャラリーを作るか判断
-4. **`pages/ProductDetailPage.tsx` 本体実装**
-   - ローディング・取得失敗・本体表示の3状態を出し分け
-   - `ProductDetailContent` に product を渡す
-5. **`AddToCartButton` への接続**
-   - `ProductDetail` から `CartItem` に変換して渡す
-   - 追加成功時にトースト通知を出すか検討（現状の `AddToCartButton` には通知なし）
+### 画像ギャラリー (`ProductImageGallery`)
+
+- `molecules/` 配下に新規作成（既存 `ProductImageList` は管理画面が使用しているため流用せず）
+- メイン画像 + サムネイル列の構成
+- メイン画像の決定ロジック: `mainImage === true` を優先、なければ先頭、画像なしなら `null`
+- サムネイル選択は内部 state (`mainKey`) で保持
+- 選択中サムネイルは `border-zinc-800` でハイライト
+
+### カート追加 (`AddToCartButton` 接続)
+
+- `ProductDetailContent` 内で `ProductDetail` → `CartItem` (5フィールド) に変換し props で渡す
+- トースト通知は `AddToCartButton` 内で完結（`toast.success("カートに追加しました。")` を直接呼ぶ）
+  - 親からコールバックを渡す方式は採用せず。「カート追加成功時はトースト」という挙動が `AddToCartButton` 単体で完結している方がシンプル
+
+### 在庫切れ表示
+
+- 「在庫切れ」ラベルは `AddToCartButton` 側で在庫0時に表示する形に統合
+- 設計書当初の「`ProductDetailContent` 側で在庫切れラベル」は不採用（ボタンと重複するため）
 
 ---
 
