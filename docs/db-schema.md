@@ -112,6 +112,45 @@ S3（本番）/ MinIO（ローカル）に保存したファイルのメタデ�
 
 ---
 
+### orders（注文）
+
+会員からの注文ヘッダ。配送先情報を注文時のスナップショットとして保持する（住所マスタが変更されても注文履歴は不変）。`status` で注文の進行段階を表す。
+
+| カラム               | 型           | 制約                                   |
+|----------------------|--------------|----------------------------------------|
+| id                   | integer      | PK, GENERATED ALWAYS                   |
+| account_id           | integer      | FK → accounts(id)                      |
+| status               | varchar(50)  | NOT NULL, DEFAULT `'PENDING'`          |
+| total_amount         | integer      | NOT NULL                               |
+| shipping_name        | varchar(255) | NOT NULL                               |
+| shipping_postal_code | varchar(20)  | NOT NULL                               |
+| shipping_address     | text         | NOT NULL                               |
+| shipping_phone       | varchar(20)  | NULL可                                  |
+| note                 | text         | NULL可                                  |
+| del_flg              | boolean      | NOT NULL, DEFAULT false                |
+| created_at           | timestamp    | NOT NULL, DEFAULT NOW()                |
+| updated_at           | timestamp    | NOT NULL, DEFAULT NOW()                |
+
+`status` の取りうる値: `PENDING` / `CONFIRMED` / `SHIPPED` / `DELIVERED` / `CANCELLED`
+
+---
+
+### order_items（注文明細）
+
+注文に含まれる商品の明細。商品名・単価は注文時点のスナップショットを保持する（商品マスタが変更・削除されても注文履歴は不変）。画像情報は持たないため、表示時は現在の `s3_files` を参照する（商品削除済みなら NO_IMAGE）。
+
+| カラム       | 型           | 制約                              |
+|--------------|--------------|-----------------------------------|
+| id           | integer      | PK, GENERATED ALWAYS              |
+| order_id     | integer      | NOT NULL, FK → orders(id)         |
+| product_id   | integer      | NOT NULL（FK制約なし: 商品削除でも明細は残る） |
+| product_name | varchar(255) | NOT NULL（スナップショット）       |
+| unit_price   | integer      | NOT NULL（スナップショット）       |
+| quantity     | integer      | NOT NULL                          |
+| created_at   | timestamp    | NOT NULL, DEFAULT NOW()           |
+
+---
+
 ## ER図
 
 ```mermaid
@@ -170,10 +209,37 @@ erDiagram
         timestamp updated_at
     }
 
+    orders {
+        integer id PK
+        integer account_id FK
+        varchar status
+        integer total_amount
+        varchar shipping_name
+        varchar shipping_postal_code
+        text shipping_address
+        varchar shipping_phone
+        text note
+        boolean del_flg
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    order_items {
+        integer id PK
+        integer order_id FK
+        integer product_id
+        varchar product_name
+        integer unit_price
+        integer quantity
+        timestamp created_at
+    }
+
     accounts ||--o{ account_roles : ""
     roles ||--o{ account_roles : ""
     accounts ||--o{ addresses : ""
     products ||--o{ s3_files : "entity_type=products"
+    accounts ||--o{ orders : ""
+    orders ||--o{ order_items : ""
 ```
 
 ---

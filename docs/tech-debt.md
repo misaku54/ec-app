@@ -39,6 +39,6 @@ export const useProducts = (params) => useQuery({
 
 ### 対応時の考慮点
 
-- 全フック（`useAdmProducts`, `useSelectProduct` 等）を一括で移行する
+- 全フック（`useAdmProducts`, `useAdmProduct`, `useProduct`, `useProducts` 等）を一括で移行する
 - ローディング・エラー状態の管理が簡略化される
 - キャッシュにより同一データの重複フェッチが削減される
