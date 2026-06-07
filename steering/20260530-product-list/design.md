@@ -116,8 +116,9 @@
 
 | エラー | 挙動 |
 |---|---|
-| 404（商品が見つからない） | トースト通知 + 一覧ページ `/products` へ navigate |
-| その他のAPIエラー | トースト通知（ページに留まる） |
+| 取得失敗（404・5xx 等すべて） | `/products` へ navigate し、state 経由でエラーメッセージを `DefaultLayout` に渡してトースト表示 |
+
+詳細ページに留まっても再試行 UI が無く、空のページを表示し続ける意味が薄いため、エラー種別で挙動を分けない設計とする。
 
 ---
 
@@ -144,7 +145,7 @@ frontend/src/
       ProductImage.tsx             ✅ 既存。1枚の画像（onError フォールバック）
   hooks/
     useProducts.ts                 ✅ 公開商品一覧取得
-    useProduct.ts                  🔶 公開商品詳細取得（**APIパスが誤り**: `/api/product/:id` → `/api/public/product/:id` に修正必要。404時の navigate も未対応）
+    useProduct.ts                  ✅ 公開商品詳細取得（APIパス修正済み、エラー時は `/products` へ navigate + state でメッセージ伝達）
     useProductSearchParams.ts      ✅ URL ↔ SearchForm/page 変換
   stores/
     useCartStore.ts                ✅ 既存。addItem を再利用
@@ -163,9 +164,7 @@ frontend/src/
 
 ## 詳細画面の実装タスク
 
-1. **`hooks/useProduct.ts` の修正**
-   - APIパス: `/api/product/${id}` → `/api/public/product/${id}`
-   - 404 (AxiosError.response?.status === 404) で `/products` へ navigate
+1. ~~**`hooks/useProduct.ts` の修正**~~ ✅ 完了（APIパス修正済み、エラー時は `/products` へ navigate）
 2. **`router/Router.tsx` にルート追加**
    - `<Route path="/products/:id" element={<ProductDetailPage />} />` を顧客側レイアウト配下に
 3. **`organisms/ProductDetailContent.tsx` を新規作成**
@@ -310,7 +309,7 @@ NO_IMAGE_URL                 // onError フォールバック用
 | エラー種別 | 表示方法 |
 |---|---|
 | 商品一覧取得失敗 | トースト通知（ページに留まる） |
-| 商品詳細取得失敗（404含む） | トースト通知 + `/products` へ navigate |
+| 商品詳細取得失敗（404・5xx 等すべて） | `/products` へ navigate + state 経由でメッセージを `DefaultLayout` に渡してトースト表示 |
 | 画像読み込み失敗 | `onError` で `NO_IMAGE_URL` にフォールバック |
 
 ---

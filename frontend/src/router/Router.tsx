@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from "react-router";
+import { AdmProductDetail } from "../components/pages/AdmProductDetail";
 import { CartPage } from "../components/pages/CartPage";
 import { CheckOutPage } from "../components/pages/CheckOutPage";
 import { Login } from "../components/pages/Login";
 import { OrderCompletePage } from "../components/pages/OrderCompletePage";
 import { ProductCreateForm } from "../components/pages/ProductCreateForm";
-import { AdmProductDetail } from "../components/pages/AdmProductDetail";
+import { ProductDetailPage } from "../components/pages/ProductDetailPage";
 import { ProductListPage } from "../components/pages/ProductListPage";
 import { ProductManegement } from "../components/pages/ProductManegement";
 import { Register } from "../components/pages/Register";
@@ -28,6 +29,7 @@ export const Router = () => {
         </Route>
         <Route element={<DefaultLayout />}>
           <Route path="/products" element={<ProductListPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route
