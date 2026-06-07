@@ -56,16 +56,19 @@ docker exec $(docker ps --filter "name=postgresdb" -q) psql -U ecuser -d ecdb -c
 - **Spring Security** でセッションベース認証。カスタムフィルター `JsonEmailPasswordAuthenticationFilter` がJSON形式のログインを処理
 
 **APIルーティング:**
+
 - `POST /login` — 認証不要
 - `/api/public/**` — 認証不要
 - `/api/customer/**` — USER または ADMIN ロール必要
 - `/api/admin/**` — ADMIN ロールのみ
 
 **バリデーション処理の仕組み:**
+
 - コントローラメソッドに `@UseBindingResult` アノテーションを付与すると、`ApiValidationAspect` が `BindingResult` を検査してバリデーションエラーを一括スロー
 - `GlobalExceptionHandler` でエラーレスポンスを統一形式 (`ErrorResponseDto`) に変換
 
 **レイヤー構成:**
+
 ```
 rest/ (Controller) → service/ → mapper/ (MyBatis) → DB
                               → util/S3Util → MinIO/S3
@@ -83,11 +86,13 @@ rest/ (Controller) → service/ → mapper/ (MyBatis) → DB
 - **react-hot-toast** でトースト通知
 
 **コンポーネント構成（Atomic Design）:**
+
 ```
 atoms/ → molecules/ → organisms/ → templates/ → pages/
 ```
 
 **認証フロー:**
+
 - `PrivateRoute` がセッション状態を確認し、未認証の場合はログインページへリダイレクト
 - 認証情報は `AuthProvider` で管理し `useAuth()` フックで取得
 
@@ -99,7 +104,7 @@ atoms/ → molecules/ → organisms/ → templates/ → pages/
 
 - コミットはユーザーから明示的に依頼された場合のみ行う。修正・実装後に自動でコミットしない。
 - 新規テーブルの作成・既存テーブルの変更を伴う実装を行った場合、`docs/db-schema.md` のメンテナンスが必要か確認する。
-- フロントエンドの型定義やコンポーネントを提案する前に、対応するバックエンドの既存コードを確認する。バックエンドの実装を提案する前に、対応するフロントエンドの既存コードを確認する。
+- フロントエンドの実装を提案する前に、対応するバックエンドの既存コードを確認する。バックエンドの実装を提案する前に、対応するフロントエンドの既存コードを確認する。
 - `docs/knowledge/` 配下はユーザー専用の学習ノートのため、質問への回答や実装提案の根拠として参照しない（grep / read しない）。ユーザーから「ナレッジを追加して」と依頼されたときのみ書き込む。
 
 ## 開発ガイドライン
@@ -150,6 +155,7 @@ docs/knowledge/
 ```
 
 **重要:**
+
 - 陳腐化しても削除・移動しない。すべて蓄積し続ける
 - **Claudeはこのフォルダを質問回答・実装の根拠として参照しない。**ユーザーから明示的に「ナレッジに追加して」「ナレッジを更新して」と依頼されたときのみ書き込む
 - ファイル冒頭には最小限のメタ情報（書いた日・関連コード）を記載する

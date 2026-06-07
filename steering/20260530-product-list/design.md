@@ -1,8 +1,8 @@
-# お客様向け商品一覧 詳細設計書（フロントエンド）
+# お客様向け商品一覧・詳細 詳細設計書（フロントエンド）
 
 ## 概要
 
-お客様が商品を閲覧し、カートに追加するための画面。
+お客様が商品を閲覧し、カートに追加するための画面（一覧・詳細）。
 認証済みユーザー（USER・ADMIN）のみ利用可能。
 
 本設計は今後のサンプル実装として保守性・可読性を重視する。
@@ -20,6 +20,9 @@
    - リロード・ブラウザバック・URL共有に自然対応
 3. **見た目とロジックの分離**
    - 検索フォームは表示と入力ハンドリングのみ。検索実行後の挙動（page=1 リセット等）は呼び出し側で決める
+4. **カート関連の責務はカート画面に集約**
+   - 詳細ページからのカート操作は「1個追加」だけに留める
+   - 数量変更・削除はカート画面で行う（既存実装を流用）
 
 ---
 
@@ -73,33 +76,113 @@
 
 ---
 
-## ファイル構成
+### 商品詳細（`/products/:id`）
+
+#### レイアウト
+
+```
+┌─────────────────────────────────────────┐
+│ ┌──────────┐                            │
+│ │          │  商品名                    │
+│ │  メイン  │  ¥X,XXX                    │
+│ │  画像    │                            │
+│ │          │  説明文                    │
+│ └──────────┘                            │
+│ [小1][小2][小3]                         │
+│                                         │
+│              [カートに追加]              │
+│                                         │
+│  ※在庫切れの場合:                       │
+│   ・「在庫切れ」ラベル                  │
+│   ・カート追加ボタンは非表示             │
+└─────────────────────────────────────────┘
+```
+
+#### カート追加仕様
+
+- ボタンクリックで `useCartStore.addItem(product)` を呼ぶ
+- カートに既に同商品があれば**個数+1**（既存 `addItem` の挙動）
+- 詳細ページに数量セレクトは置かない。**数量変更はカート画面で行う**
+- 追加成功時はトースト通知で「カートに追加しました」
+
+#### 在庫切れ表示
+
+`product.stock === 0` のとき：
+- 「在庫切れ」ラベルを表示
+- カート追加ボタンを非表示
+- 価格・画像・説明は通常通り表示
+
+#### エラーハンドリング
+
+| エラー | 挙動 |
+|---|---|
+| 404（商品が見つからない） | トースト通知 + 一覧ページ `/products` へ navigate |
+| その他のAPIエラー | トースト通知（ページに留まる） |
+
+---
+
+## ファイル構成と実装状況
+
+凡例: ✅ 完了 / 🔶 部分実装 / ❌ 未着手
 
 ```
 frontend/src/
   components/
     pages/
-      ProductListPage.tsx          # 描画と配線のみ。検索状態は useProductSearchParams に委譲
+      ProductListPage.tsx          ✅ 一覧。描画と配線のみ
+      ProductDetailPage.tsx        🔶 骨組みのみ（return が空）。本体実装が必要
     organisms/
-      ProductSearchForm.tsx        # react-hook-form。defaultValues で URL 復元対応
-      ProductCardList.tsx          # 商品カードのグリッド表示
+      ProductSearchForm.tsx        ✅ react-hook-form。defaultValues で URL 復元対応
+      ProductCardList.tsx          ✅ 商品カードのグリッド表示
+      ProductDetailContent.tsx     ❌ 詳細ページの本体（画像 + 情報 + ボタン）
     molecules/
-      ProductCard.tsx              # 商品カード1枚（Product 型を直接受け取る）
+      ProductCard.tsx              ✅ 商品カード1枚
+      ProductImageList.tsx         ✅ 既存。画像ギャラリー（流用検討）
+    atoms/
+      button/
+        AddToCartButton.tsx        ✅ 既存。CartItem を受け取り、在庫0なら「在庫なし」表示
+      ProductImage.tsx             ✅ 既存。1枚の画像（onError フォールバック）
   hooks/
-    useProducts.ts                 # 公開商品一覧取得（既存）
-    useProductSearchParams.ts      # URL ↔ SearchForm/page 変換（新規）
+    useProducts.ts                 ✅ 公開商品一覧取得
+    useProduct.ts                  🔶 公開商品詳細取得（**APIパスが誤り**: `/api/product/:id` → `/api/public/product/:id` に修正必要。404時の navigate も未対応）
+    useProductSearchParams.ts      ✅ URL ↔ SearchForm/page 変換
+  stores/
+    useCartStore.ts                ✅ 既存。addItem を再利用
   utils/
-    productImageUrl.ts             # S3 画像URL生成（新規）
+    productImageUrl.ts             ✅ S3 画像URL生成
   types/
-    Product.ts                     # 既存流用
-    Form.ts                        # SearchForm（inStock は boolean）
+    Product.ts                     ✅ 既存流用
+    ProductDetail.ts               ✅ 既存流用（画像リスト込みの型）
+    Form.ts                        ✅ SearchForm（inStock は boolean）
+    Cart.ts                        ✅ CartItem 型
+  router/
+    Router.tsx                     🔶 `/products/:id` ルート追加が必要
 ```
+
+---
+
+## 詳細画面の実装タスク
+
+1. **`hooks/useProduct.ts` の修正**
+   - APIパス: `/api/product/${id}` → `/api/public/product/${id}`
+   - 404 (AxiosError.response?.status === 404) で `/products` へ navigate
+2. **`router/Router.tsx` にルート追加**
+   - `<Route path="/products/:id" element={<ProductDetailPage />} />` を顧客側レイアウト配下に
+3. **`organisms/ProductDetailContent.tsx` を新規作成**
+   - 画像ギャラリー + 商品情報 + AddToCartButton を組み合わせる
+   - 既存 `ProductImageList` を流用するか、新規の画像ギャラリーを作るか判断
+4. **`pages/ProductDetailPage.tsx` 本体実装**
+   - ローディング・取得失敗・本体表示の3状態を出し分け
+   - `ProductDetailContent` に product を渡す
+5. **`AddToCartButton` への接続**
+   - `ProductDetail` から `CartItem` に変換して渡す
+   - 追加成功時にトースト通知を出すか検討（現状の `AddToCartButton` には通知なし）
 
 ---
 
 ## 状態管理
 
-### useProductSearchParams
+### useProductSearchParams（一覧用）
 
 ```
 URL: /products?page=2&name=シャツ&minPrice=1000
@@ -117,7 +200,21 @@ URL ──▶│ page: number                   │
 `ProductListPage` は `useEffect([page, searchForm])` で `getProducts` を呼ぶだけ。
 URL が変わると hook の戻り値が更新され、副作用として API が走る。
 
-### 値の解釈ルール
+### useProduct（詳細用）
+
+```
+       ┌────────────────────────────────┐
+       │           useProduct           │
+       ├────────────────────────────────┤
+id ──▶│ product: ProductDetail | null  │
+       │ isLoading: boolean             │
+       │ getProduct(id)                 │
+       └────────────────────────────────┘
+```
+
+`ProductDetailPage` が `useParams` で `id` を取得し、`useEffect([id])` で `getProduct` を呼ぶ。
+
+### 値の解釈ルール（検索）
 
 | URL                   | searchForm の値                |
 |-----------------------|-------------------------------|
@@ -170,6 +267,31 @@ name=...&minPrice=...&maxPrice=...&inStock=true&page=1&size=20
 }
 ```
 
+### GET /api/public/product/:id
+
+**レスポンス:**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "name": "商品名",
+    "description": "説明",
+    "price": 1000,
+    "stock": 5,
+    "productImageList": [
+      { "s3Key": "PRODUCT/1/product_0.png", "sortOrder": 0, "mainImage": true },
+      { "s3Key": "PRODUCT/1/product_1.png", "sortOrder": 1, "mainImage": false }
+    ],
+    "createdAt": "2026-05-01T00:00:00",
+    "updatedAt": "2026-05-01T00:00:00"
+  }
+}
+```
+
+存在しない / 削除済みの場合: 404 を返す。
+
 ---
 
 ## 画像URL生成
@@ -187,7 +309,8 @@ NO_IMAGE_URL                 // onError フォールバック用
 
 | エラー種別 | 表示方法 |
 |---|---|
-| 商品一覧取得失敗 | トースト通知 |
+| 商品一覧取得失敗 | トースト通知（ページに留まる） |
+| 商品詳細取得失敗（404含む） | トースト通知 + `/products` へ navigate |
 | 画像読み込み失敗 | `onError` で `NO_IMAGE_URL` にフォールバック |
 
 ---
@@ -197,6 +320,8 @@ NO_IMAGE_URL                 // onError フォールバック用
 ```
 商品一覧（/products）
   └── 商品カードクリック → 商品詳細（/products/:id）
+        └── 「カートに追加」 → カート状態を更新（画面遷移なし、トースト通知）
+              └── ヘッダーのカートアイコンからカート画面へ
 ```
 
 ---
@@ -207,4 +332,4 @@ NO_IMAGE_URL                 // onError フォールバック用
 - 並び替え（価格順・新着順）
 - お気に入り機能
 - 商品レビュー
-- 商品詳細ページのリファクタ（本設計は商品一覧のみを対象）
+- 商品詳細での数量指定追加（カート画面で調整する設計）
