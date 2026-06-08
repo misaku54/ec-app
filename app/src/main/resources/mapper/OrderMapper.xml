@@ -34,35 +34,37 @@
 
   <select id="getOrderDetail" resultMap="orderDetailResultMap">
     SELECT
-      or.id,
-      or.total_amount,
-      or.status,
-      or.shipping_name,
-      or.shipping_postal_code,
-      or.shipping_address,
-      or.shipping_phone,
-      or.note,
-      or.created_at,
+      o.id,
+      o.total_amount,
+      o.status,
+      o.shipping_name,
+      o.shipping_postal_code,
+      o.shipping_address,
+      o.shipping_phone,
+      o.note,
+      o.created_at,
       oi.product_id AS item_product_id,
       oi.product_name AS item_product_name,
       oi.unit_price AS item_unit_price,
       oi.quantity AS item_quantity,
       s3.s3_key AS item_s3_key
     FROM
-      orders or
-    LEFT JOIN order_items oi
-      ON or.id = oi.order_id
-    LEFT JOIN products p
-      ON oi.product_id = p.id
+      orders o
+    LEFT JOIN order_items oi ON
+      o.id = oi.order_id
+    LEFT JOIN products p ON
+      oi.product_id = p.id
       AND p.del_flg = false
-    LEFT JOIN s3
-      ON p.id = s3.product_id
+    LEFT JOIN s3_files s3 ON
+      s3.entity_type = 1
+      AND s3.entity_id = p.id
       AND s3.is_main_image = true
+      AND s3.del_flg = false
     WHERE
-      or.id = #{orderId}
-      AND or.account_id = #{accountId}
-      AND or.del_flg = false
-    ORDER BY or.created_at DESC
+      o.id = #{orderId}
+      AND o.account_id = #{accountId}
+      AND o.del_flg = false
+    ORDER BY oi.id ASC
   </select>
 
   <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id">
