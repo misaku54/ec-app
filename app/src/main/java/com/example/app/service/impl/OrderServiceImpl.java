@@ -28,6 +28,15 @@ public class OrderServiceImpl implements OrderService {
   };
 
   @Override
+  public OrderDetailDto getOrderDetail(int orderId, int accountId) {
+    OrderDetailDto orderDetail = orderMapper.getOrderDetail(orderId, accountId);
+    if (orderDetail == null) {
+      throw new ApiNotFoundException("指定された注文は見つかりませんでした。");
+    }
+    return orderDetail;
+  }
+
+  @Override
   @Transactional
   public OrderResultDto createOrder(int accountId, OrderCreateForm form) {
     List<OrderItemDto> orderItems = buildOrderItems(form);

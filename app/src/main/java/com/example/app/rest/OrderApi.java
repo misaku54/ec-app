@@ -22,7 +22,7 @@ public class OrderApi {
   private final OrderService orderService;
 
   @GetMapping("/list")
-  public ResponseListDto<OrderHistoryItemDto> getOrderList(
+  public ResponseListDto<OrderHistoryItemDto> orderList(
     @RequestParam(defaultValue = "1") int page,
     @RequestParam(defaultValue = "20") int size) {
     PageHelper.startPage(page, size);
@@ -35,6 +35,16 @@ public class OrderApi {
     response.setStatus("success");
     response.setData(list);
     response.setPageInfo(new PageInfoDto(pageInfo.getTotal(), pageInfo.getPages(), pageInfo.getPageNum(), pageInfo.getPageSize()));
+    return response;
+  }
+
+  @GetMapping("/{orderId}")
+  public ResponseDto<OrderDetailDto> orderDetail(@PathVariable("orderId") int orderId) {
+    OrderDetailDto orderDetail = orderService.getOrderDetail(orderId, CurrentUserSupport.getAccountId());
+
+    ResponseDto<OrderDetailDto> response = new ResponseDto<>();
+    response.setStatus("success");
+    response.setData(orderDetail);
     return response;
   }
 
