@@ -33,12 +33,20 @@ export const useProducts = (params) => useQuery({
 });
 ```
 
-### 見送り理由
+### 方針（2026-06-10 更新）
 
-7月リリースに向けてスコープを絞るため、今サイクルは見送り。現状の実装で機能上の問題はない。
+**新規 API は react-query を採用、既存 API はそのまま** のハイブリッド運用に切り替え。
+注文履歴（`features/orders/`）から bulletproof-react パターン（`src/features/<feature>/api/` に
+fetcher + queryOptions + フックを同居）で実装する。
 
-### 対応時の考慮点
+### 既存 API の段階移行
 
-- 全フック（`useAdmProducts`, `useAdmProduct`, `useProduct`, `useProducts` 等）を一括で移行する
+- 既存フック（`useAdmProducts` / `useAdmProduct` / `useProduct` / `useProducts` 等）は当面据え置き
+- 機能追加・大きな改修の機会に合わせて、その feature 単位で react-query に置き換える
+- `useAxios` は `lib/api-client.ts` への一本化が望ましい。`useAxios` 経由のフックを移行するときに合わせて廃止
+
+### react-query 導入の利点
+
 - ローディング・エラー状態の管理が簡略化される
 - キャッシュにより同一データの重複フェッチが削減される
+- mutation 後の invalidate でデータ整合性が保ちやすい
