@@ -11,8 +11,10 @@
 1. **権限境界**
    - `/api/customer/order/*` の各エンドポイントは認証済みユーザーのみ
    - 注文詳細・キャンセルは `account_id` がログインユーザーと一致する場合のみ操作可能。他人の注文へのアクセスは 404
-2. **状態の単一の源は DB**
-   - 一覧・詳細の都度 GET で取得する。フロント側でキャッシュは持たない（カートとは別概念）
+2. **サーバー状態は react-query のキャッシュで管理**
+   - 一覧・詳細は `useQuery` で取得 + キャッシュ（`staleTime: 60s`）
+   - キャンセル成功時は `invalidateQueries({ queryKey: ['orders'] })` で一覧・詳細両方を再取得
+   - 「DBが正、フロントはキャッシュ」の関係は維持しつつ、ページ間遷移での重複フェッチを抑制する
 3. **商品情報の表示**
    - **商品名・単価・数量**: `order_items` のスナップショットを使用（注文時点で固定）
    - **画像**: 現在の `products` マスタから取得。商品削除済み or 画像なしなら `NO_IMAGE_URL`
@@ -102,7 +104,12 @@
 
 - `status === "PENDING"` のときのみキャンセルボタン表示
 - ボタンクリックで確認ダイアログ（既存 `DiaLogContext` 流用）
-- キャンセル成功時: トースト + ステータスを `CANCELLED` に更新（画面はAPI再取得で反映）
+- キャンセル成功時の挙動:
+  1. トースト「注文をキャンセルしました」を表示
+  2. **画面は詳細ページに留まる**（一覧に戻さない）
+  3. `useCancelOrder` の `onSuccess` 内で `invalidateQueries({ queryKey: ['orders'] })` 発火 → 詳細キャッシュが無効化され、再 fetch でステータスが `CANCELLED` に更新される
+  4. ステータスが `PENDING` でなくなるため、キャンセルボタンが自動的に消える
+- キャンセル失敗時: トースト「キャンセルに失敗しました」。ボタンは活性に戻る（react-query が自動で `isPending: false`）
 - BE側で在庫を戻す処理が必要
 
 ---
@@ -195,25 +202,31 @@ page=1&size=20
 
 ## ファイル構成
 
+### BE
+
+凡例: ✅ 完了 / 🔶 一部完了（cancel が未着手） / 🆕 新規（完了済み）
+
 ```
 app/src/main/java/com/example/app/
   rest/
-    OrderApi.java                    ✅ 既存に list / detail / cancel エンドポイント追加
+    OrderApi.java                    🔶 list / detail 完了。cancel 追加が必要
   service/
-    OrderService.java                ✅ getOrderList / getOrderDetail / cancelOrder を追加
-    impl/OrderServiceImpl.java       ✅ 同上
+    OrderService.java                🔶 getOrderList / getOrderDetail 完了。cancelOrder 追加が必要
+    impl/OrderServiceImpl.java       🔶 同上
   mapper/
-    OrderMapper.java                 ✅ selectOrderList / selectOrderById / selectOrderItemsByOrderId / updateOrderStatus 等を追加
+    OrderMapper.java                 🔶 getOrderList / getOrderDetail 完了。updateOrderStatus / 在庫加算 が必要
   dto/
-    OrderListItemDto.java            🆕 一覧用 DTO
+    OrderHistoryItemDto.java         🆕 一覧用 DTO
     OrderDetailDto.java              🆕 詳細用 DTO（OrderItem 込み）
     OrderItemDetailDto.java          🆕 詳細の orderItem 用 DTO（currentImageS3Key 込み）
 app/src/main/resources/mapper/
-  OrderMapper.xml                    ✅ 既存に select 追加
+  OrderMapper.xml                    🔶 list / detail の select 完了。updateOrderStatus が必要
+```
 
-### FE（bulletproof-react 流の features 構成）
+### FE
 
-本機能から `src/features/<feature>/` ベースのディレクトリ構成と **react-query** を導入する。
+既存の Atomic Design 構造（`atoms`/`molecules`/`organisms`/`pages`）はそのまま維持。
+本機能から **react-query** と **bulletproof-react の API レイヤパターン**（fetcher + queryOptions + フックの3点セット）を導入する。
 既存コード（products / cart / auth 等）は据え置きで、新規 API のみ react-query を使う**ハイブリッド運用**。
 
 ```
@@ -221,53 +234,60 @@ frontend/src/
   lib/
     api-client.ts                    🆕 共通 axios クライアント（既存 useAxios の interceptor を移植）
     react-query.ts                   🆕 QueryClient のデフォルト config + QueryConfig/MutationConfig 型ユーティリティ
-  app/
-    provider.tsx                     🆕 QueryClientProvider + 既存の Provider を集約（既存 main.tsx から移管）
-  features/
+  api/
     orders/
-      api/
-        get-orders.ts                🆕 fetcher + getOrdersQueryOptions + useOrders（useQuery）
-        get-order.ts                 🆕 fetcher + getOrderQueryOptions + useOrder（useQuery）
-        cancel-order.ts              🆕 fetcher + useCancelOrder（useMutation + invalidate）
-      components/
-        OrderList.tsx                🆕 一覧テーブル（useOrders を呼ぶ）
-        OrderDetailContent.tsx       🆕 詳細表示（useOrder を呼ぶ）
-        OrderStatusLabel.tsx         🆕 ステータスバッジ（formatOrderStatus を使用）
-        CancelOrderButton.tsx        🆕 キャンセルボタン（useCancelOrder。PENDING時のみ表示）
-      types/
-        order.ts                     🆕 Order / OrderHistoryItem / OrderDetail / OrderItemDetail / OrderStatus
-      utils/
-        format-status.ts             🆕 formatOrderStatus(status) — 日本語ラベル変換
+      get-orders.ts                  🆕 fetcher + getOrdersQueryOptions + useOrders（useQuery）
+      get-order.ts                   🆕 fetcher + getOrderQueryOptions + useOrder（useQuery）
+      cancel-order.ts                🆕 fetcher + useCancelOrder（useMutation + invalidate）
   components/
     pages/
-      OrderListPage.tsx              🆕 features/orders/components を組み立てる薄いラッパ
-      OrderDetailPage.tsx            🆕 features/orders/components を組み立てる薄いラッパ
+      OrderListPage.tsx              🆕 注文履歴ページ
+      OrderDetailPage.tsx            🆕 注文詳細ページ
+      OrderCompletePage.tsx          ✅ 「注文履歴を見る」リンク追加
     organisms/
+      OrderList.tsx                  🆕 一覧テーブル（useOrders を呼ぶ）
+      OrderDetailContent.tsx         🆕 詳細表示（useOrder を呼ぶ）
       CustomerHeader.tsx             ✅ 「注文履歴」リンク追加
-    pages/
-      OrderCompletePage.tsx         ✅ 「注文履歴を見る」リンク追加
+    molecules/
+      CancelOrderButton.tsx          🆕 キャンセルボタン（useCancelOrder。PENDING時のみ表示）
+    atoms/
+      OrderStatusLabel.tsx           🆕 ステータスバッジ
+  types/
+    Order.ts                         🆕 OrderStatus / OrderHistoryItem / OrderDetail / OrderItemDetail
+  utils/
+    orderStatus.ts                   🆕 formatOrderStatus(status) — 日本語ラベル変換
   router/
     Router.tsx                       ✅ `/orders` `/orders/:id` 追加
 ```
 
 **配置ルール:**
 
-- `features/orders/` は orders 固有のコード。他の feature から import 禁止
-- ページ（`components/pages/`）は features を組み立てる薄いラッパ。ロジックは features に閉じる
+- API 関連（fetcher + queryOptions + フック）は `src/api/<resource>/` に集約。bulletproof-react の features 構成は今回は採用せず、API レイヤだけ分離
+- 既存の `hooks/` には新規ファイルを増やさない（API 系は `api/` 配下に統一）
 - `lib/` は app 全体で使う基盤コード（axios インスタンス、react-query 設定）
 
 ---
 
 ## 実装タスク
 
-### BE（再掲・順番）
+### BE
 
-1. **DTO 作成**: `OrderHistoryItemDto`（一覧用） / `OrderDetailDto`（詳細用、orderItems込み） / `OrderItemDetailDto`
-2. **Mapper 追加**: `selectOrderList(accountId)` / `selectOrderById(id, accountId)` / `updateOrderStatus(id, status)` / 在庫加算用
-3. **Service 追加**: `getOrderList(accountId)` / `getOrderDetail(id, accountId)` / `cancelOrder(id, accountId)`
-   - キャンセル処理は `@Transactional`：status更新 + 在庫加算
-4. **Controller 追加**: `OrderApi` に 3エンドポイント追加
-5. **404 ハンドリング**: null 戻り → `ApiNotFoundException` → GlobalExceptionHandler で 404
+凡例: ✅ 完了 / ❌ 未着手
+
+- ✅ **DTO 作成**: `OrderHistoryItemDto` / `OrderDetailDto` / `OrderItemDetailDto`
+- ✅ **一覧/詳細の Mapper・Service・Controller**: `getOrderList(accountId)` / `getOrderDetail(orderId, accountId)`
+- ✅ **404 ハンドリング**: 詳細の null 戻り → `ApiNotFoundException` → 404
+- ❌ **キャンセル Mapper 追加**:
+  - `updateOrderStatus(orderId, status)` — `orders.status` 更新
+  - `incrementProductStock(productId, quantity)` — 在庫加算（既存 `updateProductStock` は減算用なので新規 or 引数で正負対応）
+  - `selectOrderItemsByOrderId(orderId)` — キャンセル対象明細の取得（既存 detail SQL を流用可）
+- ❌ **キャンセル Service 追加**: `cancelOrder(orderId, accountId)`
+  - 注文取得 → 自分の注文か & status が PENDING かチェック
+  - status を CANCELLED に更新
+  - 各明細の商品の在庫を加算
+  - `@Transactional` 必須
+- ❌ **キャンセル Controller 追加**: `POST /api/customer/order/{orderId}/cancel`
+- ❌ **キャンセル時のバリデーション**: 自分の注文でない → 404 / status != PENDING → 400
 
 ### FE（手順 — bulletproof-react 流）
 
@@ -275,27 +295,66 @@ frontend/src/
 
 1. **依存追加**: `npm i @tanstack/react-query @tanstack/react-query-devtools`
 2. **`lib/api-client.ts` 作成**:
-   - `axios.create({ baseURL, withCredentials: true })`
-   - request interceptor: 認証ヘッダ等（既存 `useAxios` から移植）
-   - response interceptor: `response.data` を return（fetcher 関数の return 型がスッキリする）。エラー時は `Promise.reject(error)`
+   ```ts
+   export const api = axios.create({
+     baseURL: 'http://localhost:8888',
+     withCredentials: true,
+   });
+
+   api.interceptors.request.use((config) => {
+     if (config.headers) config.headers.Accept = 'application/json';
+     return config;
+   });
+
+   api.interceptors.response.use(
+     (response) => response.data,  // ApiResponse<T> をそのまま返す（fetcher 側で型付け）
+     (error) => Promise.reject(error),  // エラーは画面側でハンドリング
+   );
+   ```
+   - **方針**: interceptor では「成功時の data 展開」のみ行う。エラー処理は画面側に委ねる（[エラーハンドリング](#エラーハンドリング) 参照）
+   - 401 のグローバル処理は現状の `PrivateRoute` パターンに任せる（interceptor で特別処理しない）
 3. **`lib/react-query.ts` 作成**:
-   - `queryConfig`: `staleTime: 60 * 1000`, `refetchOnWindowFocus: false`, `retry: false`
-   - `QueryConfig<T>` / `MutationConfig<T>` の型ユーティリティ（bulletproof-react から流用）
-4. **QueryClientProvider 設置**: `App.tsx` か `app/provider.tsx` のルートで `<QueryClientProvider client={queryClient}>` で全体を包む
+   ```ts
+   export const queryConfig = {
+     queries: {
+       refetchOnWindowFocus: false,
+       retry: false,
+       staleTime: 60 * 1000,
+     },
+   } satisfies DefaultOptions;
+
+   export type ApiFnReturnType<FnType extends (...args: any) => Promise<any>> =
+     Awaited<ReturnType<FnType>>;
+
+   export type QueryConfig<T extends (...args: any[]) => any> = Omit<
+     ReturnType<T>,
+     'queryKey' | 'queryFn'
+   >;
+
+   export type MutationConfig<
+     MutationFnType extends (...args: any) => Promise<any>,
+   > = UseMutationOptions<
+     ApiFnReturnType<MutationFnType>,
+     Error,
+     Parameters<MutationFnType>[0]
+   >;
+   ```
+4. **QueryClientProvider 設置**: `App.tsx` のルートで `<QueryClientProvider client={queryClient}>` で全体を包む。`queryClient` は `lib/react-query.ts` の `queryConfig` で生成
 5. **DevTools の組み込み**（任意・開発時のみ）: `<ReactQueryDevtools />`
 
-#### orders feature の実装
+#### orders 機能の実装
 
-6. **`features/orders/types/order.ts`**:
+6. **`types/Order.ts`**:
    ```ts
    export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
    export type OrderHistoryItem = { id: number; status: OrderStatus; totalAmount: number; createdAt: string };
    export type OrderItemDetail = { productId: number; productName: string; unitPrice: number; quantity: number; currentImageS3Key: string | null };
    export type OrderDetail = { id: number; status: OrderStatus; totalAmount: number; shippingName: string; shippingPostalCode: string; shippingAddress: string; shippingPhone: string | null; note: string | null; createdAt: string; orderItems: OrderItemDetail[] };
    ```
-7. **`features/orders/utils/format-status.ts`**: `formatOrderStatus(status: OrderStatus): string` を export
-8. **`features/orders/api/get-orders.ts`**（パターン: fetcher + queryOptions + フック）:
+7. **`utils/orderStatus.ts`**: `formatOrderStatus(status: OrderStatus): string` を export
+8. **`api/orders/get-orders.ts`**（パターン: fetcher + queryOptions + フック）:
    ```ts
+   // size は BE 側のデフォルト（20）を使用。可変にする要件が出たら fetcher 引数に追加
    export const getOrders = (page = 1): Promise<{ data: OrderHistoryItem[]; pageInfo: PageInfo }> =>
      api.get('/api/customer/order/list', { params: { page } });
 
@@ -308,8 +367,8 @@ frontend/src/
    export const useOrders = ({ page, queryConfig }: { page?: number; queryConfig?: QueryConfig<typeof getOrdersQueryOptions> } = {}) =>
      useQuery({ ...getOrdersQueryOptions({ page }), ...queryConfig });
    ```
-9. **`features/orders/api/get-order.ts`**: 同様のパターンで詳細取得
-10. **`features/orders/api/cancel-order.ts`**（mutation パターン）:
+9. **`api/orders/get-order.ts`**: 同様のパターンで詳細取得
+10. **`api/orders/cancel-order.ts`**（mutation パターン）:
     ```ts
     export const cancelOrder = ({ orderId }: { orderId: number }) =>
       api.post(`/api/customer/order/${orderId}/cancel`);
@@ -328,8 +387,8 @@ frontend/src/
       });
     };
     ```
-11. **`features/orders/components/`**: `OrderStatusLabel` → `OrderList` → `OrderDetailContent` → `CancelOrderButton` の順に。各コンポーネントは feature内のフック（`useOrders` 等）を直接呼ぶ
-12. **ページ**: `components/pages/OrderListPage.tsx` は `<OrderList />` を return するだけの薄いラッパ。`OrderDetailPage.tsx` も同様
+11. **コンポーネント**: `atoms/OrderStatusLabel` → `organisms/OrderList` → `organisms/OrderDetailContent` → `molecules/CancelOrderButton` の順に。組織化はそのままで、API系フックは `api/orders/` から import
+12. **ページ**: `pages/OrderListPage.tsx` は `<OrderList />` を return するだけの薄いラッパ。`OrderDetailPage.tsx` も同様
 13. **Router**: `/orders` `/orders/:id` を顧客側 Layout 配下に追加
 14. **導線追加**: `CustomerHeader` / `OrderCompletePage`
 
@@ -375,20 +434,63 @@ cancelMutation.mutate({ orderId: 1234 });
 
 ### 5. 型の置き場所
 
-- **feature 固有の型**: `features/orders/types/order.ts`
+- **リソース別の型**: 既存と同じく `src/types/Order.ts` に集約
 - **app 横断の型**（PageInfo, ApiResponse など）: 既存の `src/types/` のまま
-- bulletproof-react に倣うなら共通型は `src/types/api.ts` に集約してもよいが、今回はスコープ外
+- features 構成は今回は採用しないため、型もリソース単位（1ファイル）にまとめる
 
 ---
 
 ## エラーハンドリング
 
-| エラー | 挙動 |
-|---|---|
-| 一覧取得失敗 | トースト通知（ページに留まる） |
-| 詳細取得失敗（404・5xx 等） | `/orders` へ navigate + state でエラーメッセージ |
-| キャンセル失敗 | トースト通知（ページに留まる、ボタンは押せる状態に戻す） |
-| 画像読み込み失敗 | `onError` で `NO_IMAGE_URL` |
+### 役割分担
+
+- **`lib/api-client.ts` の response interceptor**: 認証エラー（401）の処理のみ。それ以外はエラーをそのまま reject し、画面側に判断を委ねる
+- **画面（ページコンポーネント）**: `useQuery`/`useMutation` の `error` を `useEffect` で監視し、トースト or navigate を発火する
+- **`useQuery` フック自体（`useOrders` 等）**: エラー処理は持たない。画面非依存に保つ
+
+### ケース別の挙動
+
+| エラー | 場所 | 挙動 |
+|---|---|---|
+| 一覧取得失敗 (`OrderListPage`) | 画面側 `useEffect` | `toast.error('注文一覧の取得に失敗しました')`。ページに留まる |
+| 詳細取得失敗 (`OrderDetailPage`) | 画面側 `useEffect` | `navigate('/orders', { state: { message, type: 'error' } })`。`DefaultLayout` がトースト表示 |
+| キャンセル失敗 | `useCancelOrder` 呼び出し側の `mutationConfig.onError` | `toast.error('キャンセルに失敗しました')`。ボタンは活性に戻る（react-query が自動で `isPending` を false にする） |
+| 認証切れ（401） | `lib/api-client.ts` の interceptor | 既存パターン（`PrivateRoute` で `/login` 誘導）を踏襲。当面 interceptor で特別処理しない |
+| 画像読み込み失敗 | `<img>` の `onError` | `NO_IMAGE_URL` にフォールバック |
+
+### 画面側エラー監視の実装イメージ
+
+```tsx
+// OrderDetailPage.tsx
+const { data, error, isLoading } = useOrder({ orderId });
+const navigate = useNavigate();
+
+useEffect(() => {
+  if (error) {
+    navigate('/orders', {
+      state: {
+        message: '注文情報の取得に失敗しました',
+        type: 'error',
+      },
+    });
+  }
+}, [error, navigate]);
+
+if (isLoading) return <Loader />;
+if (!data) return null;
+return <OrderDetailContent order={data.data} />;
+```
+
+```tsx
+// OrderListPage.tsx
+const { data, error, isLoading } = useOrders({ page });
+
+useEffect(() => {
+  if (error) {
+    toast.error('注文履歴の取得に失敗しました');
+  }
+}, [error]);
+```
 
 ---
 
