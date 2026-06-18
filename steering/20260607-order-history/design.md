@@ -232,7 +232,7 @@ app/src/main/resources/mapper/
 ```
 frontend/src/
   lib/
-    api-client.ts                    🆕 共通 axios クライアント（既存 useAxios の interceptor を移植）
+    api-client.ts                    🆕 react-query 用の独立 axios インスタンスを新設（既存 ApiClient / useAxios とは別物。interceptor は移植せず最小限に留める）
     react-query.ts                   🆕 QueryClient のデフォルト config + QueryConfig/MutationConfig 型ユーティリティ
   api/
     orders/
@@ -294,10 +294,12 @@ frontend/src/
 #### 事前準備（共通基盤）
 
 1. **依存追加**: `npm i @tanstack/react-query @tanstack/react-query-devtools`
-2. **`lib/api-client.ts` 作成**:
+2. **`lib/api-client.ts` 作成**（既存 `api/ApiClient.ts` / `useAxios` とは**別物の独立インスタンス**。既存コードには一切手を入れない）:
    ```ts
+   // react-query 専用の独立 axios インスタンス。
+   // baseURL は plan「すぐ対応すべき点」の環境変数化に合わせて env 参照（未設定時はローカルにフォールバック）。
    export const api = axios.create({
-     baseURL: 'http://localhost:8888',
+     baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8888',
      withCredentials: true,
    });
 
@@ -308,11 +310,13 @@ frontend/src/
 
    api.interceptors.response.use(
      (response) => response.data,  // ApiResponse<T> をそのまま返す（fetcher 側で型付け）
-     (error) => Promise.reject(error),  // エラーは画面側でハンドリング
+     (error) => Promise.reject(error),  // エラーは画面側でハンドリング（plan フェーズ4「テスト・品質向上」4-3 で interceptor 集約に置き換え予定）
    );
    ```
-   - **方針**: interceptor では「成功時の data 展開」のみ行う。エラー処理は画面側に委ねる（[エラーハンドリング](#エラーハンドリング) 参照）
+   - **方針**: interceptor は **最小限**に留める。「成功時の data 展開」のみ行い、エラー処理は画面側に委ねる（[エラーハンドリング](#エラーハンドリング) 参照）
+   - bulletproof 本家は interceptor で共通トースト＋401リダイレクトを一元化しているが、**その一元化は plan のフェーズ4「テスト・品質向上」4-3「API エラーハンドリング統一」スコープ**（`repo/implementation-plan.md` 225〜230行目）。本タスクでは暫定的に画面側で処理し、フェーズ4-3 で interceptor 集約 / ErrorBoundary に移行する
    - 401 のグローバル処理は現状の `PrivateRoute` パターンに任せる（interceptor で特別処理しない）
+   - `useAxios` の 401/403 navigate ロジックは**移植しない**（独立インスタンスの分離を崩さないため）
 3. **`lib/react-query.ts` 作成**:
    ```ts
    export const queryConfig = {
