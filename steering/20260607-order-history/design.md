@@ -364,14 +364,15 @@ frontend/src/
 
    export const getOrdersQueryOptions = ({ page }: { page?: number } = {}) =>
      queryOptions({
-       queryKey: page ? ['orders', { page }] : ['orders'],
+       // queryKey は REST 構造に対応させる（generic → specific）。'list' セグメントで一覧系を明示
+       queryKey: page ? ['orders', 'list', { page }] : ['orders', 'list'],
        queryFn: () => getOrders(page),
      });
 
    export const useOrders = ({ page, queryConfig }: { page?: number; queryConfig?: QueryConfig<typeof getOrdersQueryOptions> } = {}) =>
      useQuery({ ...getOrdersQueryOptions({ page }), ...queryConfig });
    ```
-9. **`api/orders/get-order.ts`**: 同様のパターンで詳細取得
+9. **`api/orders/get-order.ts`**: 同様のパターンで詳細取得。queryKey は `['orders', 'detail', id]`、fetcher の戻り値は `{ data: OrderDetail }`（pageInfo なし）、フック名は `useOrder`（単数）
 10. **`api/orders/cancel-order.ts`**（mutation パターン）:
     ```ts
     export const cancelOrder = ({ orderId }: { orderId: number }) =>
@@ -412,9 +413,23 @@ frontend/src/
 
 ### 2. queryKey 設計
 
-- 一覧: `['orders', { page }]`（ページ番号ごとにキャッシュ）
-- 詳細: `['orders', orderId]`（個別のキャッシュ）
-- mutation 後の invalidate: `['orders']` をプレフィックス指定で全部無効化
+**方針: queryKey のルールを REST API 設計に依存させる**（TkDodo "Effective React Query Keys" 流）。`generic → specific` の順で階層化し、`'list'` / `'detail'` の種別セグメントを挟むことで、スケールしても重複せず・無効化範囲を選べるようにする。
+
+| 用途 | REST | queryKey |
+|---|---|---|
+| 全体 | `/orders` | `['orders']` |
+| 一覧 | `/order/list?page=` | `['orders', 'list', { page }]`（page 無しは `['orders', 'list']`） |
+| 詳細 | `/order/:id` | `['orders', 'detail', id]` |
+
+**無効化の使い分け（前方一致でマッチ）:**
+
+- `['orders']` → 一覧・全詳細をまとめて無効化（キャンセル成功時はこれを使用）
+- `['orders', 'list']` → 一覧（全ページ）だけ無効化（詳細キャッシュは温存）
+- `['orders', 'detail']` → 全詳細だけ無効化
+- `['orders', 'detail', id]` → 特定の注文1件だけ無効化
+
+> `'list'` / `'detail'` を挟む利点は「狙い撃ち invalidate」ができること。本タスクのキャンセルは `['orders']` 全体無効化で足りるが、3-5 の管理者注文管理など機能が増えても規約がブレないようにこの形で統一しておく。
+> リソースが orders 以外にも増えてきたら、キーを1箇所に集約する Query Key Factory（`orderKeys.detail(id)` 等）への発展も検討する。現時点では各 API ファイルに colocate する3点セット方式で十分。
 
 ### 3. mutation の onSuccess チェーン
 
