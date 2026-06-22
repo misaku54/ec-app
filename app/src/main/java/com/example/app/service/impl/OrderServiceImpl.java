@@ -1,9 +1,6 @@
 package com.example.app.service.impl;
 
-import com.example.app.dto.OrderDto;
-import com.example.app.dto.OrderItemDto;
-import com.example.app.dto.OrderResultDto;
-import com.example.app.dto.ProductDto;
+import com.example.app.dto.*;
 import com.example.app.exception.ApiInvalidUpdateException;
 import com.example.app.exception.ApiNotFoundException;
 import com.example.app.form.OrderCreateForm;
@@ -24,6 +21,20 @@ import java.util.Objects;
 public class OrderServiceImpl implements OrderService {
   private final ProductMapper productMapper;
   private final OrderMapper orderMapper;
+
+  @Override
+  public List<OrderHistoryItemDto> getOrderList(int accountId) {
+    return orderMapper.getOrderList(accountId);
+  };
+
+  @Override
+  public OrderDetailDto getOrderDetail(int orderId, int accountId) {
+    OrderDetailDto orderDetail = orderMapper.getOrderDetail(orderId, accountId);
+    if (orderDetail == null) {
+      throw new ApiNotFoundException("指定された注文は見つかりませんでした。");
+    }
+    return orderDetail;
+  }
 
   @Override
   @Transactional
