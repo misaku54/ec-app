@@ -28,6 +28,20 @@
     <result property="mainImage" column="is_main_image"/>
   </resultMap>
 
+  <!-- 商品一覧用: 画像は別クエリで取得して PageHelper の LIMIT が JOIN 行数に影響しない -->
+  <resultMap id="productListResultMap" type="com.example.app.dto.ProductDetailDto">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="description" column="description"/>
+    <result property="price" column="price"/>
+    <result property="stock" column="stock"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+    <collection property="productImageList"
+                select="findImagesByProductId"
+                column="id"/>
+  </resultMap>
+
   <select id="getProductList" resultMap="productResultMap">
     SELECT
       id, name, description, price, stock, created_at, updated_at
@@ -45,36 +59,33 @@
     ORDER BY id
   </select>
 
-  <select id="searchProducts" resultMap="productDetailResultMap">
+  <select id="searchProducts" resultMap="productListResultMap">
     SELECT
-      pr.id,
-      pr.name,
-      pr.description,
-      pr.price,
-      pr.stock,
-      pr.created_at,
-      pr.updated_at,
-      s3.s3_key as s3_s3_key,
-      s3.sort_order as s3_sort_order,
-      s3.is_main_image as s3_is_main_image
+      id, name, description, price, stock, created_at, updated_at
     FROM
-      products pr
-    LEFT JOIN
-      S3_files s3
-    ON
-      pr.id = s3.entity_id
-      AND s3.entity_type = 1
-      AND s3.del_flg = false
+      products
     <where>
-      pr.del_flg = false
+      del_flg = false
       <if test="params.name != null and params.name != ''">
-        AND LOWER(pr.name) LIKE CONCAT('%', LOWER(#{params.name}), '%')
+        AND LOWER(name) LIKE CONCAT('%', LOWER(#{params.name}), '%')
       </if>
-      <if test="params.minPrice != null">AND pr.price &gt;= #{params.minPrice}</if>
-      <if test="params.maxPrice != null">AND pr.price &lt;= #{params.maxPrice}</if>
-      <if test="params.inStock != null and params.inStock">AND pr.stock &gt; 0</if>
+      <if test="params.minPrice != null">AND price &gt;= #{params.minPrice}</if>
+      <if test="params.maxPrice != null">AND price &lt;= #{params.maxPrice}</if>
+      <if test="params.inStock != null and params.inStock == true">AND stock &gt; 0</if>
     </where>
-    ORDER BY pr.id ASC, s3.sort_order ASC
+    ORDER BY id ASC
+  </select>
+
+  <select id="findImagesByProductId" resultMap="productImage">
+    SELECT
+      s3_key, sort_order, is_main_image
+    FROM
+      S3_files
+    WHERE
+      entity_id = #{productId}
+      AND entity_type = 1
+      AND del_flg = false
+    ORDER BY sort_order ASC
   </select>
 
   <select id="getProductDetailById" resultMap="productDetailResultMap">
@@ -103,6 +114,20 @@
     ORDER BY s3.sort_order ASC
   </select>
 
+  <select id="getProductByIdForUpdate" resultType="com.example.app.dto.ProductDto">
+    SELECT
+      id,
+      name,
+      price,
+      stock
+    FROM
+      products
+    WHERE
+      id = #{productId}
+      AND del_flg = false
+    FOR UPDATE
+  </select>
+
   <insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO products (name, description, price, stock)
     VALUES (#{name}, #{description}, #{price}, #{stock})
@@ -129,4 +154,12 @@
       AND del_flg = false
   </update>
 
+  <update id="updateProductStock">
+    UPDATE products SET
+      stock = stock - #{quantity},
+      updated_at = CURRENT_TIMESTAMP
+    WHERE
+      id = #{productId}
+      AND del_flg = false
+  </update>
 </mapper>

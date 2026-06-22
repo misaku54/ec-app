@@ -5,7 +5,7 @@ type Props = {
   selectedProduct: ProductDetail;
 }
 
-export const ProductDetailInfo:React.FC<Props> = (props) => {
+export const AdmProductDetailInfo = (props: Props) => {
   const {selectedProduct} = props;
 
   return (

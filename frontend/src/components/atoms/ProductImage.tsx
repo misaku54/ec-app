@@ -1,25 +1,24 @@
+import {
+  NO_IMAGE_URL,
+  buildProductImageUrl,
+} from "../../utils/productImageUrl";
+
 type Props = {
   s3Key: string;
   isMain?: boolean;
 };
 
-export const ProductImage: React.FC<Props> = (props) => {
-  const {s3Key, isMain} = props;
-  // url生成
-  const baseUrl = "http://localhost:9000/your-bucket";
-  const imageUrl = `${baseUrl}/${s3Key}`
-  const noImageUrl = `${baseUrl}/noImage.png`
-  
+export const ProductImage = ({ s3Key, isMain }: Props) => {
   return (
     <img
-      src={imageUrl}
+      src={buildProductImageUrl(s3Key)}
       onError={(e) => {
-        e.currentTarget.src = noImageUrl;
+        e.currentTarget.src = NO_IMAGE_URL;
         e.currentTarget.onerror = null;
       }}
       width="200"
       height="200"
-      alt={isMain? "main" : "sub"}
+      alt={isMain ? "main" : "sub"}
     />
-  )
-}
+  );
+};

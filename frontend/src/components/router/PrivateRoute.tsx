@@ -8,5 +8,5 @@ export const PrivateRoute = () => {
   if (!isAuthChecked) {
     return <Loader />;
   }
-  return me?.roles.includes("ADMIN") ? <Outlet /> : <Navigate to="/" replace />;
+  return me ? <Outlet /> : <Navigate to="/" replace />;
 };

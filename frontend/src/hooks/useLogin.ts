@@ -24,7 +24,7 @@ export const useLogin = (): {
       .post("http://localhost:8888/login", data)
       .then(() => {
         fetchMe();
-        navigate("/admin/product/list");
+        navigate("/admin/products");
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 403) {

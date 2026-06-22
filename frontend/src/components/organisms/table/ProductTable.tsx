@@ -8,7 +8,7 @@ type Props = {
   onDelete: (id: number) => void;
 };
 
-export const ProductTable: React.FC<Props> = (props) => {
+export const ProductTable = (props: Props) => {
   const { products, onDelete } = props;
 
   return (
@@ -32,7 +32,7 @@ export const ProductTable: React.FC<Props> = (props) => {
               <td className="px-4 py-3 text-sm text-zinc-400">{product.id}</td>
               <td className="px-4 py-3 text-sm font-medium">
                 <Link
-                  to={`/admin/product/${product.id}`}
+                  to={`/admin/products/${product.id}`}
                   className="text-zinc-800 hover:text-zinc-500 hover:underline"
                 >
                   {product.name}
