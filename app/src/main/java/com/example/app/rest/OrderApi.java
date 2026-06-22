@@ -41,21 +41,13 @@ public class OrderApi {
   @GetMapping("/{orderId}")
   public ResponseDto<OrderDetailDto> getOrderDetail(@PathVariable("orderId") int orderId) {
     OrderDetailDto orderDetail = orderService.getOrderDetail(orderId, CurrentUserSupport.getAccountId());
-
-    ResponseDto<OrderDetailDto> response = new ResponseDto<>();
-    response.setStatus("success");
-    response.setData(orderDetail);
-    return response;
+    return ResponseDto.success(orderDetail);
   }
 
   @PostMapping("/create")
   @UseBindingResult
   public ResponseDto<OrderResultDto> createOrder(@Validated @RequestBody OrderCreateForm form, BindingResult br, Locale locale) {
     OrderResultDto orderResult = orderService.createOrder(CurrentUserSupport.getAccountId(), form);
-
-    ResponseDto<OrderResultDto> response = new ResponseDto<>();
-    response.setStatus("success");
-    response.setData(orderResult);
-    return response;
+    return ResponseDto.success(orderResult);
   }
 }

@@ -8,8 +8,6 @@ import com.example.app.form.AccountRegisterForm;
 import com.example.app.security.CustomUserDetails;
 import com.example.app.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +23,7 @@ public class AccountApi {
   private final AccountService accountService;
 
   @GetMapping("/me")
-  public ResponseEntity<ResponseDto<MeDto>> getMe(@AuthenticationPrincipal CustomUserDetails loginUser) {
+  public ResponseDto<MeDto> getMe(@AuthenticationPrincipal CustomUserDetails loginUser) {
     AccountDto account = loginUser.getAccount();
 
     MeDto me = new MeDto();
@@ -33,23 +31,18 @@ public class AccountApi {
     me.setEmail(account.getEmail());
     me.setRoles(account.getRoles());
 
-    ResponseDto<MeDto> response = new ResponseDto<>();
-    response.setStatus("success");
-    response.setData(me);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseDto.success(me);
   }
 
   @PostMapping("/public/register")
   @UseBindingResult
-  public ResponseEntity<ResponseDto<Void>> register(@Validated @RequestBody AccountRegisterForm accountRegisterForm, BindingResult bindingResult, Locale locale) {
+  public ResponseDto<Void> register(@Validated @RequestBody AccountRegisterForm accountRegisterForm, BindingResult bindingResult, Locale locale) {
     accountService.register(
       accountRegisterForm.getName(),
       accountRegisterForm.getEmail(),
       accountRegisterForm.getPassword()
     );
 
-    ResponseDto<Void> response = new ResponseDto<>();
-    response.setStatus("success");
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseDto.success();
   }
 }
