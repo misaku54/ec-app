@@ -81,11 +81,7 @@ http-client.private.env.json
 .idea/.cache/.Apifox_Helper
 .idea/ApifoxUploaderProjectSetting.xml
 
-repo
 .github/
 
 # 環境変数
 .env
-
-# 学習メモ（個人用）
-learning/
