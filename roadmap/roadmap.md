@@ -6,9 +6,10 @@
 > このブロックは SessionStart フックで毎セッション自動表示される。タスクの着手・完了時にここを最優先で更新すること。
 
 - **進行中フェーズ**: Phase 3-4 注文履歴（会員向け）
-- **いま着手中のタスク**: FE の API レイヤ実装（`api/orders/` の3点セット）。`get-orders.ts` / `get-order.ts` 完了、`cancel-order.ts` 未着手
-- **直近に完了したこと**: BE 一覧/詳細 API、react-query 基盤（`lib/api-client.ts` / `lib/react-query.ts` / `QueryClientProvider`）
-- **次にやること**: `cancel-order.ts`（mutation）→ コンポーネント（OrderStatusLabel → OrderList → OrderDetailContent → CancelOrderButton）→ ページ → Router → 導線
+- **いま着手中のタスク**: FE の API レイヤ。`get-orders.ts` / `get-order.ts` 完了。次は `cancel-order.ts`（ただし BE キャンセルAPIが未実装なので先にそちらが必要）
+- **直近に完了したこと**: BE 一覧/詳細API、react-query 基盤（`lib/api-client` / `lib/react-query` / `QueryClientProvider`）、`types/Order` / `utils/orderStatus`、`get-orders` / `get-order` の3点セット
+- **次にやること（順番）**: ① BE キャンセルAPI（`/cancel`・在庫戻し）→ ② FE `cancel-order.ts` → ③ コンポーネント（`OrderStatusLabel` を素Tailwind化 → `OrderList` → `OrderDetailContent` → `CancelOrderButton`）→ ④ ページ → ⑤ Router → ⑥ 導線
+- **注意点**: `atoms/OrderStatusLabel.tsx` は `@material-tailwind` 依存の雛形のまま（未完）
 - **設計書**: `steering/20260607-order-history/design.md`
 
 <!-- CURRENT-STATUS:END -->
@@ -50,7 +51,7 @@
 - ✅ 管理画面と顧客画面のレイアウト分離 — `BaseLayout` + `AdmHeader` / `CustomerHeader` で分離完了
 - ✅ 注文作成 API（`POST /api/customer/order/create`）— 完了
 - ✅ チェックアウト画面・注文完了画面
-- ❌ 注文履歴（会員向け）
+- 🔶 注文履歴（会員向け）— 実装中（BE一覧/詳細・FE基盤/取得フック 完了。キャンセルAPI・画面・導線が残）
 - ❌ 管理者向け注文管理
 - ⏳ バッチ処理（Spring Batch）— 余裕があれば
 - ❌ 本番環境設定・CI/CD
@@ -160,24 +161,35 @@ ECサイトのコア — カートと注文のフルフローを実装。
 - ✅ **FE**: チェックアウト画面（`/checkout`）
 - ✅ **FE**: 注文完了画面（`/order/complete/:orderId`）
 
-### 3-4. 注文履歴（会員向け）← **次のタスク**
+### 3-4. 注文履歴（会員向け）← **実装中**
 
 設計書: `steering/20260607-order-history/design.md`
 
-- ❌ **BE**: `GET /api/customer/order/list` — 注文一覧API（ログインユーザーの注文を新着順、ページネーション）
-- ❌ **BE**: `GET /api/customer/order/:id` — 注文詳細API（自分の注文のみ閲覧可。他人の注文は404）
-- ❌ **FE**: `useOrders` / `useOrder` フック作成
-- ❌ **FE**: 注文履歴ページ（`/orders`）— 注文番号・注文日・合計金額・ステータスの一覧
-- ❌ **FE**: 注文詳細ページ（`/orders/:id`）— 注文した商品リスト・小計・合計
-- ❌ **FE**: Router に `/orders` `/orders/:id` 追加
-- ❌ **FE**: `CustomerHeader` に「注文履歴」リンク追加
-- ❌ 注文完了画面から注文履歴・注文詳細への導線追加
+**BE**
+- ✅ `GET /api/customer/order/list` — 注文一覧API（新着順・ページネーション）
+- ✅ `GET /api/customer/order/:id` — 注文詳細API（自分の注文のみ。他人は404）
+- ❌ `POST /api/customer/order/:id/cancel` — キャンセルAPI（Mapper/Service/Controller・在庫戻し・@Transactional）
 
-**設計上の論点（着手前に確認）:**
-- パスは `/mypage/orders` か `/orders` か → シンプルに `/orders` を推奨（マイページが他にないため）
-- 注文ステータスの enum（PENDING / CONFIRMED / SHIPPED / DELIVERED / CANCELLED）の日本語表示はどこで持つか
-- 注文詳細の画面で商品名・画像はスナップショット（注文時点）を出すか、現在のマスタを出すか
-  - `order_items` にスナップショットを持っているか BE 側の確認が必要
+**FE 基盤（react-query 導入）**
+- ✅ `lib/api-client.ts` / `lib/react-query.ts`（独立 axios + QueryClient 設定）
+- ✅ `App.tsx` に `QueryClientProvider` 設置
+- ✅ `types/Order.ts` / `utils/orderStatus.ts`
+
+**FE 機能**
+- ✅ `api/orders/get-orders.ts`（`useOrders` 3点セット）
+- ✅ `api/orders/get-order.ts`（`useOrder` 3点セット）
+- ❌ `api/orders/cancel-order.ts`（`useCancelOrder` mutation + invalidate）
+- 🔶 `atoms/OrderStatusLabel.tsx`（雛形のみ。`@material-tailwind` 依存を外し素Tailwindで書き直しが必要）
+- ❌ `organisms/OrderList`（一覧テーブル）/ `organisms/OrderDetailContent`（詳細表示）
+- ❌ `molecules/CancelOrderButton`（PENDING時のみ表示）
+- ❌ `pages/OrderListPage`（`/orders`）/ `pages/OrderDetailPage`（`/orders/:id`）
+- ❌ Router に `/orders` `/orders/:id` 追加
+- ❌ 導線追加（`CustomerHeader` の「注文履歴」リンク / `OrderCompletePage` からの遷移）
+
+**設計上の論点（解決済み）:**
+- ✅ パス → `/orders` に決定
+- ✅ ステータス日本語表示 → `utils/orderStatus.ts` の `formatOrderStatus` に集約
+- ✅ 商品名・単価・数量はスナップショット（`order_items`）、画像は現在のマスタから取得
 
 ### 3-5. 管理者向け注文管理
 
