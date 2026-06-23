@@ -44,13 +44,9 @@ public class ProductApi {
   }
 
   @GetMapping("/{productId}")
-  public ResponseEntity<ResponseDto<ProductDetailDto>> productDetail(
+  public ResponseDto<ProductDetailDto> productDetail(
       @PathVariable("productId") int productId) throws Exception {
-    ProductDetailDto productDetailDto = productService.getProductDetail(productId);
-
-    ResponseDto<ProductDetailDto> response = new ResponseDto<>();
-    response.setStatus("success");
-    response.setData(productDetailDto);
-    return ResponseEntity.ok(response);
+    ProductDetailDto productDetail = productService.getProductDetail(productId);
+    return ResponseDto.success(productDetail);
   }
 }

@@ -12,7 +12,7 @@ export const getOrders = (
 
 export const getOrdersQueryOptions = ({ page }: { page?: number } = {}) =>
   queryOptions({
-    queryKey: page ? ["orders", { page }] : ["orders"],
+    queryKey: page ? ["orders", "list", { page }] : ["orders", "list"],
     queryFn: () => getOrders(page),
   });
 
