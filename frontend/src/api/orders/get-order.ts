@@ -11,7 +11,7 @@ export const getOrder = (
 
 export const getOrderQueryOptions = ({ id }: { id: number }) =>
   queryOptions({
-    queryKey: ["orders", "detail", { id }],
+    queryKey: ["orders", "detail", id],
     queryFn: () => getOrder(id),
   });
 
