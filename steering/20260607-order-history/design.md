@@ -314,7 +314,7 @@ frontend/src/
    );
    ```
    - **方針**: interceptor は **最小限**に留める。「成功時の data 展開」のみ行い、エラー処理は画面側に委ねる（[エラーハンドリング](#エラーハンドリング) 参照）
-   - bulletproof 本家は interceptor で共通トースト＋401リダイレクトを一元化しているが、**その一元化は plan のフェーズ4「テスト・品質向上」4-3「API エラーハンドリング統一」スコープ**（`repo/implementation-plan.md` 225〜230行目）。本タスクでは暫定的に画面側で処理し、フェーズ4-3 で interceptor 集約 / ErrorBoundary に移行する
+   - bulletproof 本家は interceptor で共通トースト＋401リダイレクトを一元化しているが、**その一元化は plan のフェーズ4「テスト・品質向上」4-3「API エラーハンドリング統一」スコープ**（`roadmap/roadmap.md` の「フェーズ4-3 API エラーハンドリング統一」）。本タスクでは暫定的に画面側で処理し、フェーズ4-3 で interceptor 集約 / ErrorBoundary に移行する
    - 401 のグローバル処理は現状の `PrivateRoute` パターンに任せる（interceptor で特別処理しない）
    - `useAxios` の 401/403 navigate ロジックは**移植しない**（独立インスタンスの分離を崩さないため）
 3. **`lib/react-query.ts` 作成**:
