@@ -16,9 +16,10 @@ export const ProductImage = ({ s3Key, isMain }: Props) => {
         e.currentTarget.src = NO_IMAGE_URL;
         e.currentTarget.onerror = null;
       }}
-      width="200"
-      height="200"
-      alt={isMain ? "main" : "sub"}
+      alt={isMain ? "メイン画像" : "サブ画像"}
+      className={`h-28 w-28 rounded-md object-cover ${
+        isMain ? "ring-2 ring-zinc-800" : "border border-zinc-200"
+      }`}
     />
   );
 };

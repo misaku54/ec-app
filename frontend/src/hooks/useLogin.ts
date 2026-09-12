@@ -22,9 +22,10 @@ export const useLogin = (): {
   const login = (data: LoginInput) => {
     axiosInstance
       .post("http://localhost:8888/login", data)
-      .then(() => {
-        fetchMe();
-        navigate("/admin/products");
+      .then(() => fetchMe())
+      .then((me) => {
+        // 管理者は管理画面、会員は商品一覧へ
+        navigate(me?.roles.includes("ADMIN") ? "/admin/products" : "/products");
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 403) {

@@ -1,0 +1,8 @@
+# ローカル IntelliJ 起動用プロファイル
+# MinIO: Docker が 9000 でホスト公開しているのでそこに向ける
+aws:
+  endpoint: http://localhost:9000
+  minio-user: minioadmin
+  minio-pass: minioadmin
+  s3:
+    bucket-name: your-bucket

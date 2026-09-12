@@ -24,7 +24,7 @@ cd app && ./mvnw test -Dtest=ClassName
 ### Frontend (frontend/)
 
 ```bash
-cd frontend && npm run dev    # 開発サーバー起動 (port 5173)
+cd frontend && npm run dev -- --port 3003   # 開発サーバー起動（CORS許可が3003のみのため3003で起動する）
 cd frontend && npm run build  # ビルド
 cd frontend && npm run lint   # ESLint
 ```
@@ -32,7 +32,8 @@ cd frontend && npm run lint   # ESLint
 ### インフラ（Docker Compose）
 
 ```bash
-docker compose up -d          # DB (PostgreSQL:5433), LocalStack, MinIO, Frontend 起動
+docker compose up -d          # DB (PostgreSQL:5433), Backend (8888), Frontend (3003), MinIO, LocalStack 起動
+                              # createbuckets が商品画像用バケットを自動作成（匿名GET許可）
 docker compose down
 ```
 
@@ -192,4 +193,4 @@ docs/knowledge/
 
 ## Local Development
 
-バックエンドをIntelliJで起動する場合、`local` プロファイルを指定する（`application-local.yml` が読み込まれMinIOエンドポイントが設定される）。フロントエンドはDockerまたはローカルで起動（port 3003 または 5173）。CORSは `localhost:3003` のみ許可設定。
+バックエンドをIntelliJで起動する場合、`local` プロファイルを指定する（`application-local.yml` が読み込まれMinIOエンドポイントが設定される）。ポートが衝突するため `docker compose stop app` でコンテナ側は止めておく。フロントエンドは Docker（3003）かローカル（`--port 3003`）で起動する。CORSは `localhost:3003` のみ許可設定のため、Vite 既定の 5173 では API が通らない。

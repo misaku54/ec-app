@@ -1,20 +1,17 @@
-import type { ImageData } from '../../types/ImageData';
+import type { ImageData } from "../../types/ImageData";
 import { ProductImage } from "../atoms/ProductImage";
 
 type Props = {
-  images: ImageData[]
+  images: ImageData[];
 };
 
-export const ProductImageList = (props: Props) => {
-  const {images} = props;
-
-  console.log(images);
+export const ProductImageList = ({ images }: Props) => {
   if (!images || images.length === 0) {
-    return <div className="product_images">画像がありません</div>
+    return <p className="text-sm text-zinc-400">画像がありません</p>;
   }
 
   return (
-    <div className="product_images">
+    <div className="flex flex-wrap gap-3">
       {images.map((image) => (
         <ProductImage
           key={image.s3Key}
@@ -23,5 +20,5 @@ export const ProductImageList = (props: Props) => {
         />
       ))}
     </div>
-  )
-}
+  );
+};

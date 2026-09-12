@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import type { Product } from "../../../types/Product";
+import { formatDateTime } from "../../../utils/formatDate";
 import { Button } from "../../atoms/button/Button";
 
 type Props = {
@@ -45,8 +46,8 @@ export const ProductTable = (props: Props) => {
                   {product.stock}
                 </span>
               </td>
-              <td className="px-4 py-3 text-sm text-zinc-400">{product.createdAt}</td>
-              <td className="px-4 py-3 text-sm text-zinc-400">{product.updatedAt}</td>
+              <td className="px-4 py-3 text-sm text-zinc-400">{formatDateTime(product.createdAt)}</td>
+              <td className="px-4 py-3 text-sm text-zinc-400">{formatDateTime(product.updatedAt)}</td>
               <td className="px-4 py-3 text-sm text-right">
                 <Button onClick={() => onDelete(product.id)} className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:border-red-400 px-3 py-1 rounded transition-colors">削除</Button>
               </td>

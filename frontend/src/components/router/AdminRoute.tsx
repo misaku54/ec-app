@@ -4,5 +4,5 @@ import { useAuth } from "../../context/AuthContext";
 export const AdminRoute = () => {
   const { me } = useAuth();
 
-  return me?.roles.includes("ADMIN") ? <Outlet /> : <Navigate to="/" replace />;
+  return me?.roles.includes("ADMIN") ? <Outlet /> : <Navigate to="/products" replace />;
 };
