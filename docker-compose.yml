@@ -4,6 +4,11 @@ services:
     image: postgres:16
     restart: unless-stopped
     env_file: ./.env
+    # created_at / updated_at は timestamp（タイムゾーンなし）で、既定値が DB の現在時刻。
+    # コンテナ既定の UTC のままだと画面表示が9時間ずれるため日本時間に揃える。
+    environment:
+      - TZ=Asia/Tokyo
+      - PGTZ=Asia/Tokyo
     ports:
       - "5433:5432"
     volumes:
@@ -22,6 +27,7 @@ services:
     ports:
       - "8888:8888"
     environment:
+      - TZ=Asia/Tokyo
       - SERVER_PORT=8888
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}

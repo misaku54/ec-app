@@ -1,4 +1,5 @@
 import type { ProductDetail } from "../../types/ProductDetail";
+import { formatDateTime } from "../../utils/formatDate";
 import { ProductImageList } from "../molecules/ProductImageList";
 
 type Props = {
@@ -54,13 +55,13 @@ export const AdmProductDetailInfo = ({ selectedProduct }: Props) => {
         <div className="flex items-center">
           <span className={labelClass}>登録日時</span>
           <span className="text-zinc-400 text-sm">
-            {selectedProduct.createdAt}
+            {formatDateTime(selectedProduct.createdAt)}
           </span>
         </div>
         <div className="flex items-center">
           <span className={labelClass}>更新日時</span>
           <span className="text-zinc-400 text-sm">
-            {selectedProduct.updatedAt}
+            {formatDateTime(selectedProduct.updatedAt)}
           </span>
         </div>
       </div>
