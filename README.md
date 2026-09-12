@@ -56,8 +56,13 @@ DB マイグレーション（Flyway）はバックエンド起動時に自動�
 | 管理者 | `admin@example.com` | `password` | ADMIN（管理画面あり） |
 | 会員 | `user@example.com` | `password` | USER |
 
-- 商品はバッグ・革小物8件（うち1件は在庫切れ状態）。
-- 商品画像は投入されないため、管理画面（ADMIN でログイン）からアップロードしてください。
+- 商品はバッグ・革小物24件。1ページ20件表示なので、一覧のページネーションを2ページで確認できます。
+- 2件は在庫0、1件は画像なし（NO_IMAGE 表示の確認用）にしてあります。
+- 商品画像は `docker/minio/seed-images/` に置いてあり、`createbuckets` が MinIO へ配置します。
+  画像は [Unsplash](https://unsplash.com/) の Unsplash License による無償利用可能なものです。
+
+バックエンドをコンテナで動かしている場合、マイグレーションを追加したら `docker compose up -d --build app` で
+イメージを作り直してください（ソースはビルド時にコピーされるため）。
 
 ## API ルーティング
 

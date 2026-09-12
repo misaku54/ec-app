@@ -77,7 +77,7 @@ services:
       timeout: 3s
       retries: 10
 
-  # 商品画像用バケットを作成する初期化コンテナ。
+  # 商品画像用バケットを作成し、デモ用の初期画像を配置する初期化コンテナ。
   # バケット名は application.yml の aws.s3.bucket-name と揃える。
   # フロントは http://localhost:9000/your-bucket/<key> を直接参照するため匿名 GET を許可する。
   createbuckets:
@@ -86,11 +86,14 @@ services:
     depends_on:
       minio:
         condition: service_healthy
+    volumes:
+      - ./docker/minio/seed-images:/seed-images:ro
     entrypoint: >
       /bin/sh -c "
       mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
       mc mb --ignore-existing local/your-bucket &&
-      mc anonymous set download local/your-bucket
+      mc anonymous set download local/your-bucket &&
+      mc mirror --overwrite /seed-images local/your-bucket/seed
       "
 
 volumes:
