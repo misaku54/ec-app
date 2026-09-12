@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Local dev profile (contains credentials) ###
-src/main/resources/application-local.properties
-src/main/resources/application-local.yml
+### Local dev profile ###
+# ローカル用のダミー値しか入っていないため、他環境でもクローン直後に起動できるよう追跡対象にする。
+# 本番相当の資格情報は環境変数 / Secrets Manager 側で注入する。
