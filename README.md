@@ -13,37 +13,59 @@ Spring Boot + React によるECサイトアプリ。
 | ストレージ | S3 / MinIO（ローカル） |
 | インフラ | Docker Compose |
 
+## 必要なもの
+
+- Docker / Docker Compose（これだけで全サービスが動きます）
+- ホストで個別に起動する場合のみ JDK 21 と Node.js 20 以上
+
 ## 起動方法
 
 ```bash
 docker compose up -d
 ```
 
-これだけで DB・バックエンド・フロントエンド・MinIO・LocalStack がすべて起動します。
+DB・バックエンド・フロントエンド・MinIO・LocalStack がすべて起動します。
 初回はバックエンドイメージのビルドと依存ライブラリの取得に数分かかります。
+起動の進み具合は `docker compose logs -f app` で確認できます。
 
 | URL | 内容 |
 |---|---|
 | http://localhost:3003 | フロントエンド |
-| http://localhost:8888 | バックエンド API（CORS 許可は `localhost:3003` のみ） |
+| http://localhost:8888 | バックエンド API |
 | http://localhost:9001 | MinIO コンソール（`minioadmin` / `minioadmin`） |
-| localhost:5433 | PostgreSQL |
+| localhost:5433 | PostgreSQL（`ecuser` / `ecpass` / DB名 `ecdb`） |
 
 商品画像用の MinIO バケットは `createbuckets` コンテナが起動時に作成し、匿名 GET を許可します。
 
-### バックエンドをホストで起動する場合
+停止は `docker compose down`。DB と MinIO のデータも消して作り直す場合は `docker compose down -v` です。
+
+---
+
+## 開発時の起動（任意）
+
+動かすだけなら上の `docker compose up -d` で完結します。
+以下は開発中にデバッガやホットリロードを使いたい場合の代替手段です。
+
+### バックエンドだけホストで起動する
 
 IntelliJ や Maven から起動するときは `local` プロファイルを指定します。
-接続先が `localhost` になるため、`docker compose up -d postgresdb minio createbuckets` でインフラだけ起動しておきます。
+接続先が `localhost` になるため、インフラはコンテナで動かしたままにします。
+ポート 8888 がぶつかるので、バックエンドのコンテナは止めておきます。
 
 ```bash
+docker compose up -d postgresdb minio createbuckets frontend
+docker compose stop app
 cd app && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-### フロントエンドをホストで起動する場合
+### フロントエンドだけホストで起動する
+
+CORS は `http://localhost:3003` のみ許可しているため、Vite も 3003 番で起動します。
+ポートがぶつかるので、フロントエンドのコンテナは止めておきます。
 
 ```bash
-cd frontend && npm run dev   # http://localhost:5173
+docker compose stop frontend
+cd frontend && npm install && npm run dev -- --port 3003
 ```
 
 ## 初期データ / デモアカウント
