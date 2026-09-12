@@ -35,6 +35,22 @@ cd app && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 cd frontend && npm run dev   # port 5173
 ```
 
+Docker で起動した場合は http://localhost:3003 、ローカルで起動した場合は http://localhost:5173 で開きます。
+バックエンドは http://localhost:8888 で待ち受けます（CORS 許可は `localhost:3003` のみ）。
+
+## 初期データ / デモアカウント
+
+DB マイグレーション（Flyway）はバックエンド起動時に自動実行され、デモ用のアカウントと商品が投入されます。
+クローン直後でも追加の手作業なしでログインから購入まで一通り試せます。
+
+| 種別 | メールアドレス | パスワード | 権限 |
+|---|---|---|---|
+| 管理者 | `admin@example.com` | `password` | ADMIN（管理画面あり） |
+| 会員 | `user@example.com` | `password` | USER |
+
+- 商品はバッグ・革小物8件（うち1件は在庫切れ状態）。
+- 商品画像は投入されません。MinIO のバケットが未作成のため、画像は管理画面からアップロードしてください。
+
 ## API ルーティング
 
 | パス | 認証 |
