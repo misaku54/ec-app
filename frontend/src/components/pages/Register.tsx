@@ -29,8 +29,7 @@ export const Register = () => {
     <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-zinc-950">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex flex-col items-center gap-2">
-          <span className="text-xs font-light tracking-[0.4em] text-zinc-500 uppercase">Admin</span>
-          <span className="text-2xl font-semibold tracking-wide text-white">STORE</span>
+          <span className="text-2xl font-semibold tracking-[0.2em] text-white">ECDEMO</span>
         </div>
         <h2 className="mt-8 text-center text-sm font-medium tracking-widest text-zinc-500 uppercase">
           Sign up

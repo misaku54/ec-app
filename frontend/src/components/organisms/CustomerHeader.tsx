@@ -13,7 +13,7 @@ export const CustomerHeader = () => {
       <div className="container mx-auto flex flex-wrap px-6 py-4 flex-col md:flex-row items-center">
         <Link to="/products" className="flex items-center mb-4 md:mb-0 select-none">
           <span className="text-xs font-light tracking-[0.3em] text-zinc-400 uppercase">
-            Lily STORE
+            ECDEMO
           </span>
         </Link>
         <nav className="md:ml-auto flex flex-wrap items-center text-sm justify-center gap-6">

@@ -13,7 +13,7 @@ export const AdmHeader = () => {
           className="flex items-center mb-4 md:mb-0 select-none"
         >
           <span className="text-xs font-light tracking-[0.3em] text-zinc-400 uppercase">
-            管理画面
+            ECDEMO 管理画面
           </span>
         </Link>
         <nav className="md:ml-auto flex flex-wrap items-center text-sm justify-center gap-6">
