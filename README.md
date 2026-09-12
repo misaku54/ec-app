@@ -15,28 +15,36 @@ Spring Boot + React によるECサイトアプリ。
 
 ## 起動方法
 
-### 1. インフラ起動
-
 ```bash
 docker compose up -d
 ```
 
-DB（PostgreSQL:5433）、LocalStack、MinIO、Frontendが起動します。
+これだけで DB・バックエンド・フロントエンド・MinIO・LocalStack がすべて起動します。
+初回はバックエンドイメージのビルドと依存ライブラリの取得に数分かかります。
 
-### 2. Backend
+| URL | 内容 |
+|---|---|
+| http://localhost:3003 | フロントエンド |
+| http://localhost:8888 | バックエンド API（CORS 許可は `localhost:3003` のみ） |
+| http://localhost:9001 | MinIO コンソール（`minioadmin` / `minioadmin`） |
+| localhost:5433 | PostgreSQL |
+
+商品画像用の MinIO バケットは `createbuckets` コンテナが起動時に作成し、匿名 GET を許可します。
+
+### バックエンドをホストで起動する場合
+
+IntelliJ や Maven から起動するときは `local` プロファイルを指定します。
+接続先が `localhost` になるため、`docker compose up -d postgresdb minio createbuckets` でインフラだけ起動しておきます。
 
 ```bash
 cd app && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-### 3. Frontend（ローカルで動かす場合）
+### フロントエンドをホストで起動する場合
 
 ```bash
-cd frontend && npm run dev   # port 5173
+cd frontend && npm run dev   # http://localhost:5173
 ```
-
-Docker で起動した場合は http://localhost:3003 、ローカルで起動した場合は http://localhost:5173 で開きます。
-バックエンドは http://localhost:8888 で待ち受けます（CORS 許可は `localhost:3003` のみ）。
 
 ## 初期データ / デモアカウント
 
@@ -49,7 +57,7 @@ DB マイグレーション（Flyway）はバックエンド起動時に自動�
 | 会員 | `user@example.com` | `password` | USER |
 
 - 商品はバッグ・革小物8件（うち1件は在庫切れ状態）。
-- 商品画像は投入されません。MinIO のバケットが未作成のため、画像は管理画面からアップロードしてください。
+- 商品画像は投入されないため、管理画面（ADMIN でログイン）からアップロードしてください。
 
 ## API ルーティング
 

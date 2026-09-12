@@ -32,7 +32,8 @@ cd frontend && npm run lint   # ESLint
 ### インフラ（Docker Compose）
 
 ```bash
-docker compose up -d          # DB (PostgreSQL:5433), LocalStack, MinIO, Frontend 起動
+docker compose up -d          # DB (PostgreSQL:5433), Backend (8888), Frontend (3003), MinIO, LocalStack 起動
+                              # createbuckets が商品画像用バケットを自動作成（匿名GET許可）
 docker compose down
 ```
 

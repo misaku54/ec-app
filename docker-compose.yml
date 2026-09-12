@@ -8,6 +8,34 @@ services:
       - "5433:5432"
     volumes:
       - db-storage:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # バックエンド。DB と MinIO はコンテナ名で解決するため、接続先を環境変数で上書きする。
+  # （application-local.* は IntelliJ / ホスト起動用で localhost を向いているため使わない）
+  app:
+    build: ./app
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    environment:
+      - SERVER_PORT=8888
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - AWS_ENDPOINT=http://minio:9000
+      - AWS_MINIO_USER=${MINIO_ROOT_USER}
+      - AWS_MINIO_PASS=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - maven-repo:/root/.m2
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+      createbuckets:
+        condition: service_completed_successfully
 
   frontend:
     build: ./frontend
@@ -69,3 +97,4 @@ volumes:
   db-storage:
   localstack-data:
   minio-data:
+  maven-repo:
