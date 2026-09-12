@@ -9,16 +9,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   // ログインユーザー取得
-  const fetchMe = () => {
+  // ログイン直後にロールで遷移先を振り分けるため、取得した me を返す
+  const fetchMe = (): Promise<Me | null> => {
     setIsAuthChecked(false);
-    ApiClient.get<{ status: string; data: Me }>("/api/me")
+    return ApiClient.get<{ status: string; data: Me }>("/api/me")
       .then((res) => {
         setMe(res.data.data);
         setIsAuthenticated(true);
+        return res.data.data;
       })
       .catch(() => {
         setMe(null);
         setIsAuthenticated(false);
+        return null;
       })
       .finally(() => {
         setIsAuthChecked(true);
@@ -32,7 +35,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Provider初回ロード時にmeを取得
-  useEffect(() => fetchMe(), []);
+  useEffect(() => {
+    fetchMe();
+  }, []);
 
   // me の変化を監視
   useEffect(() => {

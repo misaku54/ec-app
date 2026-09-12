@@ -5,7 +5,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   isAuthChecked: boolean;
   me: Me | null;
-  fetchMe: () => void;
+  fetchMe: () => Promise<Me | null>;
   clearMe: () => void;
 };
 
