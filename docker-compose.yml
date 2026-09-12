@@ -33,7 +33,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   minio:
-    image: minio/minio:latest
+    # MinIO は公式イメージの配布先が Docker Hub から quay.io へ移行済み。
+    # docker.io/minio/minio は pull できないため quay.io を指定する。
+    image: quay.io/minio/minio:latest
     ports:
       - "9000:9000"
       - "9001:9001"
